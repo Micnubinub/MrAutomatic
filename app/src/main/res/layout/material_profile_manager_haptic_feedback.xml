@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_card_background"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/haptic_switch"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="Haptic feedback"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <view_classes.MaterialSwitch
+        android:id="@+id/haptic_switch"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="8dp" />
+
+</RelativeLayout>

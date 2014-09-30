@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_button_selector"
+        android:minWidth="120dp"
+        android:padding="8dp"
+        android:text="Cancel"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/cancel"
+        android:background="@drawable/white_button_selector"
+        android:minWidth="110dp"
+        android:padding="8dp"
+        android:text="Save"
+        android:textColor="@color/extra_high"
+        android:textSize="18sp" />
+
+</RelativeLayout>

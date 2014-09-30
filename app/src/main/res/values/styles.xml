@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="CustomDialog" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
+
+    <style name="Torch" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:longClickable">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">#ffffff</item>
+        <item name="android:padding">0px</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Light.NoTitleBar">
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
