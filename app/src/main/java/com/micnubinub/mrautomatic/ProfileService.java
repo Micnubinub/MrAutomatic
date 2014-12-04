@@ -30,9 +30,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import tools.Tools;
 
@@ -157,10 +154,6 @@ public class ProfileService extends Service {
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
         startForeground(startId, notification);
-
-        final ScheduledExecutorService executorService =
-                Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);
         return Service.START_STICKY;//Service.START_STICKY;
     }
 
@@ -422,23 +415,11 @@ public class ProfileService extends Service {
         if (adapter.isEnabled()) {
             findBluetoothDevices();
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    checkBluetoothDevices(profile);
-                }
-            }, 12000);
         } else {
             try {
                 adapter.enable();
             } catch (Exception e) {
             }
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    checkBluetooth(profile);
-                }
-            }, 350);
         }
     }
 
