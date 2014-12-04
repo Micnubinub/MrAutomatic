@@ -55,8 +55,6 @@ public class Tools {
     private static Calendar calendar = Calendar.getInstance();
 
 
-
-
     public static void getApps(Context context) {
         final PackageManager manager = packageManager(context);
         final Intent i = new Intent(Intent.ACTION_MAIN, null);

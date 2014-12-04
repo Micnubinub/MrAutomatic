@@ -1,7 +1,9 @@
 package com.micnubinub.mrautomatic;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
@@ -16,8 +19,10 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +30,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import tools.Tools;
 
@@ -38,7 +46,6 @@ import tools.Tools;
 
 public class ProfileService extends Service {
 
-
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -48,13 +55,23 @@ public class ProfileService extends Service {
             }
         }
     };
-    private static final Timer timer = new Timer(true);
     private static final ArrayList<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
     private static final ArrayList<Profile> viableProfiles = new ArrayList<Profile>();
+    private static PendingIntent alarmIntent;
+    private static AlarmManager alarmManager;
     private static List<ScanResult> wifiScanResults;
     private static Cursor cursor;
     private static WifiManager wifiManager;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
+    private final Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(getBaseContext(), "Scanning", Toast.LENGTH_SHORT).show();
+            checkProfiles();
+            Log.e("Chk", "Done checking");
+            Log.e("viable prof", viableProfiles.toString());
+        }
+    };
     boolean trigger_found;
     int scan_interval, retries;
     int bluetooth_old_value, wifi_old_value, current_count, battery_count, wifi_value, bluetooth_value, autobrightness_value, brightness, haptic_feedback_value, gps_value, data_int, sleep_timeout, accountsync_value, airplane_mode_value;
@@ -73,17 +90,38 @@ public class ProfileService extends Service {
     private boolean newWifiArray = false;
     private boolean scan = true;
 
-    private final Thread scanThread = new Thread(new Runnable() {
+    public static void scheduleNext(Context context, boolean load) {
 
+        try {
+            // Toast.makeText(context, "LOAD_AD sched" + String.valueOf(loadAd), Toast.LENGTH_LONG).show();
+            alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (load) {
 
-        @Override
-        public void run() {
-            while (scan) {
-                timer.scheduleAtFixedRate(new Scanner(), 0, scan_interval);
+                Intent i = new Intent(context, AlarmReceiver.class);
+                if (false) {
+                    alarmManager.cancel(alarmIntent);
+                    return;
+                } else {
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                        alarmManager.setExact(AlarmManager.RTC, (System.currentTimeMillis() + (mins * 60000)) - 10000, PendingIntent.getBroadcast(context, 0, i, 0));
+                    }
+//                    else
+//                        alarmManager.set(AlarmManager.RTC, (System.currentTimeMillis() + (mins * 60000)) - 10000, PendingIntent.getBroadcast(context, 0, i, 0));
+                }
+            } else {
+                final Intent intent = new Intent(context, AlarmReceiver.class);
+                alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + 10000, alarmIntent);
+                } else
+                    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10000, alarmIntent);
             }
 
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    });
+    }
 
     private ArrayList<BluetoothDevice> findBluetoothDevices() {
 
@@ -109,9 +147,9 @@ public class ProfileService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-/*
+
         //Todo consider making the string "profile" an ID rather than a bssid
-        Notification.Builder builder = new Notification.Builder(this)
+        final Notification.Builder builder = new Notification.Builder(this)
                 //   .setSmallIcon(R.drawable.service_running, 0)
                 .setContentTitle("Notification:")
                 .setContentText("Content");
@@ -119,9 +157,11 @@ public class ProfileService extends Service {
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
         startForeground(startId, notification);
-*/
 
-        return 0;//Service.START_STICKY;
+        final ScheduledExecutorService executorService =
+                Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(runnable, 0, 5, TimeUnit.SECONDS);
+        return Service.START_STICKY;//Service.START_STICKY;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -308,7 +348,7 @@ public class ProfileService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-      /*  wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         profiledb = profileDBHelper.getReadableDatabase();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         switch (Integer.parseInt(prefs.getString(Tools.SCAN_INTERVAL, "0"))) {
@@ -342,22 +382,17 @@ public class ProfileService extends Service {
                 break;
         }
 
-/*
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //  final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        int NOTIFICATION = R.string.app_name;
+        //   final int NOTIFICATION = R.string.app_name;
 
-        Notification notification = new Notification(R.drawable.flightmode, "started",
-                System.currentTimeMillis());
+        //final Notification notification = new Notification(R.drawable.save, "started", System.currentTimeMillis());
 
         // Display a notification about us starting.  We put an icon in the status bar.
-        notificationManager.notify(NOTIFICATION, notification);
+        //notificationManager.notify(NOTIFICATION, notification);
 
-        scanThread.setDaemon(true);
-        scanThread.start();
-        */
+
     }
-
 
     private void checkBattery(final Profile profile) {
 
@@ -373,6 +408,7 @@ public class ProfileService extends Service {
             viableProfiles.add(profile);
 
     }
+
 
     private void location(String location) {
         //Todo check location
@@ -491,14 +527,41 @@ public class ProfileService extends Service {
         }
     }
 
-    private class Scanner extends TimerTask {
-
+    public static class BootUp extends BroadcastReceiver {
         @Override
-        public void run() {
-            Log.e("Chk", "Checking");
-            checkProfiles();
-            Log.e("Chk", "Done checking");
-            Log.e("viable prof", viableProfiles.toString());
+        public void onReceive(Context context, Intent intent) {
+            try {
+//                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.AUTO_START_BOOL, false)) {
+                Intent myIntent = new Intent(context, ProfileService.class);
+                context.startService(myIntent);
+//                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//            if (isServiceRunning) {
+//                try {
+//                    if (loadAd) {
+//                        bannerPopup.loadFullScreenAd();
+//                        scheduleNext(context, false);
+//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.TOAST_BEFORE_BOOL, true))
+//                            Toast.makeText(context, "Showing Ad in 10 secs", Toast.LENGTH_LONG).show();
+//                        return;
+//                    } else {
+//                        bannerPopup.showFullScreenAd();
+//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.LOOP_SCHEDULE, false))
+            scheduleNext(context, true);
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
         }
     }

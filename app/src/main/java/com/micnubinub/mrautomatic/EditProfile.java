@@ -452,7 +452,7 @@ public class EditProfile extends Activity {
     private Dialog bluetooth_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
         dialog.setContentView(R.layout.material_profile_manager_bluetooth);
-        
+
 
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.bluetooth_switch);
         materialSwitch.setChecked(bluetooth_value == 1 ? true : false);
@@ -468,7 +468,7 @@ public class EditProfile extends Activity {
 
     private Dialog data_mode_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
 
         return dialog;
     }
@@ -507,7 +507,7 @@ public class EditProfile extends Activity {
 
     private Dialog screen_settings_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_screen_settings);
         final View brightnessBarLayout = dialog.findViewById(R.id.brightness_seekbar_layout);
 
@@ -566,14 +566,14 @@ public class EditProfile extends Activity {
 
     private Dialog sound_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_sound_volumes);
         return dialog;
     }
 
     private Dialog silent_mode_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_silentmode);
 
         /*final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
@@ -590,7 +590,7 @@ public class EditProfile extends Activity {
 
     private Dialog wifi_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_wifi);
 
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
@@ -607,7 +607,7 @@ public class EditProfile extends Activity {
 
     private Dialog sync_click_view() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_sync);
 
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.sync_switch);
@@ -624,7 +624,7 @@ public class EditProfile extends Activity {
 
     private Dialog trigger() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_trigger_chooser);
         dialog.findViewById(R.id.wifi_click_view).setOnClickListener(triggerDialogClick);
         dialog.findViewById(R.id.bluetooth_click_view).setOnClickListener(triggerDialogClick);
@@ -637,7 +637,7 @@ public class EditProfile extends Activity {
 
     private Dialog wifiDevicePicker() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_wireless_scanner_bluetooth_wifi);
 
         ListView listView = (ListView) dialog.findViewById(R.id.list);
@@ -695,14 +695,14 @@ public class EditProfile extends Activity {
 
     private Dialog nfcDevicePicker() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_silentmode);
         return dialog;
     }
 
     private Dialog batteryPiker() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        
+
         dialog.setContentView(R.layout.material_profile_manager_battery);
         final View batteryBarLayout = dialog.findViewById(R.id.battery_seekbar_layout);
         final MaterialSeekBar battery_seekbar = (MaterialSeekBar) dialog.findViewById(R.id.battery_seekbar_level);

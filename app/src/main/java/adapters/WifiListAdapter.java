@@ -16,7 +16,6 @@ import com.micnubinub.mrautomatic.R;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import tools.WirelessDevice;
 
 /**
