@@ -61,21 +61,21 @@ public class ProfileManagerAdapter extends BaseAdapter {
         }
 
         holder.name.setText(profile.getName());
-        holder.icon.setImageDrawable(getDrawable(profile.getTriggerType()));
-        if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
-            int i = 0;
-            try {
-                i = Integer.parseInt(profile.getTrigger());
-            } catch (Exception e) {
-                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
-            }
-
-            if (i < 0)
-                holder.trigger.setText(profile.getTriggerType() + " (Charging)");
-            else
-                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
-        } else
-            holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
+//        holder.icon.setImageDrawable(getDrawable(profile.getTriggerType()));
+//        if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
+//            int i = 0;
+//            try {
+//                i = Integer.parseInt(profile.getTrigger());
+//            } catch (Exception e) {
+//                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
+//            }
+//
+//            if (i < 0)
+//                holder.trigger.setText(profile.getTriggerType() + " (Charging)");
+//            else
+//                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
+//        } else
+//            holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
 
         return convertView;
     }

@@ -1,11 +1,15 @@
 package tools;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
+import android.provider.Settings;
 
 import com.micnubinub.mrautomatic.ProfileDBHelper;
 import com.micnubinub.mrautomatic.ProfileListItem;
@@ -50,6 +54,7 @@ public class Utility {
     public static final String AUTO_ROTATION_SETTING = "AUTO_ROTATION_SETTING";
     public static final String SLEEP_TIMEOUT_SETTING = "SLEEP_TIMEOUT_SETTING";
     public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
+    public static final String RINGTONE_SETTING = "RINGTONE_SETTING";
     public static final String LAUNCH_APP_SETTING = "LAUNCH_APP_SETTING";
     public static final String START_MUSIC_SETTING = "START_MUSIC_SETTING";
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
@@ -71,7 +76,7 @@ public class Utility {
     private static Calendar calendar = Calendar.getInstance();
 
     public static void getApps(Context context) {
-        final PackageManager manager = packageManager(context);
+        final PackageManager manager = getPackageManager(context);
         final Intent i = new Intent(Intent.ACTION_MAIN, null);
         i.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> list = manager.queryIntentActivities(i, 0);
@@ -128,7 +133,7 @@ public class Utility {
         return formatter.format(calendar.getTime());
     }
 
-    public static PackageManager packageManager(Context context) {
+    public static PackageManager getPackageManager(Context context) {
         return context.getPackageManager();
     }
 
@@ -188,6 +193,207 @@ public class Utility {
             }
         });
         return profiles;
+    }
+
+    public static void setNotificationVolume(Context context, int value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_NOTIFICATION, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setMediaVolume(Context context, int value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_MUSIC, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setAlarmVolume(Context context, int value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_ALARM, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setRingerVolume(Context context, int value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_RING, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setAutoBrightness(Context context, int value) {
+        try {
+            if (value < 0)
+                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+            else
+                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setBrightness(Context context, int value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setWifi(Context context, int value) {
+        try {
+            ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(value > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setBluetooth(Context context, int value) {
+        try {
+            final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            if (value > 1) {
+                if (!adapter.isEnabled())
+                    adapter.enable();
+            } else {
+                if (adapter.isEnabled())
+                    adapter.disable();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setScreenTimeout(Context context, int value) {
+        try {
+            int time_out;
+            switch (value) {
+                case 0:
+                    time_out = 15;
+                    break;
+                case 1:
+                    time_out = 30;
+                    break;
+                case 2:
+                    time_out = 60;
+                    break;
+                case 3:
+                    time_out = 120;
+                    break;
+                case 4:
+                    time_out = 300;
+                    break;
+                case 5:
+                    time_out = 600;
+                    break;
+                case 6:
+                    time_out = 1800;
+                    break;
+                default:
+                    time_out = 60;
+                    break;
+            }
+            time_out = time_out * 1000;
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time_out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setData(Context context, int value) {
+        try {/*
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
+        switch (data_int) {
+            case 0:
+                connectivityManager.setNetworkPreference(ConnectivityManager.TYPE_MOBILE);
+                break;
+            case 1:
+                connectivityManager.startUsingNetworkFeature(connectivityManager.TYPE_MOBILE, "a")
+                break;
+            case 2:
+                data_value = "2g";
+                break;
+            case 3:
+                connectivityManager.stopUsingNetworkFeature(ConnectivityManager.TYPE_MOBILE, "android.net.conn.CONNECTIVITY_CHANGE");
+                break;
+        }
+*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setAirplaneMode(Context context, int value) {
+        try {
+            //Todo airplane
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSilentMode(Context context, int value) {
+        try {
+            //Todo silent mode
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setAccountSync(Context context, int value) {
+        try {
+            //Todo account sync
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void playMusic(Context context) {
+        try {//Todo play music
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void setWallpaper(Context context, String value) {
+        try {
+            Uri uri = Uri.parse(value);
+            //Todo when saving uri.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSetRingtone(Context context, String value) {
+        try {
+            Uri uri = Uri.parse(value);
+            //Todo when saving uri.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setVibrate(Context context, int value) {
+        try {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void launchApp(Context context, String value) {
+        try {
+            getPackageManager(context).getLaunchIntentForPackage(value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

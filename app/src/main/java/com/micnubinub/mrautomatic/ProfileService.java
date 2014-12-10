@@ -240,19 +240,6 @@ public class ProfileService extends Service {
 
         if (Integer.parseInt(profile_id) >= 0 && Integer.parseInt(profile_id) < cursor.getCount()) {
             cursor.moveToPosition(Integer.parseInt(profile_id));
-
-            wifi_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.WIFI)));
-            bluetooth_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BLUETOOTH)));
-            autobrightness_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BRIGHTNESS_MODE)));
-            brightness = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BRIGHTNESS)));
-            notification_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_NOTIFICATION)));
-            incoming_call_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_PHONE_CALL)));
-            media_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_MEDIA)));
-            alarm_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ALARM)));
-            data_int = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.DATA_VALUE)));
-            sleep_timeout = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SCREEN_TIMEOUT)));
-            haptic_feedback_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.HAPTIC_FEEDBACK)));
-            accountsync_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SYNC)));
             profiledb.close();
             cursor.close();
             setProfile();
@@ -265,8 +252,6 @@ public class ProfileService extends Service {
     }
 
     private void setProfile() {
-        // Toast.makeText(this, "Setting profile :" + )
-
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, notification_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, media_volume);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_ALARM, alarm_volume);
@@ -493,14 +478,14 @@ public class ProfileService extends Service {
         }
 
         for (Profile profile : getProfiles()) {
-            if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
-                checkBattery(profile);
-            } else if (profile.getTriggerType().equals(Utility.TRIGGER_WIFI)) {
-                checkWifi(profile);
-            } else if (profile.getTriggerType().equals(Utility.TRIGGER_BLUETOOTH)) {
-                checkBluetooth(profile);
-            } else if (profile.getTriggerType().equals(Utility.TRIGGER_LOCATION)) {
-            }
+//            if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
+//                checkBattery(profile);
+//            } else if (profile.getTriggerType().equals(Utility.TRIGGER_WIFI)) {
+//                checkWifi(profile);
+//            } else if (profile.getTriggerType().equals(Utility.TRIGGER_BLUETOOTH)) {
+//                checkBluetooth(profile);
+//            } else if (profile.getTriggerType().equals(Utility.TRIGGER_LOCATION)) {
+//            }
 
             newWifiArray = false;
             newBluetothArray = false;

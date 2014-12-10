@@ -384,21 +384,7 @@ public class EditProfile extends Activity {
         cursor.moveToPosition(Integer.parseInt(ID));
 
         update_profile = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID));
-        bssid = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BSSID));
         profile_name_text = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME));
-        wifi_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.WIFI)));
-        bluetooth_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BLUETOOTH)));
-        gps_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.GPS)));
-        autobrightness_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BRIGHTNESS_MODE)));
-        brightness_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BRIGHTNESS)));
-        data_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.DATA_VALUE)));
-        media_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_MEDIA)));
-        notification_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_NOTIFICATION)));
-        ringer_phonecall_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SOUND_PHONE_CALL)));
-        sleep_timeout = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.SCREEN_TIMEOUT)));
-        airplane_mode_value = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.AIRPLANE_MODE)));
-        alarm_volume = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ALARM)));
-        trigger_type = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGER_DEVICE_TYPE));
 
         close();
 
