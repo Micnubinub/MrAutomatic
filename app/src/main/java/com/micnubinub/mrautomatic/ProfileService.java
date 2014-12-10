@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tools.Tools;
+import tools.Utility;
 
 /**
  * Created with IntelliJ IDEA.
@@ -231,7 +231,6 @@ public class ProfileService extends Service {
 
     private void getProfile(String profile_id) {
 
-
         profiledb = profileDBHelper.getReadableDatabase();
         setOldValues();
         final String[] need = new String[]{ProfileDBHelper.WIFI, ProfileDBHelper.TRIGGER_DEVICE_TYPE, ProfileDBHelper.DATA_VALUE, ProfileDBHelper.BLUETOOTH, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.ALARM, ProfileDBHelper.SOUND_MEDIA, ProfileDBHelper.SOUND_NOTIFICATION, ProfileDBHelper.SOUND_PHONE_CALL, ProfileDBHelper.BRIGHTNESS, ProfileDBHelper.BRIGHTNESS_MODE, ProfileDBHelper.BSSID};
@@ -344,7 +343,7 @@ public class ProfileService extends Service {
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         profiledb = profileDBHelper.getReadableDatabase();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        switch (Integer.parseInt(prefs.getString(Tools.SCAN_INTERVAL, "0"))) {
+        switch (Integer.parseInt(prefs.getString(Utility.SCAN_INTERVAL, "0"))) {
 
             case 0:
                 scan_interval = 30000;
@@ -397,7 +396,7 @@ public class ProfileService extends Service {
 
         final int battery_level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
 
-        if ((profile.getTrigger().equals(Tools.TRIGGER_BATTERY_CHARGING) && isCharging) || battery_level < Integer.parseInt(profile.getTrigger()))
+        if ((profile.getTrigger().equals(Utility.TRIGGER_BATTERY_CHARGING) && isCharging) || battery_level < Integer.parseInt(profile.getTrigger()))
             viableProfiles.add(profile);
 
     }
@@ -494,13 +493,13 @@ public class ProfileService extends Service {
         }
 
         for (Profile profile : getProfiles()) {
-            if (profile.getTriggerType().equals(Tools.TRIGGER_BATTERY)) {
+            if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
                 checkBattery(profile);
-            } else if (profile.getTriggerType().equals(Tools.TRIGGER_WIFI)) {
+            } else if (profile.getTriggerType().equals(Utility.TRIGGER_WIFI)) {
                 checkWifi(profile);
-            } else if (profile.getTriggerType().equals(Tools.TRIGGER_BLUETOOTH)) {
+            } else if (profile.getTriggerType().equals(Utility.TRIGGER_BLUETOOTH)) {
                 checkBluetooth(profile);
-            } else if (profile.getTriggerType().equals(Tools.TRIGGER_LOCATION)) {
+            } else if (profile.getTriggerType().equals(Utility.TRIGGER_LOCATION)) {
             }
 
             newWifiArray = false;

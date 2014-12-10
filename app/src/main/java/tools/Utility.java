@@ -21,39 +21,54 @@ import java.util.List;
 /**
  * Created by root on 9/07/14.
  */
-public class Tools {
-    public static final String SCHEDULED_RECORDING = "SCHEDULED_RECORDING";
-    public static final String SCHEDULED_COMMAND = "SCHEDULED_COMMAND";
-    public static final String WAKE_UP = "WAKE_UP";
-    public static final String WIFI_OFF = "WIFI_OFF";
-    public static final String EDIT_PROFILE = "EDIT_PROFILE";
-    public static final String TRIGGER_BATTERY = "BATTERY";
-    public static final String TRIGGER_BLUETOOTH = "BLUETOOTH";
-    public static final String TRIGGER_WIFI = "WIFI";
-    public static final String TRIGGER_LOCATION = "LOCATION";
+public class Utility {
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
+    public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
+    public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
+    public static final String TRIGGER_BATTERY_CHARGING = "BATTERY_CHARGING";
+    public static final String TRIGGER_BLUETOOTH_BSSID = "BLUETOOTH_BSSID";
+    public static final String TRIGGER_BLUETOOTH_SSID = "BLUETOOTH_SSID";
+    public static final String TRIGGER_WIFI_BSSID = "WIFI_BSSID";
+    public static final String TRIGGER_WIFI_SSID = "WIFI_SSID";
+    public static final String TRIGGER_APP_LAUNCH = "TRIGGER_APP_LAUNCH";
+    public static final String TRIGGER_LOCATION = "LOCATION";
     public static final String TRIGGER_TIME = "TIME";
     public static final String TRIGGER_NFC = "NFC";
     public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
-    public static final String NEXT_SCAN = "NEXT_SCAN";
-    public static final String TRIGGER_BATTERY_CHARGING = "TRIGGER_BATTERY_CHARGING";
+
+    public static final String WIFI_SETTING = "WIFI_SETTING";
+    public static final String BLUETOOTH_SETTING = "BLUETOOTH_SETTING";
+    public static final String DATA_SETTING = "DATA_SETTING";
+    public static final String BRIGHTNESS_SETTING = "BRIGHTNESS_SETTING";
+    public static final String BRIGHTNESS_AUTO_SETTING = "BRIGHTNESS_AUTO_SETTING";
+    public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
+    public static final String SILENT_MODE_SETTING = "SILENT_MODE_SETTING";
+    public static final String NOTIFICATION_VOLUME_SETTING = "NOTIFICATION_VOLUME_SETTING";
+    public static final String MEDIA_VOLUME_SETTING = "MEDIA_VOLUME_SETTING";
+    public static final String RINGER_VOLUME_SETTING = "RINGER_VOLUME_SETTING";
+    public static final String ACCOUNT_SYNC_SETTING = "ACCOUNT_SYNC_SETTING";
+    public static final String AUTO_ROTATION_SETTING = "AUTO_ROTATION_SETTING";
+    public static final String SLEEP_TIMEOUT_SETTING = "SLEEP_TIMEOUT_SETTING";
+    public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
+    public static final String LAUNCH_APP_SETTING = "LAUNCH_APP_SETTING";
+    public static final String START_MUSIC_SETTING = "START_MUSIC_SETTING";
+    public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
+
     /*
 
-     public static final String;
-
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String;
-     public static final String; */
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " ";
+     public static final String a = " "; */
 
     public static ArrayList<App> apps;
     private static Calendar calendar = Calendar.getInstance();
-
 
     public static void getApps(Context context) {
         final PackageManager manager = packageManager(context);
@@ -77,6 +92,16 @@ public class Tools {
 
     }
 
+    public static ArrayList<Command> processCommands(String commands) {
+        final ArrayList<Command> commandList = new ArrayList<Command>();
+        final String[] commandArray = commands.split(",");
+        for (String s : commandArray) {
+            final String[] tmp = s.split(":");
+            commandList.add(new Command(tmp[0], tmp[1]));
+        }
+        return commandList;
+    }
+
 
     public static int getSeconds(long date) {
         DateFormat formatter = new SimpleDateFormat("ss");
@@ -97,6 +122,12 @@ public class Tools {
         return Integer.parseInt(formatter.format(calendar.getTime()));
     }
 
+    public static String getDay(long date) {
+        DateFormat formatter = new SimpleDateFormat("EEEE");
+        calendar.setTimeInMillis(date);
+        return formatter.format(calendar.getTime());
+    }
+
     public static PackageManager packageManager(Context context) {
         return context.getPackageManager();
     }
@@ -115,7 +146,7 @@ public class Tools {
         final ArrayList<ProfileListItem> profiles = new ArrayList<ProfileListItem>();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
-        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGER_DEVICE_TYPE, ProfileDBHelper.BSSID};
+        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         try {
             cursor.moveToPosition(0);
@@ -123,12 +154,19 @@ public class Tools {
         }
         while (!cursor.isAfterLast()) {
             try {
+                int priority;
+                try {
+                    priority = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PRIORITY)));
+                } catch (Exception e) {
+                    priority = 3;
+                }
                 profiles.add(
                         new ProfileListItem(
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGER_DEVICE_TYPE)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.BSSID))
+                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)),
+                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)),
+                                priority
                         )
                 );
             } catch (Exception e) {

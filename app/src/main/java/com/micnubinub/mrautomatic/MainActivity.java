@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import adapters.ProfileManagerAdapter;
-import tools.Tools;
+import tools.Utility;
 
 /**
  * Created by root on 21/08/14.
@@ -21,7 +22,7 @@ public class MainActivity extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             try {
                 Intent intent = new Intent(MainActivity.this, EditProfile.class);
-                intent.putExtra(Tools.EDIT_PROFILE, profiles.get(position).getID());
+//                intent.putExtra(Utility.EDIT_PROFILE, profiles.get(position).getID());
                 MainActivity.this.startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -37,7 +38,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.material_profile_manager_activity);
         ListView listView = (ListView) findViewById(R.id.profile_list);
-        profiles = Tools.getListProfiles(this);
+        profiles = Utility.getListProfiles(this);
         adapter = new ProfileManagerAdapter(this, profiles);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(listener);
@@ -52,12 +53,14 @@ public class MainActivity extends Activity {
 
         Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
+
+        Toast.makeText(this, Utility.getDay(System.currentTimeMillis()), Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        profiles = Tools.getListProfiles(this);
+        profiles = Utility.getListProfiles(this);
         adapter.setProfiles(profiles);
         adapter.notifyDataSetChanged();
     }

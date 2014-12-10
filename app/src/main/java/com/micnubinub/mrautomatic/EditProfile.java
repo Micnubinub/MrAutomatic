@@ -32,7 +32,7 @@ import java.util.List;
 
 import adapters.BluetoothListAdapter;
 import adapters.WifiListAdapter;
-import tools.Tools;
+import tools.Utility;
 import tools.WirelessDevice;
 import view_classes.MaterialSeekBar;
 import view_classes.MaterialSwitch;
@@ -54,7 +54,6 @@ public class EditProfile extends Activity {
     private static Dialog dialog;
 
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
-    private final String[] need = new String[]{ProfileDBHelper.WIFI, ProfileDBHelper.ID, ProfileDBHelper.AIRPLANE_MODE, ProfileDBHelper.SCREEN_TIMEOUT, ProfileDBHelper.GPS, ProfileDBHelper.TRIGGER_DEVICE_TYPE, ProfileDBHelper.DATA_VALUE, ProfileDBHelper.BLUETOOTH, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.ALARM, ProfileDBHelper.SOUND_MEDIA, ProfileDBHelper.SOUND_NOTIFICATION, ProfileDBHelper.SOUND_PHONE_CALL, ProfileDBHelper.BRIGHTNESS, ProfileDBHelper.BRIGHTNESS_MODE, ProfileDBHelper.BSSID};
     private final View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -184,12 +183,6 @@ public class EditProfile extends Activity {
         init();
         getOldValues();
 
-        try {
-            if (savedInstanceState.getString(Tools.EDIT_PROFILE, "").length() > 0)
-                editProfile(savedInstanceState.getString(Tools.EDIT_PROFILE, ""));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void editProfile(String id) {
@@ -254,22 +247,8 @@ public class EditProfile extends Activity {
             content_values = new ContentValues();
 
             content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-            content_values.put(ProfileDBHelper.TRIGGER_DEVICE_TYPE, trigger_type);
-            content_values.put(ProfileDBHelper.BSSID, bssid);
             content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-            content_values.put(ProfileDBHelper.WIFI, wifi_value_string);
-            content_values.put(ProfileDBHelper.BLUETOOTH, bluetooth_value_string);
-            content_values.put(ProfileDBHelper.GPS, gps_value_string);
-            content_values.put(ProfileDBHelper.BRIGHTNESS_MODE, auto_brightness_value_string);
-            content_values.put(ProfileDBHelper.BRIGHTNESS, brightness_value_string);
-            content_values.put(ProfileDBHelper.DATA_VALUE, data_value_string);
-            content_values.put(ProfileDBHelper.SOUND_MEDIA, media_volume_string);
-            content_values.put(ProfileDBHelper.SOUND_NOTIFICATION, notification_value_string);
-            content_values.put(ProfileDBHelper.SOUND_PHONE_CALL, ringer_phone_call_volume_string);
-            content_values.put(ProfileDBHelper.SCREEN_TIMEOUT, sleep_timeout_string);
-            content_values.put(ProfileDBHelper.HAPTIC_FEEDBACK, haptic_feedback_value_string);
-            content_values.put(ProfileDBHelper.AIRPLANE_MODE, airplane_mode_value_string);
-            content_values.put(ProfileDBHelper.SYNC, sync_value_string);
+            //Todo
 
             if (update) {
                 try {
@@ -647,7 +626,7 @@ public class EditProfile extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 trigger_device_picked = true;
-                trigger_type = Tools.TRIGGER_WIFI;
+                trigger_type = Utility.TRIGGER_WIFI;
                 bssid = ((WirelessDevice) wifiListAdapter.getItem(position)).getBssid();
                 wifiListAdapter.setSelectedItem(position);
             }
@@ -668,7 +647,7 @@ public class EditProfile extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 trigger_device_picked = true;
-                trigger_type = Tools.TRIGGER_BLUETOOTH;
+                trigger_type = Utility.TRIGGER_BLUETOOTH;
                 bssid = ((WirelessDevice) bluetoothListAdapter.getItem(position)).getBssid();
                 bluetoothListAdapter.setSelectedItem(position);
             }
@@ -736,7 +715,7 @@ public class EditProfile extends Activity {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                trigger_type = Tools.TRIGGER_BATTERY;
+                trigger_type = Utility.TRIGGER_BATTERY;
                 trigger_device_picked = true;
                 if (materialSwitch.isChecked())
                     bssid = String.valueOf(-1);

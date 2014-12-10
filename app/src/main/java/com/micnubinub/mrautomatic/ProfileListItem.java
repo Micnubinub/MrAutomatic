@@ -7,14 +7,16 @@ package com.micnubinub.mrautomatic;
 public class ProfileListItem {
     private final String iD;
     private final String name;
-    private final String triggerType;
+    private final String command;
     private final String trigger;
+    private final int priority;
 
-    public ProfileListItem(String iD, String name, String triggerType, String trigger) {
+    public ProfileListItem(String iD, String name, String trigger, String command, int priority) {
         this.iD = iD;
         this.trigger = trigger;
         this.name = name;
-        this.triggerType = triggerType;
+        this.command = command;
+        this.priority = priority;
     }
 
 
@@ -22,8 +24,16 @@ public class ProfileListItem {
         return name;
     }
 
-    public String getTriggerType() {
-        return triggerType;
+    public String getiD() {
+        return iD;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     public String getTrigger() {

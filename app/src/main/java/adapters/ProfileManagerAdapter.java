@@ -13,7 +13,7 @@ import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
 
-import tools.Tools;
+import tools.Utility;
 
 /**
  * Created by root on 22/08/14.
@@ -62,7 +62,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
 
         holder.name.setText(profile.getName());
         holder.icon.setImageDrawable(getDrawable(profile.getTriggerType()));
-        if (profile.getTriggerType().equals(Tools.TRIGGER_BATTERY)) {
+        if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
             int i = 0;
             try {
                 i = Integer.parseInt(profile.getTrigger());
@@ -82,17 +82,17 @@ public class ProfileManagerAdapter extends BaseAdapter {
 
     private final Drawable getDrawable(String triggerType) {
 
-        if (triggerType.equals(Tools.TRIGGER_BATTERY))
+//        if (triggerType.equals(Utility.TRIGGER_BATTERY))
+//            return context.getResources().getDrawable(R.drawable.ic_launcher);
+//        if (triggerType.equals(Utility.TRIGGER_WIFI))
+//            return context.getResources().getDrawable(R.drawable.ic_launcher);
+//        if (triggerType.equals(Utility.TRIGGER_BLUETOOTH))
+//            return context.getResources().getDrawable(R.drawable.ic_launcher);
+        if (triggerType.equals(Utility.TRIGGER_LOCATION))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Tools.TRIGGER_WIFI))
+        if (triggerType.equals(Utility.TRIGGER_BATTERY_CHARGING))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Tools.TRIGGER_BLUETOOTH))
-            return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Tools.TRIGGER_LOCATION))
-            return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Tools.TRIGGER_BATTERY_CHARGING))
-            return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Tools.TRIGGER_TIME))
+        if (triggerType.equals(Utility.TRIGGER_TIME))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
 
         //Todo make this equal to nfc
