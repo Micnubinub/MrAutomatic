@@ -25,8 +25,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +40,30 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
+
+    //Todo Onpreference changed listener
+    //Todo private static scanInterval
+    //Todo dont run service if>>
+    //Todo           numProfiles =0
+    //Todo       allProfiles can be handled with broadcasts
+    //Todo make sure you have ald values saved before a scan, and reset them after, before setting the profile
+    //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
+    //Todo get profiles on each scan
+    //Todo have all the listed broadcast receivers work in parallel
+    //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
+    //Todo group scans, so that scans happen once per respective adapter>>
+    //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
+
+    //Todo use this android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED
+    //Todo use this android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED
+    //Todo use this android.intent.action.ACTION_POWER_CONNECTED, android.intent.action.ACTION_POWER_DISCONNECTED
+    //Todo use this android.intent.action.DATA_SMS_RECEIVED
+    //Todo use this android.intent.action.DOCK_EVENT
+    //Todo use this android.intent.action.PACKAGE_ADDED
+    //Todo use this android.intent.action.SCREEN_OFF , android.intent.action.SCREEN_ON
+    //Todo use this android.net.wifi.WIFI_STATE_CHANGED
+    //Todo use this android.provider.Telephony.SMS_RECEIVED
+    //Todo use this android.intent.action.BATTERY_CHANGED
 
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -210,16 +232,7 @@ public class ProfileService extends Service {
                         )
                 );
             } catch (Exception e) {
-            }
-        }
-
-        Collections.sort(profiles, new Comparator<Profile>() {
-            @Override
-            public int compare(Profile lhs, Profile rhs) {
-                return lhs.getTriggerType().compareToIgnoreCase(lhs.getID());
-            }
-        });
-
+            }}
         try {
             cursor.close();
             profiledb.close();

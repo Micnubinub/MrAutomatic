@@ -1,19 +1,25 @@
 package tools;
 
+import android.app.WallpaperManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.SystemClock;
 import android.provider.Settings;
+import android.view.KeyEvent;
 
 import com.micnubinub.mrautomatic.ProfileDBHelper;
 import com.micnubinub.mrautomatic.ProfileListItem;
 
+import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +32,7 @@ import java.util.List;
  * Created by root on 9/07/14.
  */
 public class Utility {
+
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
@@ -37,6 +44,7 @@ public class Utility {
     public static final String TRIGGER_APP_LAUNCH = "TRIGGER_APP_LAUNCH";
     public static final String TRIGGER_LOCATION = "LOCATION";
     public static final String TRIGGER_TIME = "TIME";
+    public static final String TRIGGER_EARPHONE_JACK = "TRIGGER_EARPHONE_JACK";
     public static final String TRIGGER_NFC = "NFC";
     public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
 
@@ -45,12 +53,12 @@ public class Utility {
     public static final String DATA_SETTING = "DATA_SETTING";
     public static final String BRIGHTNESS_SETTING = "BRIGHTNESS_SETTING";
     public static final String BRIGHTNESS_AUTO_SETTING = "BRIGHTNESS_AUTO_SETTING";
-    public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
+    //    public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
     public static final String SILENT_MODE_SETTING = "SILENT_MODE_SETTING";
     public static final String NOTIFICATION_VOLUME_SETTING = "NOTIFICATION_VOLUME_SETTING";
     public static final String MEDIA_VOLUME_SETTING = "MEDIA_VOLUME_SETTING";
     public static final String RINGER_VOLUME_SETTING = "RINGER_VOLUME_SETTING";
-    public static final String ACCOUNT_SYNC_SETTING = "ACCOUNT_SYNC_SETTING";
+    //    public static final String ACCOUNT_SYNC_SETTING = "ACCOUNT_SYNC_SETTING";
     public static final String AUTO_ROTATION_SETTING = "AUTO_ROTATION_SETTING";
     public static final String SLEEP_TIMEOUT_SETTING = "SLEEP_TIMEOUT_SETTING";
     public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
@@ -60,7 +68,6 @@ public class Utility {
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
 
     /*
-
      public static final String a = " ";
      public static final String a = " ";
      public static final String a = " ";
@@ -331,19 +338,19 @@ public class Utility {
 
     public static void setAirplaneMode(Context context, int value) {
         try {
-            //Todo airplane
+
+            //Todo airplane ** only up to 16
+            Settings.System.putInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, (value > 0) ? 0 : 1);
+
+// Post an intent to reload.
+            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+            intent.putExtra("state", !(value > 0));
+            context.sendBroadcast(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void setSilentMode(Context context, int value) {
-        try {
-            //Todo silent mode
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void setAccountSync(Context context, int value) {
         try {
@@ -354,7 +361,16 @@ public class Utility {
     }
 
     public static void playMusic(Context context) {
-        try {//Todo play music
+        try {
+            final long eventTime = SystemClock.uptimeMillis();
+            final Intent downIntent = new Intent(Intent.ACTION_MEDIA_BUTTON, null);
+            final KeyEvent downEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 0);
+            downIntent.putExtra(Intent.EXTRA_KEY_EVENT, downEvent);
+            context.sendOrderedBroadcast(downIntent, null);
+            final Intent upIntent = new Intent(Intent.ACTION_MEDIA_BUTTON, null);
+            final KeyEvent upEvent = new KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, 0);
+            upIntent.putExtra(Intent.EXTRA_KEY_EVENT, upEvent);
+            context.sendOrderedBroadcast(upIntent, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -364,7 +380,23 @@ public class Utility {
     public static void setWallpaper(Context context, String value) {
         try {
             Uri uri = Uri.parse(value);
+
+            WallpaperManager wpm = WallpaperManager.getInstance(context);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            // set to false to prepare image for decoding
+            //
+            options.inJustDecodeBounds = false;
+            wpm.setBitmap(BitmapFactory.decodeStream(new FileInputStream(uri.getPath()), null, options));
             //Todo when saving uri.toString();
+            //Todo check this, make sure it doesn't run out of memory
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setSilentMode(Context context, int value) {
+        try {
+            //Todo silent might change this to ringer mode
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -372,8 +404,11 @@ public class Utility {
 
     public static void setSetRingtone(Context context, String value) {
         try {
-            Uri uri = Uri.parse(value);
+            Settings.System.putString(context.getContentResolver(), Settings.System.RINGTONE, value);
             //Todo when saving uri.toString();
+//            AudioManager.setRingerMode(RINGER_MODE_NORMAL);
+//            AudioManager.setRingerMode(RINGER_MODE_SILENT);
+//            AudioManager.setRingerMode(RINGER_MODE_VIBRATE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -387,12 +422,32 @@ public class Utility {
         }
     }
 
-    public static void launchApp(Context context, String value) {
+    public static void launchApp(Context context, String packageName) {
         try {
-            getPackageManager(context).getLaunchIntentForPackage(value);
-
+            final PackageManager packageManager = context.getPackageManager();
+            context.startActivity(packageManager.getLaunchIntentForPackage(packageName));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static class EarphoneJackReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+
+                switch (state) {
+                    case 0:
+                        // "Headset is unplugged");
+                        break;
+                    case 1:
+                        // "Headset is plugged");
+                        break;
+                    default:
+                        // "I have no idea what the headset state is");
+                }
+            }
         }
     }
 

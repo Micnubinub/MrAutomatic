@@ -36,6 +36,12 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name="tools.Utility$EarphoneJackReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.HEADSET_PLUG" />
+            </intent-filter>
+        </receiver>
+
         <service android:name=".ProfileService" />
     </application>
 
