@@ -16,8 +16,8 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.KeyEvent;
 
+import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.ProfileDBHelper;
-import com.micnubinub.mrautomatic.ProfileListItem;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;
@@ -154,8 +154,8 @@ public class Utility {
     }
 
 
-    public static ArrayList<ProfileListItem> getListProfiles(Context context) {
-        final ArrayList<ProfileListItem> profiles = new ArrayList<ProfileListItem>();
+    public static ArrayList<Profile> getListProfiles(Context context) {
+        final ArrayList<Profile> profiles = new ArrayList<Profile>();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
         final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PRIORITY};
@@ -173,7 +173,7 @@ public class Utility {
                     priority = 3;
                 }
                 profiles.add(
-                        new ProfileListItem(
+                        new Profile(
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)),
@@ -191,11 +191,11 @@ public class Utility {
         } catch (Exception e) {
         }
 
-        Collections.sort(profiles, new Comparator<ProfileListItem>() {
+        Collections.sort(profiles, new Comparator<Profile>() {
             //Todo not working right
 
             @Override
-            public int compare(ProfileListItem lhs, ProfileListItem rhs) {
+            public int compare(Profile lhs, Profile rhs) {
                 return lhs.getName().compareToIgnoreCase(lhs.getName());
             }
         });

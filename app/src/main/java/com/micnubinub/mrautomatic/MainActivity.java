@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
         }
     };
     ProfileManagerAdapter adapter;
-    private ArrayList<ProfileListItem> profiles;
+    private ArrayList<Profile> profiles;
 
 
     @Override

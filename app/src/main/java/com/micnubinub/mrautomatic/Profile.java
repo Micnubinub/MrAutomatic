@@ -3,41 +3,56 @@ package com.micnubinub.mrautomatic;
 
 import java.util.ArrayList;
 
-import tools.Command;
-import tools.Trigger;
-
 /**
  * Created by root on 20/08/14.
  */
 public class Profile {
-
     private final String iD;
-    private final ArrayList<Command> commands;
-    private final ArrayList<Trigger> triggers;
+    private final String name;
+    private final ArrayList<String> commands;
+    private final ArrayList<String> triggers;
     private final int priority;
 
-    public Profile(String iD, ArrayList<Command> commands, ArrayList<Trigger> triggers, int priority) {
-        this.triggers = triggers;
+    public Profile(String iD, String name, String trigger, String command, int priority) {
         this.iD = iD;
-        this.commands = commands;
         this.priority = priority;
+        this.name = name;
+
+        this.triggers = new ArrayList<>();
+        for (String s : trigger.split(",")) {
+            triggers.add(s);
+        }
+
+        this.commands = new ArrayList<>();
+        for (String s : command.split(",")) {
+            commands.add(s);
+        }
+
     }
 
 
-    public String getID() {
+    public String getName() {
+        return name;
+    }
+
+    public String getiD() {
         return iD;
     }
 
 
-    public ArrayList<Command> getCommands() {
+    public int getPriority() {
+        return priority;
+    }
+
+    public ArrayList<String> getCommands() {
         return commands;
     }
 
-    public ArrayList<Trigger> getTriggers() {
+    public ArrayList<String> getTriggers() {
         return triggers;
     }
 
-    public int getPriority() {
-        return priority;
+    public String getID() {
+        return iD;
     }
 }

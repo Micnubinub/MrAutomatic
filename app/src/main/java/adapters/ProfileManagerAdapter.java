@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.micnubinub.mrautomatic.ProfileListItem;
+import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import tools.Utility;
  */
 public class ProfileManagerAdapter extends BaseAdapter {
     private final Context context;
-    private ArrayList<ProfileListItem> profiles;
+    private ArrayList<Profile> profiles;
 
-    public ProfileManagerAdapter(Context context, ArrayList<ProfileListItem> profiles) {
+    public ProfileManagerAdapter(Context context, ArrayList<Profile> profiles) {
         this.context = context;
         this.profiles = profiles;
     }
@@ -47,7 +47,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
-        final ProfileListItem profile = profiles.get(position);
+        final Profile profile = profiles.get(position);
 
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.material_profile_list_item, null);
@@ -100,7 +100,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
     }
 
 
-    public void setProfiles(ArrayList<ProfileListItem> profiles) {
+    public void setProfiles(ArrayList<Profile> profiles) {
         this.profiles = profiles;
         getCount();
     }

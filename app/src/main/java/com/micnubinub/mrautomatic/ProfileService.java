@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tools.Device;
 import tools.Utility;
 
 /**
@@ -40,32 +41,36 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
+//TODO FRIDAY :
 
     //Todo Onpreference changed listener
     //Todo private static scanInterval
     //Todo dont run service if>>
     //Todo           numProfiles =0
     //Todo       allProfiles can be handled with broadcasts
-    //Todo make sure you have ald values saved before a scan, and reset them after, before setting the profile
+    //Todo make sure you have old values saved before a scan, and reset them after, before setting the profile
     //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
+    //Todo use this android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED
+    //Todo use this android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED
+    //Todo use this android.intent.action.ACTION_POWER_CONNECTED, android.intent.action.ACTION_POWER_DISCONNECTED
+    //Todo use this android.intent.action.DATA_SMS_RECEIVED
+    //Todo use this android.intent.action.DOCK_EVENT
+
+
+
     //Todo get profiles on each scan
     //Todo have all the listed broadcast receivers work in parallel
     //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
     //Todo group scans, so that scans happen once per respective adapter>>
     //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
 
-    //Todo use this android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED
-    //Todo use this android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED
-    //Todo use this android.intent.action.ACTION_POWER_CONNECTED, android.intent.action.ACTION_POWER_DISCONNECTED
-    //Todo use this android.intent.action.DATA_SMS_RECEIVED
-    //Todo use this android.intent.action.DOCK_EVENT
+
     //Todo use this android.intent.action.PACKAGE_ADDED
     //Todo use this android.intent.action.SCREEN_OFF , android.intent.action.SCREEN_ON
     //Todo use this android.net.wifi.WIFI_STATE_CHANGED
     //Todo use this android.provider.Telephony.SMS_RECEIVED
     //Todo use this android.intent.action.BATTERY_CHANGED
 
-    private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
@@ -76,6 +81,7 @@ public class ProfileService extends Service {
     };
     private static final ArrayList<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
     private static final ArrayList<Profile> viableProfiles = new ArrayList<Profile>();
+    private static BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static PendingIntent alarmIntent;
     private static AlarmManager alarmManager;
     private static List<ScanResult> wifiScanResults;
@@ -105,6 +111,7 @@ public class ProfileService extends Service {
     //Todo
     int media_volume, notification_value, incoming_call_volume, alarm_volume;
     private SQLiteDatabase profiledb;
+    private ScanListener bluetoothScanLListener, wifiScanLListener;
     private boolean newBluetothArray = false;
     private boolean newWifiArray = false;
     private boolean scan = true;
@@ -384,6 +391,38 @@ public class ProfileService extends Service {
 
     }
 
+    private void checkProfiles(ArrayList<Profile> profiles) {
+        if (profiles == null)
+            return;
+
+
+    }
+
+    private void getAdapter() {
+        if (adapter == null)
+            adapter = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    private void getWifiManager() {
+        if (wifiManager == null)
+            wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+
+    }
+
+    private void getAdapters(ArrayList<Profile> profiles) {
+        //Todo may be a waste of time
+        boolean getBluetoothAdapter, getWifiAdapter;
+
+        for (Profile profile : profiles) {
+            if (profile.getTriggers().contains(Utility.TRIGGER_WIFI_BSSID) || profile.getTriggers().contains(Utility.TRIGGER_WIFI_SSID))
+                getWifiAdapter = true;
+
+            if (profile.getTriggers().contains(Utility.TRIGGER_BLUETOOTH_BSSID) || profile.getTriggers().contains(Utility.TRIGGER_BLUETOOTH_SSID))
+                getBluetoothAdapter = true;
+
+        }
+    }
+
     private void checkBattery(final Profile profile) {
 
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -457,6 +496,7 @@ public class ProfileService extends Service {
     }
 
     private void checkWifiDevices(final Profile profile) {
+
         for (ScanResult scanResult : wifiScanResults) {
             if (scanResult.BSSID.toString().equals(profile.getTrigger()))
                 viableProfiles.add(profile);
@@ -503,6 +543,11 @@ public class ProfileService extends Service {
             newWifiArray = false;
             newBluetothArray = false;
         }
+    }
+
+    //Todo use this interface to for wifi and bluetooth
+    interface ScanListener {
+        void onScanComplete(ArrayList<Device> devices);
     }
 
     public static class BootUp extends BroadcastReceiver {
