@@ -2,6 +2,7 @@ package tools;
 
 import android.app.WallpaperManager;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.net.wifi.WifiManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.ProfileDBHelper;
@@ -41,10 +43,11 @@ public class Utility {
     public static final String TRIGGER_BLUETOOTH_SSID = "BLUETOOTH_SSID";
     public static final String TRIGGER_WIFI_BSSID = "WIFI_BSSID";
     public static final String TRIGGER_WIFI_SSID = "WIFI_SSID";
-    public static final String TRIGGER_APP_LAUNCH = "TRIGGER_APP_LAUNCH";
+    public static final String TRIGGER_APP_LAUNCH = "APP_LAUNCH";
     public static final String TRIGGER_LOCATION = "LOCATION";
     public static final String TRIGGER_TIME = "TIME";
-    public static final String TRIGGER_EARPHONE_JACK = "TRIGGER_EARPHONE_JACK";
+    public static final String TRIGGER_DOCK = "DOCK";
+    public static final String TRIGGER_EARPHONE_JACK = "EARPHONE_JACK";
     public static final String TRIGGER_NFC = "NFC";
     public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
 
@@ -434,6 +437,9 @@ public class Utility {
     public static class EarphoneJackReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //Todo test using car
+            //Todo apply
+
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
 
@@ -447,8 +453,68 @@ public class Utility {
                     default:
                         // "I have no idea what the headset state is");
                 }
+
+                Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
+                return;
             }
+
+            if (BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED.equals(intent.getAction()))
+                Toast.makeText(context, "bluetooth", Toast.LENGTH_LONG).show();
         }
     }
 
+    public static class BatteryPowerReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED))
+                Toast.makeText(context, "Charging", Toast.LENGTH_LONG).show();
+
+            if (intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED))
+                Toast.makeText(context, "Not Charging", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public static class BluetoothStateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED))
+                Toast.makeText(context, "Bluetooth connection state changed", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public static class DockReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_DOCK_EVENT))
+                Toast.makeText(context, "Dock event", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public static class SmsReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "Message received", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    public static class ScreenOnOffReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "onoff", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+
+    public static class WifiStateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "Wifi state c", Toast.LENGTH_LONG).show();
+
+        }
+    }
 }

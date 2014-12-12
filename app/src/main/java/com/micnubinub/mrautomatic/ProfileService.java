@@ -20,12 +20,9 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,26 +47,15 @@ public class ProfileService extends Service {
     //Todo       allProfiles can be handled with broadcasts
     //Todo make sure you have old values saved before a scan, and reset them after, before setting the profile
     //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
-    //Todo use this android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED
-    //Todo use this android.bluetooth.headset.profile.action.CONNECTION_STATE_CHANGED
-    //Todo use this android.intent.action.ACTION_POWER_CONNECTED, android.intent.action.ACTION_POWER_DISCONNECTED
-    //Todo use this android.intent.action.DATA_SMS_RECEIVED
-    //Todo use this android.intent.action.DOCK_EVENT
-
-
 
     //Todo get profiles on each scan
     //Todo have all the listed broadcast receivers work in parallel
     //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
     //Todo group scans, so that scans happen once per respective adapter>>
     //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
-
+    //Todo just save trigger as is, check if its a bssid by checking if it has 3 :s
 
     //Todo use this android.intent.action.PACKAGE_ADDED
-    //Todo use this android.intent.action.SCREEN_OFF , android.intent.action.SCREEN_ON
-    //Todo use this android.net.wifi.WIFI_STATE_CHANGED
-    //Todo use this android.provider.Telephony.SMS_RECEIVED
-    //Todo use this android.intent.action.BATTERY_CHANGED
 
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -84,37 +70,18 @@ public class ProfileService extends Service {
     private static BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static PendingIntent alarmIntent;
     private static AlarmManager alarmManager;
-    private static List<ScanResult> wifiScanResults;
     private static Cursor cursor;
     private static WifiManager wifiManager;
+    private static ArrayList<Profile> profiles;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            Toast.makeText(getBaseContext(), "Scanning", Toast.LENGTH_SHORT).show();
-            checkProfiles();
-            Log.e("Chk", "Done checking");
-            Log.e("viable prof", viableProfiles.toString());
-        }
-    };
     boolean trigger_found;
     int scan_interval, retries;
-    int bluetooth_old_value, wifi_old_value, current_count, battery_count, wifi_value, bluetooth_value, autobrightness_value, brightness, haptic_feedback_value, gps_value, data_int, sleep_timeout, accountsync_value, airplane_mode_value;
-    //Todo make a final array list of type Profile
-    //Todo make a thread that checks everything
-    //Todo make an array list of triggered profiles, then add them into a new array list
-    //Todo sort that array list in order of priority, then execute the highest priority
-    //Todo make a method that runs at the beginning that checks if the user has
-    //Todo SystemClock.sleep(10000)
-    //Todo
-    //Todo
-    //Todo
-    int media_volume, notification_value, incoming_call_volume, alarm_volume;
+    int bluetooth_old_value, wifi_old_value;
+    //Todo Sort array by combo number
     private SQLiteDatabase profiledb;
     private ScanListener bluetoothScanLListener, wifiScanLListener;
     private boolean newBluetothArray = false;
     private boolean newWifiArray = false;
-    private boolean scan = true;
 
     public static void scheduleNext(Context context, boolean load) {
 
@@ -149,6 +116,10 @@ public class ProfileService extends Service {
         }
     }
 
+    public static ArrayList<Profile> getProfiles() {
+        return profiles;
+    }
+
     private ArrayList<BluetoothDevice> findBluetoothDevices() {
 
         try {
@@ -176,8 +147,9 @@ public class ProfileService extends Service {
 
         //Todo consider making the string "profile" an ID rather than a bssid
         final Notification.Builder builder = new Notification.Builder(this)
-                //   .setSmallIcon(R.drawable.service_running, 0)
+                // Todo  .setSmallIcon(R.drawable.service_running, 0)
                 .setContentTitle("Notification:")
+                .setOngoing(true)
                 .setContentText("Content");
         Notification notification = buildForJellyBean(builder);
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
@@ -194,6 +166,7 @@ public class ProfileService extends Service {
     }
 
     public void getOldValues() {
+        //Todo check this
         if (adapter.isEnabled())
             bluetooth_old_value = 1;
         else
@@ -215,15 +188,11 @@ public class ProfileService extends Service {
             adapter.enable();
         }
 
-        if (wifi_old_value == 0) {
-            Log.e("Setting old values", "wifi was off");
-            wifiManager.setWifiEnabled(false);
-        } else
-            wifiManager.setWifiEnabled(true);
+        wifiManager.setWifiEnabled(wifi_old_value > 0);
     }
 
-    private ArrayList<Profile> getProfiles() {
-        ArrayList<Profile> profiles = new ArrayList<Profile>();
+    private ArrayList<Profile> refreshProfiles() {
+        profiles = new ArrayList<Profile>();
         profiledb = profileDBHelper.getReadableDatabase();
 
         cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, new String[]{ProfileDBHelper.ID, ProfileDBHelper.PRIORITY, ProfileDBHelper.TRIGGER_DEVICE_TYPE, ProfileDBHelper.BSSID}, null, null, null, null, null);
@@ -239,7 +208,8 @@ public class ProfileService extends Service {
                         )
                 );
             } catch (Exception e) {
-            }}
+            }
+        }
         try {
             cursor.close();
             profiledb.close();
@@ -250,96 +220,19 @@ public class ProfileService extends Service {
     }
 
     private void getProfile(String profile_id) {
-
-        profiledb = profileDBHelper.getReadableDatabase();
         setOldValues();
-        final String[] need = new String[]{ProfileDBHelper.WIFI, ProfileDBHelper.TRIGGER_DEVICE_TYPE, ProfileDBHelper.DATA_VALUE, ProfileDBHelper.BLUETOOTH, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.ALARM, ProfileDBHelper.SOUND_MEDIA, ProfileDBHelper.SOUND_NOTIFICATION, ProfileDBHelper.SOUND_PHONE_CALL, ProfileDBHelper.BRIGHTNESS, ProfileDBHelper.BRIGHTNESS_MODE, ProfileDBHelper.BSSID};
-        //cursor = profile db.query(true, ProfileDBHelper.PROFILE_TABLE, need, ProfileDBHelper.BSSID + "=" + ID, null, null, null, null, null);
-        cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
 
 
         if (Integer.parseInt(profile_id) >= 0 && Integer.parseInt(profile_id) < cursor.getCount()) {
             cursor.moveToPosition(Integer.parseInt(profile_id));
             profiledb.close();
             cursor.close();
-            setProfile();
 
         } else {
             Log.e("Made it to get profile", "but trigger wasn't found");
             cursor.close();
             profiledb.close();
         }
-    }
-
-    private void setProfile() {
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, notification_value);
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, media_volume);
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_ALARM, alarm_volume);
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_RING, incoming_call_volume);
-
-        if (bluetooth_value != 1) {
-            if (adapter.isEnabled())
-                adapter.disable();
-            else if (!adapter.isEnabled())
-                adapter.enable();
-        }
-
-        wifiManager.setWifiEnabled(!(wifi_value == 0));
-
-        if (autobrightness_value != 1) {
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightness);
-        } else {
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-        }
-
-        int time_out = 60;
-        switch (sleep_timeout) {
-
-            case 0:
-                time_out = 15;
-                break;
-            case 1:
-                time_out = 30;
-                break;
-            case 2:
-                time_out = 60;
-                break;
-            case 3:
-                time_out = 120;
-                break;
-            case 4:
-                time_out = 300;
-                break;
-            case 5:
-                time_out = 600;
-                break;
-            case 6:
-                time_out = 1800;
-                break;
-        }
-
-        time_out = time_out * 1000;
-        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, time_out);
-
-/*
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
-        switch (data_int) {
-            case 0:
-                connectivityManager.setNetworkPreference(ConnectivityManager.TYPE_MOBILE);
-                break;
-            case 1:
-                connectivityManager.startUsingNetworkFeature(connectivityManager.TYPE_MOBILE, "a")
-                break;
-            case 2:
-                data_value = "2g";
-                break;
-            case 3:
-                connectivityManager.stopUsingNetworkFeature(ConnectivityManager.TYPE_MOBILE, "android.net.conn.CONNECTIVITY_CHANGE");
-                break;
-        }
-*/
-
     }
 
     @Override
@@ -391,12 +284,6 @@ public class ProfileService extends Service {
 
     }
 
-    private void checkProfiles(ArrayList<Profile> profiles) {
-        if (profiles == null)
-            return;
-
-
-    }
 
     private void getAdapter() {
         if (adapter == null)
@@ -409,7 +296,7 @@ public class ProfileService extends Service {
 
     }
 
-    private void getAdapters(ArrayList<Profile> profiles) {
+    private void getAdapters() {
         //Todo may be a waste of time
         boolean getBluetoothAdapter, getWifiAdapter;
 
@@ -484,7 +371,7 @@ public class ProfileService extends Service {
         }
 
         wifiManager.startScan();
-        wifiScanResults = wifiManager.getScanResults();
+        //Todo  wifiScanResults = wifiManager.getScanResults(); >> use broadcast receiver
         newWifiArray = true;
 
         new Timer().schedule(new TimerTask() {
@@ -530,7 +417,7 @@ public class ProfileService extends Service {
         } catch (Exception w) {
         }
 
-        for (Profile profile : getProfiles()) {
+        for (Profile profile : refreshProfiles()) {
 //            if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
 //                checkBattery(profile);
 //            } else if (profile.getTriggerType().equals(Utility.TRIGGER_WIFI)) {
@@ -550,7 +437,7 @@ public class ProfileService extends Service {
         void onScanComplete(ArrayList<Device> devices);
     }
 
-    public static class BootUp extends BroadcastReceiver {
+    public static class BootUpReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
@@ -588,5 +475,6 @@ public class ProfileService extends Service {
 
         }
     }
+
 
 }
