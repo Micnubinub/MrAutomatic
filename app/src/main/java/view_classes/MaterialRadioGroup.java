@@ -10,16 +10,16 @@ import android.view.ViewGroup;
  */
 public class MaterialRadioGroup extends ViewGroup {
     private int selectedRadioButton = -1;
+    private OnSelectionChangedListener selectionChanged;
     private final MaterialRadioButton.OnCheckedChangedListener listener = new MaterialRadioButton.OnCheckedChangedListener() {
         @Override
-        public void onCheckedChange(MaterialRadioButton materialRadioButton, boolean isChecked) {
-            final int indexOfChild = indexOfChild(materialRadioButton);
-
+        public void onCheckedChange(MaterialRadioButton materialCheckBox, boolean isChecked) {
+            final int indexOfChild = indexOfChild(materialCheckBox);
             if (isChecked && !(selectedRadioButton == indexOfChild)) {
                 if (selectedRadioButton >= 0) {
-                    MaterialRadioButton materialRadioButton1 = (MaterialRadioButton) getChildAt(selectedRadioButton);
-                    materialRadioButton1.setChecked(false);
-                    materialRadioButton1.invalidate();
+                    MaterialRadioButton materialRadioButton = (MaterialRadioButton) getChildAt(selectedRadioButton);
+                    materialRadioButton.setChecked(false);
+                    materialRadioButton.invalidate();
                 }
             }
             if (selectedRadioButton == indexOfChild) {
@@ -27,6 +27,9 @@ public class MaterialRadioGroup extends ViewGroup {
             } else {
                 selectedRadioButton = indexOfChild;
             }
+
+            if (selectionChanged != null)
+                selectionChanged.onSelectionChanged((MaterialRadioButton) getChildAt(selectedRadioButton), selectedRadioButton);
         }
     };
 
@@ -74,7 +77,6 @@ public class MaterialRadioGroup extends ViewGroup {
         //Todo  measureChildWithMargins()
         //Todo xmlns:custom="http://schemas.android.com/apk/res/com.packa..."
 
-        measureChildren(widthMeasureSpec, heightMeasureSpec);
 
         int measuredHeight = 0;
         int measuredWidth = 0;
@@ -82,10 +84,8 @@ public class MaterialRadioGroup extends ViewGroup {
         for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
-                //   child.measure(widthMeasureSpec, heightMeasureSpec);
                 measureChild(child, widthMeasureSpec, heightMeasureSpec);
                 measuredHeight += child.getMeasuredHeight();
-                // measuredHeight = Math.max(measuredHeight, child.getMeasuredHeight());
                 measuredWidth = Math.max(measuredWidth, child.getMeasuredWidth());
             }
         }
@@ -93,31 +93,7 @@ public class MaterialRadioGroup extends ViewGroup {
                 resolveSizeAndState(measuredHeight, heightMeasureSpec, 0));
 
     }
-
-    @Override
-    public void addView(View child) {
-        addListener((MaterialRadioButton) child);
-        super.addView(child);
-    }
-
-    @Override
-    public void addView(View child, int index) {
-        addListener((MaterialRadioButton) child);
-        super.addView(child, index);
-    }
-
-    @Override
-    public void addView(View child, int width, int height) {
-        addListener((MaterialRadioButton) child);
-        super.addView(child, width, height);
-
-    }
-
-    @Override
-    public void addView(View child, LayoutParams params) {
-        addListener((MaterialRadioButton) child);
-        super.addView(child, params);
-    }
+    //Todo check if everything works fine, cause you removed all the other addView(...)s
 
     @Override
     public void addView(View child, int index, LayoutParams params) {
@@ -125,12 +101,19 @@ public class MaterialRadioGroup extends ViewGroup {
         super.addView(child, index, params);
     }
 
-    private void addListener(MaterialRadioButton materialRadioButton) {
+    private void addListener(MaterialRadioButton materialCheckBox) {
         try {
-            materialRadioButton.setOnCheckedChangeListener(listener);
-        } catch (Exception e) {
+            materialCheckBox.setOnCheckedChangeListener(listener);
+            materialCheckBox.setChecked(false);
+        } catch (Exception ignored) {
         }
     }
 
+    public void setOnSelectionChanged(OnSelectionChangedListener selectionChanged) {
+        this.selectionChanged = selectionChanged;
+    }
 
+    public interface OnSelectionChangedListener {
+        public void onSelectionChanged(MaterialRadioButton radioButton, int selectedChild);
+    }
 }

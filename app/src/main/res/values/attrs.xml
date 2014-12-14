@@ -4,10 +4,13 @@
         <attr name="checked" format="boolean" />
         <attr name="text" format="string" />
         <attr name="textSize" format="integer" />
+        <attr name="direction" format="integer" />
+        <attr name="textColor" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="AppIcon">
         <attr name="textf" format="string" />
         <attr name="image" format="integer" />
     </declare-styleable>
+
 </resources>

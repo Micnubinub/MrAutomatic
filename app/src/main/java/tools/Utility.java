@@ -11,6 +11,7 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.SystemClock;
@@ -35,6 +36,9 @@ import java.util.List;
  */
 public class Utility {
 
+
+    //Todo add Auto (captures current potential triggers andshows a dialog to choose/remove triggers)
+    //Todo add help, explain the difference between bssid and ssid
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
@@ -355,14 +359,6 @@ public class Utility {
     }
 
 
-    public static void setAccountSync(Context context, int value) {
-        try {
-            //Todo account sync
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void playMusic(Context context) {
         try {
             final long eventTime = SystemClock.uptimeMillis();
@@ -399,7 +395,22 @@ public class Utility {
 
     public static void setSilentMode(Context context, int value) {
         try {
-            //Todo silent might change this to ringer mode
+
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            switch (value) {
+                case 0:
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
+                    break;
+                case 1:
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    break;
+                case 2:
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    break;
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
