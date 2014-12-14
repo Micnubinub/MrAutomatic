@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
+import com.micnubinub.mrautomatic.R;
+
 
 /**
  * Created by root on 30/09/14.
@@ -247,7 +249,6 @@ public class MaterialSwitch extends ViewGroup {
         PADDING = dpToPixels(4);
 
         materialSwitch = new Switch(getContext());
-
         materialSwitch.setLayoutParams(new LayoutParams(dpToPixels(35), dpToPixels(20)));
         setPadding(PADDING, PADDING, PADDING, PADDING);
 
@@ -255,8 +256,8 @@ public class MaterialSwitch extends ViewGroup {
         PADDING = dpToPixels(5);
         textView.setPadding(PADDING, PADDING, PADDING, PADDING);
         textView.setTextColor(getResources().getColor(R.color.dark_grey_text));
-        textView.setTextSize(18);
-        textView.setMaxLines(2);
+        textView.setTextSize(textSize);
+        textView.setMaxLines(1);
         textView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
 

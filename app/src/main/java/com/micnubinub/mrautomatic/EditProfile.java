@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -21,21 +20,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import adapters.BluetoothListAdapter;
-import adapters.WifiListAdapter;
-import tools.Utility;
-import tools.WirelessDevice;
-import view_classes.MaterialSeekBar;
-import view_classes.MaterialSwitch;
 
 /**
  * Created by root on 21/08/14.
@@ -66,39 +56,39 @@ public class EditProfile extends Activity {
                     EditProfile.this.finish();
                     break;
                 case R.id.trigger:
-                    trigger().show();
+                    // trigger().show();
                     break;
-                case R.id.airplane_mode_click_view:
-                    airplane_mode_click_view().show();
-                    break;
-                case R.id.bluetooth_click_view:
-                    bluetooth_click_view().show();
-                    break;
-
-                case R.id.data_mode_click_view:
-                    data_mode_click_view().show();
-                    break;
-                case R.id.gps_click_view:
-                    gps_click_view().show();
-                    break;
-                case R.id.haptic_click_view:
-                    haptic_click_view().show();
-                    break;
-                case R.id.screen_settings_click_view:
-                    screen_settings_click_view().show();
-                    break;
-                case R.id.sound_click_view:
-                    sound_click_view().show();
-                    break;
-                case R.id.silent_mode_click_view:
-                    silent_mode_click_view().show();
-                    break;
-                case R.id.wifi_click_view:
-                    wifi_click_view().show();
-                    break;
-                case R.id.sync_click_view:
-                    sync_click_view().show();
-                    break;
+//                case R.id.airplane_mode_click_view:
+//                    airplane_mode_click_view().show();
+//                    break;
+//                case R.id.bluetooth_click_view:
+//                    bluetooth_click_view().show();
+//                    break;
+//
+//                case R.id.data_mode_click_view:
+//                    data_mode_click_view().show();
+//                    break;
+//                case R.id.gps_click_view:
+//                    gps_click_view().show();
+//                    break;
+//                case R.id.haptic_click_view:
+//                    haptic_click_view().show();
+//                    break;
+//                case R.id.screen_settings_click_view:
+//                    screen_settings_click_view().show();
+//                    break;
+//                case R.id.sound_click_view:
+//                    sound_click_view().show();
+//                    break;
+//                case R.id.silent_mode_click_view:
+//                    silent_mode_click_view().show();
+//                    break;
+//                case R.id.wifi_click_view:
+//                    wifi_click_view().show();
+//                    break;
+//                case R.id.sync_click_view:
+//                    sync_click_view().show();
+//                    break;
 
 
             }
@@ -113,29 +103,29 @@ public class EditProfile extends Activity {
             }
 
             switch (v.getId()) {
-                case R.id.wifi_click_view:
-                    wifiDevicePicker().show();
-                    break;
-                case R.id.bluetooth_click_view:
-                    bluetoothDevicePicker().show();
-
-                    break;
-                case R.id.time_click_view:
-                    timePicker().show();
-
-                    break;
-                case R.id.gps_click_view:
-                    locationPicker().show();
-
-                    break;
-                case R.id.nfc_click_view:
-                    nfcDevicePicker().show();
-
-                    break;
-                case R.id.battery_click_view:
-                    batteryPiker().show();
-
-                    break;
+//                case R.id.wifi_click_view:
+//                    wifiDevicePicker().show();
+//                    break;
+//                case R.id.bluetooth_click_view:
+//                    bluetoothDevicePicker().show();
+//
+//                    break;
+//                case R.id.time_click_view:
+//                    timePicker().show();
+//
+//                    break;
+//                case R.id.gps_click_view:
+//                    locationPicker().show();
+//
+//                    break;
+//                case R.id.nfc_click_view:
+//                    nfcDevicePicker().show();
+//
+//                    break;
+//                case R.id.battery_click_view:
+//                    batteryPiker().show();
+//
+//                    break;
             }
         }
     };
@@ -222,7 +212,7 @@ public class EditProfile extends Activity {
 
         profiledb = profileDBHelper.getWritableDatabase();
         if (!trigger_device_picked || bssid == "") {
-            trigger().show();
+            //trigger().show();
             Toast.makeText(this, "You need a trigger device", Toast.LENGTH_LONG).show();
         } else {
 
@@ -361,26 +351,26 @@ public class EditProfile extends Activity {
         trigger_text_view = (TextView) findViewById(R.id.trigger);
         trigger_text_view.setOnClickListener(listener);
 
-        profile_name = (EditText) findViewById(R.id.profile_name);
-
-        findViewById(R.id.airplane_mode_click_view).setOnClickListener(listener);
-        findViewById(R.id.bluetooth_click_view).setOnClickListener(listener);
-        findViewById(R.id.save).setOnClickListener(listener);
-        findViewById(R.id.cancel).setOnClickListener(listener);
-        findViewById(R.id.data_mode_click_view).setOnClickListener(listener);
-        findViewById(R.id.gps_click_view).setOnClickListener(listener);
-        findViewById(R.id.haptic_click_view).setOnClickListener(listener);
-        findViewById(R.id.screen_settings_click_view).setOnClickListener(listener);
-        findViewById(R.id.sound_click_view).setOnClickListener(listener);
-        findViewById(R.id.silent_mode_click_view).setOnClickListener(listener);
-        findViewById(R.id.wifi_click_view).setOnClickListener(listener);
-        findViewById(R.id.sync_click_view).setOnClickListener(listener);
+//        profile_name = (EditText) findViewById(R.id.profile_name);
+//
+//        findViewById(R.id.airplane_mode_click_view).setOnClickListener(listener);
+//        findViewById(R.id.bluetooth_click_view).setOnClickListener(listener);
+//        findViewById(R.id.save).setOnClickListener(listener);
+//        findViewById(R.id.cancel).setOnClickListener(listener);
+//        findViewById(R.id.data_mode_click_view).setOnClickListener(listener);
+//        findViewById(R.id.gps_click_view).setOnClickListener(listener);
+//        findViewById(R.id.haptic_click_view).setOnClickListener(listener);
+//        findViewById(R.id.screen_settings_click_view).setOnClickListener(listener);
+//        findViewById(R.id.sound_click_view).setOnClickListener(listener);
+//        findViewById(R.id.silent_mode_click_view).setOnClickListener(listener);
+//        findViewById(R.id.wifi_click_view).setOnClickListener(listener);
+//        findViewById(R.id.sync_click_view).setOnClickListener(listener);
     }
 
     public void getProfileValues(String ID) {
 
         profiledb = profileDBHelper.getReadableDatabase();
-        cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
+        // cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         cursor.moveToPosition(Integer.parseInt(ID));
 
         update_profile = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID));
@@ -398,318 +388,318 @@ public class EditProfile extends Activity {
         }
     }
 
-    private Dialog airplane_mode_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_airplane);
+//    private Dialog airplane_mode_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_airplane);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.airplane_mode_switch);
+//        materialSwitch.setChecked(airplane_mode_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                airplane_mode_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog bluetooth_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_bluetooth);
+//
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.bluetooth_switch);
+//        materialSwitch.setChecked(bluetooth_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                bluetooth_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog data_mode_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//
+//        return dialog;
+//    }
+//
+//    private Dialog gps_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_gps);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.gps_switch);
+//        materialSwitch.setChecked(gps_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                gps_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog haptic_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_haptic_feedback);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.haptic_switch);
+//        materialSwitch.setChecked(haptic_feedback_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                haptic_feedback_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog screen_settings_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_screen_settings);
+//        final View brightnessBarLayout = dialog.findViewById(R.id.brightness_seekbar_layout);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.auto_brightness_switch);
+//        materialSwitch.setChecked(autobrightness_value == 1 ? true : false);
+////        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
+////            @Override
+////            public void onCheckedChange(boolean isChecked) {
+////                if (!isChecked) {
+////                    brightnessBarLayout.setVisibility(View.VISIBLE);
+////                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+////
+////                } else {
+////                    brightnessBarLayout.setVisibility(View.GONE);
+////                    try {
+////                        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+////                    } catch (Exception e) {
+////                    }
+////                }
+////
+//                brightness_auto = isChecked ? 1 : 0;
+//            }
+//        });
 
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.airplane_mode_switch);
-        materialSwitch.setChecked(airplane_mode_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                airplane_mode_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog bluetooth_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_bluetooth);
-
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.bluetooth_switch);
-        materialSwitch.setChecked(bluetooth_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                bluetooth_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog data_mode_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-
-        return dialog;
-    }
-
-    private Dialog gps_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_gps);
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.gps_switch);
-        materialSwitch.setChecked(gps_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                gps_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog haptic_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_haptic_feedback);
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.haptic_switch);
-        materialSwitch.setChecked(haptic_feedback_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                haptic_feedback_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog screen_settings_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_screen_settings);
-        final View brightnessBarLayout = dialog.findViewById(R.id.brightness_seekbar_layout);
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.auto_brightness_switch);
-        materialSwitch.setChecked(autobrightness_value == 1 ? true : false);
-        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
-            @Override
-            public void onCheckedChange(boolean isChecked) {
-                if (!isChecked) {
-                    brightnessBarLayout.setVisibility(View.VISIBLE);
-                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-
-                } else {
-                    brightnessBarLayout.setVisibility(View.GONE);
-                    try {
-                        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-                    } catch (Exception e) {
-                    }
-                }
-
-                brightness_auto = isChecked ? 1 : 0;
-            }
-        });
-
-        final MaterialSeekBar brightness = (MaterialSeekBar) dialog.findViewById(R.id.brightness_seekbar_level);
-        brightness.setMax(255);
-        try {
-            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-            brightness.setProgress(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS));
-        } catch (Settings.SettingNotFoundException e) {
-        }
-
-
-        brightness.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
-            @Override
-            public void onProgressChanged(int progress) {
-                brightness_value = progress;
-                Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (brightness_auto_old_value != 1) {
-                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightness_old_value);
-                } else {
-                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-                }
-            }
-        });
-
-        return dialog;
-    }
-
-    private Dialog sound_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_sound_volumes);
-        return dialog;
-    }
-
-    private Dialog silent_mode_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-
-        /*final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
-        materialSwitch.setChecked(wifi_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                wifi_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });*/
-        return dialog;
-    }
-
-    private Dialog wifi_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_wifi);
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
-        materialSwitch.setChecked(wifi_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                wifi_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog sync_click_view() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_sync);
-
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.sync_switch);
-        materialSwitch.setChecked(sync_value == 1 ? true : false);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                sync_value = materialSwitch.isChecked() ? 1 : 0;
-            }
-        });
-        return dialog;
-    }
-
-    private Dialog trigger() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_trigger_chooser);
-        dialog.findViewById(R.id.wifi_click_view).setOnClickListener(triggerDialogClick);
-        dialog.findViewById(R.id.bluetooth_click_view).setOnClickListener(triggerDialogClick);
-        dialog.findViewById(R.id.time_click_view).setOnClickListener(triggerDialogClick);
-        dialog.findViewById(R.id.gps_click_view).setOnClickListener(triggerDialogClick);
-        dialog.findViewById(R.id.nfc_click_view).setOnClickListener(triggerDialogClick);
-        dialog.findViewById(R.id.battery_click_view).setOnClickListener(triggerDialogClick);
-        return dialog;
-    }
-
-    private Dialog wifiDevicePicker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_wireless_scanner_bluetooth_wifi);
-
-        ListView listView = (ListView) dialog.findViewById(R.id.list);
-        final WifiListAdapter wifiListAdapter = new WifiListAdapter(this);
-        listView.setAdapter(wifiListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trigger_device_picked = true;
-                trigger_type = Utility.TRIGGER_WIFI;
-                bssid = ((WirelessDevice) wifiListAdapter.getItem(position)).getBssid();
-                wifiListAdapter.setSelectedItem(position);
-            }
-        });
-
-        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        return dialog;
-    }
-
-    private Dialog bluetoothDevicePicker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_wireless_scanner_bluetooth_wifi);
-        ListView listView = (ListView) dialog.findViewById(R.id.list);
-        final BluetoothListAdapter bluetoothListAdapter = new BluetoothListAdapter(this);
-        listView.setAdapter(bluetoothListAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                trigger_device_picked = true;
-                trigger_type = Utility.TRIGGER_BLUETOOTH;
-                bssid = ((WirelessDevice) bluetoothListAdapter.getItem(position)).getBssid();
-                bluetoothListAdapter.setSelectedItem(position);
-            }
-        });
-
-        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        return dialog;
-    }
-
-    private Dialog timePicker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-
-        return dialog;
-    }
-
-    private Dialog locationPicker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-
-        return dialog;
-    }
-
-    private Dialog nfcDevicePicker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-        return dialog;
-    }
-
-    private Dialog batteryPiker() {
-        dialog = new Dialog(this, R.style.CustomDialog);
-
-        dialog.setContentView(R.layout.material_profile_manager_battery);
-        final View batteryBarLayout = dialog.findViewById(R.id.battery_seekbar_layout);
-        final MaterialSeekBar battery_seekbar = (MaterialSeekBar) dialog.findViewById(R.id.battery_seekbar_level);
-        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.battery_charging_switch);
-        final TextView percentage = (TextView) dialog.findViewById(R.id.battery_percentage);
-        //Todo charging is -1
-        battery_seekbar.setMax(100);
-        battery_seekbar.setProgress(50);
-        bssid = "50";
-        percentage.setText("Battery level: " + bssid + "%");
-
-        materialSwitch.setChecked(battery_level == -1 ? true : false);
-        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
-            @Override
-            public void onCheckedChange(boolean isChecked) {
-                if (!isChecked)
-                    batteryBarLayout.setVisibility(View.VISIBLE);
-                else
-                    batteryBarLayout.setVisibility(View.GONE);
-            }
-        });
-
-        battery_seekbar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
-            @Override
-            public void onProgressChanged(int progress) {
-                bssid = String.valueOf(progress);
-                percentage.setText("Battery level: " + bssid + "%");
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                trigger_type = Utility.TRIGGER_BATTERY;
-                trigger_device_picked = true;
-                if (materialSwitch.isChecked())
-                    bssid = String.valueOf(-1);
-            }
-        });
-
-        return dialog;
-    }
+//        final MaterialSeekBar brightness = (MaterialSeekBar) dialog.findViewById(R.id.brightness_seekbar_level);
+//        brightness.setMax(255);
+//        try {
+//            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//            brightness.setProgress(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS));
+//        } catch (Settings.SettingNotFoundException e) {
+//        }
+//
+//
+////        brightness.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+////            @Override
+////            public void onProgressChanged(int progress) {
+////                brightness_value = progress;
+////                Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
+////            }
+////        });
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                if (brightness_auto_old_value != 1) {
+//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightness_old_value);
+//                } else {
+//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+//                }
+//            }
+//        });
+//
+//        return dialog;
+//    }
+////
+////    private Dialog sound_click_view() {
+////        dialog = new Dialog(this, R.style.CustomDialog);
+////
+////        dialog.setContentView(R.layout.material_profile_manager_sound_volumes);
+////        return dialog;
+////    }
+////
+////    private Dialog silent_mode_click_view() {
+////        dialog = new Dialog(this, R.style.CustomDialog);
+////
+////        dialog.setContentView(R.layout.material_profile_manager_silentmode);
+////
+////        /*final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
+////        materialSwitch.setChecked(wifi_value == 1 ? true : false);
+////
+////        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+////            @Override
+////            public void onDismiss(DialogInterface dialog) {
+//                wifi_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });*/
+//        return dialog;
+//    }
+//
+//    private Dialog wifi_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_wifi);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
+//        materialSwitch.setChecked(wifi_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                wifi_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog sync_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_sync);
+//
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.sync_switch);
+//        materialSwitch.setChecked(sync_value == 1 ? true : false);
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                sync_value = materialSwitch.isChecked() ? 1 : 0;
+//            }
+//        });
+//        return dialog;
+//    }
+//
+//    private Dialog trigger() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_trigger_chooser);
+//        dialog.findViewById(R.id.wifi_click_view).setOnClickListener(triggerDialogClick);
+//        dialog.findViewById(R.id.bluetooth_click_view).setOnClickListener(triggerDialogClick);
+//        dialog.findViewById(R.id.time_click_view).setOnClickListener(triggerDialogClick);
+//        dialog.findViewById(R.id.gps_click_view).setOnClickListener(triggerDialogClick);
+//        dialog.findViewById(R.id.nfc_click_view).setOnClickListener(triggerDialogClick);
+//        dialog.findViewById(R.id.battery_click_view).setOnClickListener(triggerDialogClick);
+//        return dialog;
+//    }
+//
+//    private Dialog wifiDevicePicker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_wireless_scanner_bluetooth_wifi);
+//
+//        ListView listView = (ListView) dialog.findViewById(R.id.list);
+//        final WifiListAdapter wifiListAdapter = new WifiListAdapter(this);
+//        listView.setAdapter(wifiListAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                trigger_device_picked = true;
+//               // trigger_type = Utility.TRIGGER_WIFI;
+//                bssid = ((WirelessDevice) wifiListAdapter.getItem(position)).getBssid();
+//                wifiListAdapter.setSelectedItem(position);
+//            }
+//        });
+//
+//        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+//        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+//        return dialog;
+//    }
+//
+//    private Dialog bluetoothDevicePicker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_wireless_scanner_bluetooth_wifi);
+//        ListView listView = (ListView) dialog.findViewById(R.id.list);
+//        final BluetoothListAdapter bluetoothListAdapter = new BluetoothListAdapter(this);
+//        listView.setAdapter(bluetoothListAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                trigger_device_picked = true;
+//                //trigger_type = Utility.TRIGGER_BLUETOOTH;
+//                bssid = ((WirelessDevice) bluetoothListAdapter.getItem(position)).getBssid();
+//                bluetoothListAdapter.setSelectedItem(position);
+//            }
+//        });
+//
+//        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+//        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+//        return dialog;
+//    }
+//
+//    private Dialog timePicker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
+//
+//        return dialog;
+//    }
+//
+//    private Dialog locationPicker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
+//
+//        return dialog;
+//    }
+//
+//    private Dialog nfcDevicePicker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
+//        return dialog;
+//    }
+//
+//    private Dialog batteryPiker() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//        dialog.setContentView(R.layout.material_profile_manager_battery);
+//        final View batteryBarLayout = dialog.findViewById(R.id.battery_seekbar_layout);
+//        final MaterialSeekBar battery_seekbar = (MaterialSeekBar) dialog.findViewById(R.id.battery_seekbar_level);
+//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.battery_charging_switch);
+//        final TextView percentage = (TextView) dialog.findViewById(R.id.battery_percentage);
+//        //Todo charging is -1
+//        battery_seekbar.setMax(100);
+//        battery_seekbar.setProgress(50);
+//        bssid = "50";
+//        percentage.setText("Battery level: " + bssid + "%");
+//
+//        materialSwitch.setChecked(battery_level == -1 ? true : false);
+////        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
+////            @Override
+////            public void onCheckedChange(boolean isChecked) {
+////                if (!isChecked)
+////                    batteryBarLayout.setVisibility(View.VISIBLE);
+////                else
+////                    batteryBarLayout.setVisibility(View.GONE);
+////            }
+////        });
+//
+////        battery_seekbar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+////            @Override
+////            public void onProgressChanged(int progress) {
+////                bssid = String.valueOf(progress);
+////                percentage.setText("Battery level: " + bssid + "%");
+////            }
+////        });
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                //trigger_type = Utility.TRIGGER_BATTERY;
+//                trigger_device_picked = true;
+//                if (materialSwitch.isChecked())
+//                    bssid = String.valueOf(-1);
+//            }
+//        });
+//
+//        return dialog;
+//    }
 
 
 }

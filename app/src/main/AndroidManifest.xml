@@ -28,7 +28,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -96,22 +96,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.DATA_SMS_RECEIVED" />
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="tools.Utility$SmsReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="tools.Utility$SmsReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.SCREEN_OFF" />
-                <action android:name="android.intent.action.SCREEN_ON" />
             </intent-filter>
         </receiver>
 
