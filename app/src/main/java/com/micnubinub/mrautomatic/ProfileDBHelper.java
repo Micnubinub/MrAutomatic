@@ -25,6 +25,7 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase profiledb) {
+        //Todo prohibit
         String sqlStatement = "create table " + PROFILE_TABLE
                 + " (" + ID + " integer primary key autoincrement not null,"
                 + PROFILE_NAME + " string not null,"

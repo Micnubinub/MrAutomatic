@@ -35,10 +35,9 @@ import java.util.List;
  * Created by root on 9/07/14.
  */
 public class Utility {
-
-
-    //Todo add Auto (captures current potential triggers andshows a dialog to choose/remove triggers)
+    //Todo add Auto (captures current potential triggers and shows a dialog to choose/remove triggers)
     //Todo add help, explain the difference between bssid and ssid
+    //Todo add restrictions, triggers, not triggered
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
@@ -60,12 +59,12 @@ public class Utility {
     public static final String DATA_SETTING = "DATA_SETTING";
     public static final String BRIGHTNESS_SETTING = "BRIGHTNESS_SETTING";
     public static final String BRIGHTNESS_AUTO_SETTING = "BRIGHTNESS_AUTO_SETTING";
-    //    public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
+    //public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
     public static final String SILENT_MODE_SETTING = "SILENT_MODE_SETTING";
     public static final String NOTIFICATION_VOLUME_SETTING = "NOTIFICATION_VOLUME_SETTING";
     public static final String MEDIA_VOLUME_SETTING = "MEDIA_VOLUME_SETTING";
     public static final String RINGER_VOLUME_SETTING = "RINGER_VOLUME_SETTING";
-    //    public static final String ACCOUNT_SYNC_SETTING = "ACCOUNT_SYNC_SETTING";
+    //public static final String ACCOUNT_SYNC_SETTING = "ACCOUNT_SYNC_SETTING";
     public static final String AUTO_ROTATION_SETTING = "AUTO_ROTATION_SETTING";
     public static final String SLEEP_TIMEOUT_SETTING = "SLEEP_TIMEOUT_SETTING";
     public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
@@ -73,6 +72,8 @@ public class Utility {
     public static final String LAUNCH_APP_SETTING = "LAUNCH_APP_SETTING";
     public static final String START_MUSIC_SETTING = "START_MUSIC_SETTING";
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
+
+    public static final String DURATION = "DURATION";
 
     /*
      public static final String a = " ";

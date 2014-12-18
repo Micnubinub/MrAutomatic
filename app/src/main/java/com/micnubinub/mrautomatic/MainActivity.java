@@ -17,6 +17,30 @@ import tools.Utility;
  * Created by root on 21/08/14.
  */
 public class MainActivity extends Activity {
+    //3 sections triggers, restrictions
+
+    //Triggers work at an OR basis, if any one of them is triggered, it will check through the restriction, if those
+    //are met, the profile will be set
+    //* there must be a minimum of one trigger
+    //Todo ad ID (from db) to Profile.class and make add that to Trigger.class too, so when checking the triggers you can track the profile easily
+
+    //Restrictions work on an and basis, they must ALL be satisfied, or else the profile won't be set
+
+    //Prohibited must NOT be triggered, or else the profile won't be set
+    //Todo add to database
+
+    //Todo refine these definitions, and come up with better words
+
+    /* <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        card_view:cardCornerRadius="4dp">
+     */
+
+
     private final AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

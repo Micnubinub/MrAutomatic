@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * Created by root on 20/08/14.
  */
 public class Profile {
+    //Todo prohibit
     private final String iD;
     private final String name;
     private final ArrayList<String> commands;
@@ -29,7 +30,6 @@ public class Profile {
         }
 
     }
-
 
     public String getName() {
         return name;
