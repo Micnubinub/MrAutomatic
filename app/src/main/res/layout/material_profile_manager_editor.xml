@@ -32,8 +32,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/save"
-            android:layout_marginLeft="72dp"
-            android:layout_marginRight="8dp"
+            android:layout_margin="8dp"
             android:ellipsize="end"
             android:fontFamily="sans"
             android:maxLines="1"
@@ -47,8 +46,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/a"
-            android:layout_marginLeft="72dp"
-            android:layout_marginRight="8dp"
+            android:layout_margin="8dp"
             android:background="@color/material_green_light"
             android:ellipsize="end"
             android:fontFamily="sans"
@@ -59,52 +57,6 @@
             android:textColorHint="@color/white_alpha"
             android:textSize="20sp" />
 
-
-        <TextView
-            android:id="@+id/b"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_name"
-            android:layout_marginLeft="72dp"
-            android:layout_marginRight="8dp"
-            android:ellipsize="end"
-            android:fontFamily="sans"
-            android:maxLines="1"
-            android:padding="6dp"
-            android:text="Trigger :"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/b"
-            android:layout_marginBottom="26dp">
-
-            <ImageView
-                android:id="@+id/trigger_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/fab"
-                android:scaleType="centerInside" />
-
-            <TextView
-                android:id="@+id/trigger"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/b"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/trigger_selector"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:padding="12dp"
-                android:text="Click to choose"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-        </LinearLayout>
 
 
     </RelativeLayout>
@@ -126,529 +78,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <Button
+                android:id="@+id/copy_from"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/white_button_selector"
+                android:padding="16dp"
+                android:text="Copy from"
+                android:textColor="@color/material_blue"
+                android:textSize="18sp" />
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Wifi"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/wifi_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns wifi on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/wifi_click_view"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
+            <include
+                android:id="@+id/triggers"
+                layout="@layout/scroll_view_item"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Bluetooth"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/bluetooth_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns bluetooth on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/bluetooth_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
+            <include
+                android:id="@+id/restriction"
+                layout="@layout/scroll_view_item"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="GPS"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/gps_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns GPS on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/gps_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
+            <include
+                android:id="@+id/prohibitions"
+                layout="@layout/scroll_view_item"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Screen settings"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/screen_timeout_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Set screen settings"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/screen_settings_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
+            <include
+                android:id="@+id/commands"
+                layout="@layout/scroll_view_item"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Sound"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/sound_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Sets the volume"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/sound_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Sync"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/sync_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Sets sync interval"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/sync_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Haptic feedback"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/haptic_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns vibration on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/haptic_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Silent mode"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/silent_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns silent mode on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/silent_mode_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Data"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/data_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns mobile data on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/data_mode_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="12dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/fab" />
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:padding="8dp"
-                    android:text="Airplane mode"
-                    android:textColor="@color/dark_grey_text"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/airplane_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="72dp"
-                    android:layout_marginRight="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="Turns airplane mode on or off"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp" />
-
-                <View
-                    android:id="@+id/airplane_mode_click_view"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:background="@drawable/profile_view_list_selector"
-                    android:minHeight="84dp" />
-            </RelativeLayout>
-
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

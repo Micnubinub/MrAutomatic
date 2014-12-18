@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -27,21 +28,30 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import tools.Command;
+import tools.Trigger;
+
 /**
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
+    //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
+    //Todo ad info button at the far right of a scrollview MenuItem
+    //Todo might wnd up removing the cards and makin the view flat
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
 // Get the BluetoothDevice object from the Intent
-                devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                //devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
             }
         }
     };
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-    private static ArrayList<BluetoothDevice> devices = new ArrayList<BluetoothDevice>();
-    private static Dialog dialog;
+    private static final ArrayList<Command> availableCommands = new ArrayList<Command>();
+    private static final ArrayList<Command> addedCommands = new ArrayList<Command>();
+    private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>();
+    private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>();
+    private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>();
 
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -98,7 +108,7 @@ public class EditProfile extends Activity {
         @Override
         public void onClick(View v) {
             try {
-                dialog.dismiss();
+                //  dialog.dismiss();
             } catch (Exception e) {
             }
 
@@ -136,10 +146,10 @@ public class EditProfile extends Activity {
                 case R.id.cancel:
                     bssid = "";
                     trigger_device_picked = false;
-                    dialog.dismiss();
+                    //dialog.dismiss();
                     break;
                 case R.id.save:
-                    dialog.dismiss();
+                    // dialog.dismiss();
                     break;
             }
         }
@@ -701,5 +711,114 @@ public class EditProfile extends Activity {
 //        return dialog;
 //    }
 
+
+    private void showCopyFromChooserDialog() {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+
+    private void showProhibitionTriggerChooserDialog() {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showAvailableCommandsChooserDialog() {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showNormalTriggerChooserDialog() {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showRestirctionDialogChooserDialog() {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showInfo(int id) {
+        switch (id) {
+            //Todo case R.id.... , show help dialog(String)
+        }
+    }
+
+    private void showHelpDialogChooserDialog(String help) {
+        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo change create xml for this
+        dialog.setContentView(R.layout.material_list_view);
+        View view = dialog.findViewById(R.id.a);
+
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        dialog.show();
+    }
 
 }

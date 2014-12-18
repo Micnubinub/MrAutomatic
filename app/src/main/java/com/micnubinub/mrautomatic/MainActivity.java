@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         android:layout_gravity="center"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        card_view:cardCornerRadius="4dp">
+
      */
 
 

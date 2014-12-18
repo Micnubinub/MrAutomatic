@@ -53,7 +53,11 @@ public class ProfileService extends Service {
     //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
     //Todo group scans, so that scans happen once per respective adapter>>
     //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
+    //Todo make an arraylist of triggered profiles, from that group, check which ones satisfy the ristrictions, then from those check prohibitions...
+    //Todo then when done sort the fully triggered profiles by priority and set the first
+    //Todo setting for a toast when a profile is set
     //Todo just save trigger as is, check if its a bssid by checking if it has 3 :s
+
 
     //android.intent.action.PACKAGE_ADDED
 
