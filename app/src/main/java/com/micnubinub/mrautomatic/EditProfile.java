@@ -378,7 +378,6 @@ public class EditProfile extends Activity {
     }
 
     public void getProfileValues(String ID) {
-
         profiledb = profileDBHelper.getReadableDatabase();
         // cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         cursor.moveToPosition(Integer.parseInt(ID));

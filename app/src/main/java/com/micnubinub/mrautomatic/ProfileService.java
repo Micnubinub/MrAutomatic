@@ -46,13 +46,8 @@ public class ProfileService extends Service {
     //Todo           numProfiles =0
     //Todo       allProfiles can be handled with broadcasts
     //Todo make sure you have old values saved before a scan, and reset them after, before setting the profile
-    //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
-
-    //Todo get profiles on each scan
     //Todo have all the listed broadcast receivers work in parallel
     //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
-    //Todo group scans, so that scans happen once per respective adapter>>
-    //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
     //Todo make an arraylist of triggered profiles, from that group, check which ones satisfy the ristrictions, then from those check prohibitions...
     //Todo then when done sort the fully triggered profiles by priority and set the first
     //Todo setting for a toast when a profile is set
@@ -62,6 +57,25 @@ public class ProfileService extends Service {
     //android.intent.action.PACKAGE_ADDED
 
     //Todo at the end unregister all the receivers in on destroy
+
+
+    //TODO Scans :
+    //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
+    //Todo get profiles on each scan
+    //Todo group scans, so that scans happen once per respective adapter>>
+    //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
+
+    //TODO scan order:
+    //Todo get list of all triggers
+    //Todo group by type (use sort)
+    //Todo call enable adapters >> enable if in list
+    //Todo start scans of wifi and bt using the interface, while that's happening >
+    //Todo might actually have to make a list of type device while scanning,to check for restrictions and prohibitions later on, instead of doing another scan, set old values then
+    //Todo scan for the triggers that don't require a scan
+    //Todo if trigger is triggered add them into the viable list of triggers
+    //Todo use this array, to check for restrictions and prohibitions
+    //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
+
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
