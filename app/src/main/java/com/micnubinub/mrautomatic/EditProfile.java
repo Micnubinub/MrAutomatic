@@ -21,7 +21,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ import tools.Trigger;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
+
+
     //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
     //Todo ad info button at the far right of a scrollview MenuItem
     //Todo might wnd up removing the cards and makin the view flat
@@ -52,6 +56,7 @@ public class EditProfile extends Activity {
     private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>();
+    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList;
 
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -104,41 +109,58 @@ public class EditProfile extends Activity {
             }
         }
     };
-    private final View.OnClickListener triggerDialogClick = new View.OnClickListener() {
+
+    private final View.OnClickListener tagClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            try {
-                //  dialog.dismiss();
-            } catch (Exception e) {
-            }
+            String view = v.getTag().toString();
 
-            switch (v.getId()) {
-//                case R.id.wifi_click_view:
-//                    wifiDevicePicker().show();
-//                    break;
-//                case R.id.bluetooth_click_view:
-//                    bluetoothDevicePicker().show();
-//
-//                    break;
-//                case R.id.time_click_view:
-//                    timePicker().show();
-//
-//                    break;
-//                case R.id.gps_click_view:
-//                    locationPicker().show();
-//
-//                    break;
-//                case R.id.nfc_click_view:
-//                    nfcDevicePicker().show();
-//
-//                    break;
-//                case R.id.battery_click_view:
-//                    batteryPiker().show();
-//
-//                    break;
+            if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
+            } else if (view.equals("")) {
+
             }
         }
     };
+
     private final View.OnClickListener save_cancel = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -158,9 +180,7 @@ public class EditProfile extends Activity {
     int number_of_network_devices, wifi_value, bluetooth_value, autobrightness_value, haptic_feedback_value, gps_value, sync_value, airplane_mode_value;
     int brightness_value, ringer_phonecall_volume, ringer_old_value, alarm_old_value, alarm_volume, sleep_timeout;
     int wifi_old_value, bluetooth_old_value, brightness_old_value, media_volume, old_media_volume_value, notification_volume, old_notification_value, old_incoming_call_volume;
-    private TextView wifi_description, bluetooth_description, gps_description, sound_description,
-            sync_description, haptic_feedback_description, screen_timeout_description, silent_mode_description,
-            data_description, airplane_mode_description, trigger_text_view;
+
     private EditText profile_name;
     private String ssid, bssid, trigger_type, update_profile, profile_name_text;
     private boolean update = false, trigger_device_picked = false;
@@ -178,11 +198,49 @@ public class EditProfile extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_manager_editor);
-
+        getLayouts();
+        setInfoOnClickListeners();
+        setAddItemOnClickListeners();
 
 //        init();
 //        getOldValues();
 
+    }
+
+    private void getLayouts() {
+        prohibitionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+        triggerList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+        restrictionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+        commandList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+    }
+
+    private void setInfoOnClickListeners() {
+        findViewById(R.id.prohibitions).findViewById(R.id.info).setOnClickListener(tagClickListener);
+        findViewById(R.id.prohibitions).findViewById(R.id.info).setTag("prohibitions");
+
+        findViewById(R.id.triggers).findViewById(R.id.info).setOnClickListener(tagClickListener);
+        findViewById(R.id.triggers).findViewById(R.id.info).setTag("triggers");
+
+        findViewById(R.id.restrictions).findViewById(R.id.info).setOnClickListener(tagClickListener);
+        findViewById(R.id.restrictions).findViewById(R.id.info).setTag("restriction");
+
+        findViewById(R.id.commands).findViewById(R.id.info).setOnClickListener(tagClickListener);
+        findViewById(R.id.commands).findViewById(R.id.info).setTag("commands");
+
+    }
+
+    private void setAddItemOnClickListeners() {
+        findViewById(R.id.prohibitions).findViewById(R.id.add_item).setOnClickListener(tagClickListener);
+        findViewById(R.id.prohibitions).findViewById(R.id.add_item).setTag("add_prohibitions");
+
+        findViewById(R.id.triggers).findViewById(R.id.add_item).setOnClickListener(tagClickListener);
+        findViewById(R.id.triggers).findViewById(R.id.add_item).setTag("add_triggers");
+
+        findViewById(R.id.restrictions).findViewById(R.id.add_item).setOnClickListener(tagClickListener);
+        findViewById(R.id.restrictions).findViewById(R.id.add_item).setTag("add_restriction");
+
+        findViewById(R.id.commands).findViewById(R.id.add_item).setOnClickListener(tagClickListener);
+        findViewById(R.id.commands).findViewById(R.id.add_item).setTag("add_commands");
     }
 
     private void editProfile(String id) {
@@ -353,8 +411,6 @@ public class EditProfile extends Activity {
         res = getResources();
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-        trigger_text_view = (TextView) findViewById(R.id.trigger);
-        trigger_text_view.setOnClickListener(listener);
 
 //        profile_name = (EditText) findViewById(R.id.profile_name);
 //
@@ -803,8 +859,6 @@ public class EditProfile extends Activity {
         //Todo change create xml for this
         dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
-
-
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -814,5 +868,67 @@ public class EditProfile extends Activity {
 
         dialog.show();
     }
+
+    private View getView(String name, String text) {
+        final View view = View.inflate(this, R.layout.command_list_item, null);
+        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //Todo fix this
+        view.findViewById(R.id.text).setTag("open_" + name);
+        view.findViewById(R.id.text).setOnClickListener(tagClickListener);
+        //Todo fix this
+        view.findViewById(R.id.delete).setTag("delete_" + name);
+        view.findViewById(R.id.delete).setOnClickListener(tagClickListener);
+
+        ((TextView) view.findViewById(R.id.text)).setText(text);
+        return view;
+    }
+
+    private void removeView(LinearLayout layout, String name) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View view = layout.getChildAt(i);
+            if (view.getTag().toString().equals(name)) {
+                layout.removeView(view);
+                return;
+            }
+        }
+    }
+
+    private void addProhibitionList(String name, String text) {
+        prohibitionList.addView(getView(name, text));
+    }
+
+    private void addTriggerList(String name, String text) {
+        triggerList.addView(getView(name, text));
+
+    }
+
+    private void addRestrictionList(String name, String text) {
+        restrictionList.addView(getView(name, text));
+
+    }
+
+    private void addCommandList(String name, String text) {
+        commandList.addView(getView(name, text));
+    }
+
+    private void removeProhibition(String name) {
+        removeView(prohibitionList, name);
+    }
+
+    private void removeTrigger(String name) {
+        removeView(triggerList, name);
+
+    }
+
+    private void removeRestriction(String name) {
+        removeView(restrictionList, name);
+
+    }
+
+    private void removeCommand(String name) {
+        removeView(commandList, name);
+
+    }
+
 
 }

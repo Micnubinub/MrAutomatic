@@ -2,13 +2,14 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/material_green">
+
 
     <RelativeLayout
         android:id="@+id/c"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/material_green">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/cancel"
@@ -27,89 +28,96 @@
             android:scaleType="centerInside"
             android:src="@drawable/save" />
 
-        <TextView
-            android:id="@+id/a"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/save"
-            android:layout_margin="8dp"
-            android:ellipsize="end"
-            android:fontFamily="sans"
-            android:maxLines="1"
-            android:padding="6dp"
-            android:text="Profile Name :"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/profile_name"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/a"
-            android:layout_margin="8dp"
-            android:background="@color/material_green_light"
-            android:ellipsize="end"
-            android:fontFamily="sans"
-            android:hint="Enter name here"
-            android:maxLines="1"
-            android:padding="12dp"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/white_alpha"
-            android:textSize="20sp" />
-
-
     </RelativeLayout>
 
-    <View
-
-        android:layout_width="fill_parent"
-        android:layout_height="3dp"
-        android:layout_below="@+id/c"
-        android:background="@drawable/bottom_shadow" />
-
-    <ScrollView
+    <view_classes.ParallaxScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/c">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/copy_from"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/a"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/save"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="sans"
+                    android:maxLines="1"
+                    android:text="Profile Name :"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/profile_name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/a"
+                    android:layout_margin="8dp"
+                    android:background="@color/material_green_light"
+                    android:ellipsize="end"
+                    android:fontFamily="sans"
+                    android:hint="Enter name here"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@color/white_alpha"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/white_button_selector"
-                android:padding="16dp"
-                android:text="Copy from"
-                android:textColor="@color/material_blue"
-                android:textSize="18sp" />
+                android:background="@color/ultra_light_grey"
+                android:orientation="vertical">
 
-            <include
-                android:id="@+id/triggers"
-                layout="@layout/scroll_view_item"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                <Button
+                    android:id="@+id/copy_from"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_button_selector"
+                    android:padding="16dp"
+                    android:text="Copy from"
+                    android:textColor="@color/material_blue"
+                    android:textSize="18sp" />
 
-            <include
-                android:id="@+id/restriction"
-                layout="@layout/scroll_view_item"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                <include
+                    android:id="@+id/triggers"
+                    layout="@layout/scroll_view_item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
 
-            <include
-                android:id="@+id/prohibitions"
-                layout="@layout/scroll_view_item"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                <include
+                    android:id="@+id/restrictions"
+                    layout="@layout/scroll_view_item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
 
-            <include
-                android:id="@+id/commands"
-                layout="@layout/scroll_view_item"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                <include
+                    android:id="@+id/prohibitions"
+                    layout="@layout/scroll_view_item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/commands"
+                    layout="@layout/scroll_view_item"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </view_classes.ParallaxScrollView>
 </RelativeLayout>
