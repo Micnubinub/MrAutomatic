@@ -37,6 +37,7 @@ import tools.Utility;
  * To change this template use File | Settings | File Templates.
  */
 
+
 public class ProfileService extends Service {
 //TODO FRIDAY :
 
@@ -79,7 +80,7 @@ public class ProfileService extends Service {
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
-                BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 devices.add(new Device(device.getName(), device.getAddress()));
             }
         }

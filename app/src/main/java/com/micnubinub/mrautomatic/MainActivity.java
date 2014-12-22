@@ -60,7 +60,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.material_profile_manager_activity);
+        //Todo setContentView(R.layout.profile_manager_activity);
+        setContentView(R.layout.profile_manager_activity);
         ListView listView = (ListView) findViewById(R.id.profile_list);
         profiles = Utility.getListProfiles(this);
         adapter = new ProfileManagerAdapter(this, profiles);

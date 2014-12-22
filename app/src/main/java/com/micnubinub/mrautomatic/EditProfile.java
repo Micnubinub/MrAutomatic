@@ -177,11 +177,11 @@ public class EditProfile extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.material_profile_manager_editor);
+        setContentView(R.layout.profile_manager_editor);
 
 
-        init();
-        getOldValues();
+//        init();
+//        getOldValues();
 
     }
 
@@ -209,11 +209,6 @@ public class EditProfile extends Activity {
         super.onStop();
         setOldValues();
         close();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public void save() {
@@ -714,7 +709,7 @@ public class EditProfile extends Activity {
     private void showCopyFromChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 
@@ -732,7 +727,7 @@ public class EditProfile extends Activity {
     private void showProhibitionTriggerChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 
@@ -749,7 +744,7 @@ public class EditProfile extends Activity {
     private void showAvailableCommandsChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 
@@ -766,7 +761,7 @@ public class EditProfile extends Activity {
     private void showNormalTriggerChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 
@@ -783,7 +778,7 @@ public class EditProfile extends Activity {
     private void showRestirctionDialogChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 
@@ -806,7 +801,7 @@ public class EditProfile extends Activity {
     private void showHelpDialogChooserDialog(String help) {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
-        dialog.setContentView(R.layout.material_list_view);
+        dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
 

@@ -18,7 +18,7 @@
 
     <include
         android:id="@+id/profile_list"
-        layout="@layout/material_list_view"
+        layout="@layout/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title" />

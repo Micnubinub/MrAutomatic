@@ -50,7 +50,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
         final Profile profile = profiles.get(position);
 
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.material_profile_list_item, null);
+            convertView = View.inflate(context, R.layout.profile_list_item, null);
             holder = new ViewHolder();
             holder.icon = (ImageView) convertView.findViewById(R.id.trigger_icon);
             holder.name = (TextView) convertView.findViewById(R.id.name);

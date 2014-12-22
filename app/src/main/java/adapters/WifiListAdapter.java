@@ -60,7 +60,7 @@ public class WifiListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = View.inflate(context, R.layout.material_two_line_list, null);
+            convertView = View.inflate(context, R.layout.two_line_list, null);
             holder.name = (TextView) convertView.findViewById(R.id.primary);
             holder.bssid = (TextView) convertView.findViewById(R.id.secondary);
 
