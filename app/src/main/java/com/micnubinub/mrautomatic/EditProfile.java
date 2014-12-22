@@ -38,7 +38,6 @@ import tools.Trigger;
  */
 public class EditProfile extends Activity {
 
-
     //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
     //Todo ad info button at the far right of a scrollview MenuItem
     //Todo might wnd up removing the cards and makin the view flat
@@ -51,13 +50,16 @@ public class EditProfile extends Activity {
         }
     };
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-    private static final ArrayList<Command> availableCommands = new ArrayList<Command>();
+    private static final ArrayList<String> availableCommands = new ArrayList<String>();
+    private static final ArrayList<String> availableTriggers = new ArrayList<String>();
+    private static final ArrayList<String> availableProhibitions = new ArrayList<String>();
+    private static final ArrayList<String> availableRestrictions = new ArrayList<String>();
     private static final ArrayList<Command> addedCommands = new ArrayList<Command>();
     private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>();
     private static LinearLayout prohibitionList, triggerList, restrictionList, commandList;
-
+    private static Dialog dialog;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -109,7 +111,6 @@ public class EditProfile extends Activity {
             }
         }
     };
-
     private final View.OnClickListener tagClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -160,27 +161,25 @@ public class EditProfile extends Activity {
             }
         }
     };
-
     private final View.OnClickListener save_cancel = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.cancel:
-                    bssid = "";
-                    trigger_device_picked = false;
-                    //dialog.dismiss();
+                    //Todo check current dialog
+                    dialog.dismiss();
                     break;
                 case R.id.save:
-                    // dialog.dismiss();
+                    //Todo dialog.setTag, dialog.getTag...
+                    dialog.dismiss();
                     break;
             }
         }
     };
-    int seekbar_battery_level, brightness_auto, brightness_auto_old_value, is_data_expanded, is_advanced_settings_expanded, battery_level, data_value, profile_image;
-    int number_of_network_devices, wifi_value, bluetooth_value, autobrightness_value, haptic_feedback_value, gps_value, sync_value, airplane_mode_value;
-    int brightness_value, ringer_phonecall_volume, ringer_old_value, alarm_old_value, alarm_volume, sleep_timeout;
+    int brightness_auto_old_value, ringer_phonecall_volume, ringer_old_value, alarm_old_value, alarm_volume, sleep_timeout;
     int wifi_old_value, bluetooth_old_value, brightness_old_value, media_volume, old_media_volume_value, notification_volume, old_notification_value, old_incoming_call_volume;
-
+    private String currentDialog;
+    private boolean edit = false;
     private EditText profile_name;
     private String ssid, bssid, trigger_type, update_profile, profile_name_text;
     private boolean update = false, trigger_device_picked = false;
@@ -197,10 +196,13 @@ public class EditProfile extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Bundle.getExtra edit/new >> if new fill in commands...
         setContentView(R.layout.profile_manager_editor);
         getLayouts();
         setInfoOnClickListeners();
         setAddItemOnClickListeners();
+        fillInArrayLists();
 
 //        init();
 //        getOldValues();
@@ -226,8 +228,8 @@ public class EditProfile extends Activity {
 
         findViewById(R.id.commands).findViewById(R.id.info).setOnClickListener(tagClickListener);
         findViewById(R.id.commands).findViewById(R.id.info).setTag("commands");
-
     }
+
 
     private void setAddItemOnClickListeners() {
         findViewById(R.id.prohibitions).findViewById(R.id.add_item).setOnClickListener(tagClickListener);
@@ -279,19 +281,19 @@ public class EditProfile extends Activity {
             Toast.makeText(this, "You need a trigger device", Toast.LENGTH_LONG).show();
         } else {
 
-            String wifi_value_string = String.valueOf(wifi_value);
-            String bluetooth_value_string = String.valueOf(bluetooth_value);
-            String gps_value_string = String.valueOf(gps_value);
-            String auto_brightness_value_string = String.valueOf(autobrightness_value);
-            String brightness_value_string = String.valueOf(brightness_value);
-            String data_value_string = String.valueOf(data_value);
-            String media_volume_string = String.valueOf(media_volume);
-            String notification_value_string = String.valueOf(notification_volume);
-            String ringer_phone_call_volume_string = String.valueOf(ringer_phonecall_volume);
-            String sleep_timeout_string = String.valueOf(sleep_timeout);
-            String haptic_feedback_value_string = String.valueOf(haptic_feedback_value);
-            String airplane_mode_value_string = String.valueOf(airplane_mode_value);
-            String sync_value_string = String.valueOf(sync_value);
+//            String wifi_value_string = String.valueOf(wifi_value);
+//            String bluetooth_value_string = String.valueOf(bluetooth_value);
+//            String gps_value_string = String.valueOf(gps_value);
+//            String auto_brightness_value_string = String.valueOf(autobrightness_value);
+//            String brightness_value_string = String.valueOf(brightness_value);
+//            String data_value_string = String.valueOf(data_value);
+//            String media_volume_string = String.valueOf(media_volume);
+//            String notification_value_string = String.valueOf(notification_volume);
+//            String ringer_phone_call_volume_string = String.valueOf(ringer_phonecall_volume);
+//            String sleep_timeout_string = String.valueOf(sleep_timeout);
+//            String haptic_feedback_value_string = String.valueOf(haptic_feedback_value);
+//            String airplane_mode_value_string = String.valueOf(airplane_mode_value);
+//            String sync_value_string = String.valueOf(sync_value);
             String profile_name_string = profile_name.getText().toString();
 
             if (profile_name_string.length() < 1 || profile_name_string == null)
@@ -483,7 +485,6 @@ public class EditProfile extends Activity {
 //
 //    private Dialog data_mode_click_view() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
-//
 //
 //        return dialog;
 //    }
@@ -761,10 +762,54 @@ public class EditProfile extends Activity {
 //        return dialog;
 //    }
 
+    private void showProhibitions() {
+        dialog = new Dialog(this, R.style.CustomDialog);
+        dialog.setContentView(R.layout.two_line_list);
+        currentDialog = "prohibitions";
+        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+
+
+        dialog.show();
+    }
+
+    private void showTriggersDialog() {
+        dialog = new Dialog(this, R.style.CustomDialog);
+        dialog.setContentView(R.layout.two_line_list);
+        currentDialog = "triggers";
+        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+
+
+        dialog.show();
+    }
+
+    private void showRestrictionsDialog() {
+        dialog = new Dialog(this, R.style.CustomDialog);
+        dialog.setContentView(R.layout.two_line_list);
+        currentDialog = "restrictions";
+        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+
+
+        dialog.show();
+    }
+
+    private void showCommandsDialog() {
+        dialog = new Dialog(this, R.style.CustomDialog);
+        dialog.setContentView(R.layout.two_line_list);
+        currentDialog = "commands";
+        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
+        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
+
+
+        dialog.show();
+    }
 
     private void showCopyFromChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
+        currentDialog = "copy_from";
         dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
 
@@ -930,5 +975,121 @@ public class EditProfile extends Activity {
 
     }
 
+    private void fillInArrayLists() {
+        //Todo consider using {"command"}
+        fillInAvailableCommands();
+        fillInAvailableTriggers();
+        fillInAvailableRestrictions();
+        fillInAvailableProhibitions();
 
+        if (!edit)
+            return;
+
+        //Todo db stuff here
+
+        fillInAddedCommands();
+        fillInRestrictionTriggers();
+        fillInProhibitionTriggers();
+        fillInNormalTriggers();
+    }
+
+    private void fillInAddedCommands() {
+        addedCommands.add();
+        availableCommands.remove()
+
+    }
+
+    private void fillInRestrictionTriggers() {
+        restrictionTriggers.add();
+        availableRestrictions.remove()
+    }
+
+    private void fillInProhibitionTriggers() {
+        prohibitionTriggers.add();
+        prohibitionTriggers.remove();
+    }
+
+    private void fillInNormalTriggers() {
+        normalTriggers.add();
+        normalTriggers.remove()
+    }
+
+    private void fillInAvailableTriggers() {
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+        availableTriggers.add();
+    }
+
+    private void fillInAvailableProhibitions() {
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+        availableProhibitions.add();
+    }
+
+
+    private void fillInAvailableRestrictions() {
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+        availableRestrictions.add();
+    }
+
+    private void fillInAvailableCommands() {
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+        availableCommands.add();
+    }
 }
