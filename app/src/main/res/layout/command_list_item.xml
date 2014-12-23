@@ -11,6 +11,8 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/delete"
         android:background="@drawable/white_button_selector"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:padding="8dp"
         android:text="Text"
         android:textColor="@color/dark_grey_text"

@@ -32,6 +32,7 @@ import java.util.List;
 
 import tools.Command;
 import tools.Trigger;
+import tools.Utility;
 
 /**
  * Created by root on 21/08/14.
@@ -41,6 +42,8 @@ public class EditProfile extends Activity {
     //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
     //Todo ad info button at the far right of a scrollview MenuItem
     //Todo might wnd up removing the cards and makin the view flat
+    //Todo preference to play preview/display preview when a value is set, e.g. brightness, volume
+
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
@@ -115,15 +118,16 @@ public class EditProfile extends Activity {
         @Override
         public void onClick(View v) {
             String view = v.getTag().toString();
+            //Todo split everything up >> if tag.beginswith: info, add, remove...
 
-            if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
+            if (view.equals("add_prohibitions")) {
+                showProhibitionsDialog();
+            } else if (view.equals("add_commands")) {
+                showCommandsDialog();
+            } else if (view.equals("add_restriction")) {
+                showRestrictionsDialog();
+            } else if (view.equals("add_triggers")) {
+                showTriggersDialog();
             } else if (view.equals("")) {
 
             } else if (view.equals("")) {
@@ -178,6 +182,7 @@ public class EditProfile extends Activity {
     };
     int brightness_auto_old_value, ringer_phonecall_volume, ringer_old_value, alarm_old_value, alarm_volume, sleep_timeout;
     int wifi_old_value, bluetooth_old_value, brightness_old_value, media_volume, old_media_volume_value, notification_volume, old_notification_value, old_incoming_call_volume;
+    int profileId;
     private String currentDialog;
     private boolean edit = false;
     private EditText profile_name;
@@ -199,9 +204,18 @@ public class EditProfile extends Activity {
 
         //Bundle.getExtra edit/new >> if new fill in commands...
         setContentView(R.layout.profile_manager_editor);
+        try {
+            String shouldEdit = savedInstanceState.getString(Utility.EDIT_PROFILE);
+            edit = !(shouldEdit == null || shouldEdit.length() < 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (edit)
+            profileId = savedInstanceState.getInt(Utility.PROFILE_ID);
         getLayouts();
         setInfoOnClickListeners();
         setAddItemOnClickListeners();
+
         fillInArrayLists();
 
 //        init();
@@ -211,23 +225,30 @@ public class EditProfile extends Activity {
 
     private void getLayouts() {
         prohibitionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
-        triggerList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
-        restrictionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
-        commandList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+        ((TextView) (findViewById(R.id.prohibitions).findViewById(R.id.title))).setText("Prohibitions");
+
+        triggerList = (LinearLayout) findViewById(R.id.triggers).findViewById(R.id.content);
+        ((TextView) (findViewById(R.id.triggers).findViewById(R.id.title))).setText("Triggers");
+
+        restrictionList = (LinearLayout) findViewById(R.id.restrictions).findViewById(R.id.content);
+        ((TextView) (findViewById(R.id.restrictions).findViewById(R.id.title))).setText("Restrictions");
+
+        commandList = (LinearLayout) findViewById(R.id.commands).findViewById(R.id.content);
+        ((TextView) (findViewById(R.id.commands).findViewById(R.id.title))).setText("Commands");
     }
 
     private void setInfoOnClickListeners() {
         findViewById(R.id.prohibitions).findViewById(R.id.info).setOnClickListener(tagClickListener);
-        findViewById(R.id.prohibitions).findViewById(R.id.info).setTag("prohibitions");
+        findViewById(R.id.prohibitions).findViewById(R.id.info).setTag("info_prohibitions");
 
         findViewById(R.id.triggers).findViewById(R.id.info).setOnClickListener(tagClickListener);
-        findViewById(R.id.triggers).findViewById(R.id.info).setTag("triggers");
+        findViewById(R.id.triggers).findViewById(R.id.info).setTag("info_triggers");
 
         findViewById(R.id.restrictions).findViewById(R.id.info).setOnClickListener(tagClickListener);
-        findViewById(R.id.restrictions).findViewById(R.id.info).setTag("restriction");
+        findViewById(R.id.restrictions).findViewById(R.id.info).setTag("info_restriction");
 
         findViewById(R.id.commands).findViewById(R.id.info).setOnClickListener(tagClickListener);
-        findViewById(R.id.commands).findViewById(R.id.info).setTag("commands");
+        findViewById(R.id.commands).findViewById(R.id.info).setTag("info_commands");
     }
 
 
@@ -756,55 +777,199 @@ public class EditProfile extends Activity {
 //                trigger_device_picked = true;
 //                if (materialSwitch.isChecked())
 //                    bssid = String.valueOf(-1);
-//            }
 //        });
 //
 //        return dialog;
 //    }
 
-    private void showProhibitions() {
+    private void showProhibitionsDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.two_line_list);
+        dialog.setContentView(R.layout.trigger_chooser_dialog);
         currentDialog = "prohibitions";
-        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-
-
+        dialog.findViewById(R.id.cancel).setOnClickListener(save_cancel);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Add prohibition");
+        populateProhibitions((LinearLayout) dialog.findViewById(R.id.content));
         dialog.show();
+    }
+
+    private void populateProhibitions(LinearLayout layout) {
+
+        try {
+            layout.removeAllViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < availableProhibitions.size(); i++) {
+            final String item = availableProhibitions.get(i);
+            final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.setText(getTriggerName(item));
+            view.setTag("add_prohibition_" + item);
+            view.setOnClickListener(tagClickListener);
+            layout.addView(view);
+        }
+        layout.invalidate();
+    }
+
+    private String getCommandName(String item) {
+        if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
+            item = "Alarm Volume";
+        } else if (item.equals(Utility.AUTO_ROTATION_SETTING)) {
+            item = "Auto rotation";
+        } else if (item.equals(Utility.BLUETOOTH_SETTING)) {
+            item = "Bluetooth";
+        } else if (item.equals(Utility.WALLPAPER_SETTING)) {
+            item = "Wallpaper";
+        } else if (item.equals(Utility.WIFI_SETTING)) {
+            item = "Wifi";
+        } else if (item.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
+            item = "Auto brightness";
+        } else if (item.equals(Utility.MEDIA_VOLUME_SETTING)) {
+            item = "Media volume";
+        } else if (item.equals(Utility.LAUNCH_APP_SETTING)) {
+            item = "Launch app";
+        } else if (item.equals(Utility.DATA_SETTING)) {
+            item = "Data";
+        } else if (item.equals(Utility.BRIGHTNESS_SETTING)) {
+            item = "Brightness";
+        } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
+            item = "Ringtone volume";
+        } else if (item.equals(Utility.START_MUSIC_SETTING)) {
+            item = "Music control";
+        } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+            item = "Notification volume";
+        } else if (item.equals(Utility.RINGTONE_SETTING)) {
+            item = "Ringtone";
+        } else if (item.equals(Utility.SILENT_MODE_SETTING)) {
+            item = "Silent mode";
+        } else if (item.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+            item = "Screen timeout";
+        }
+        return item;
+    }
+
+    private String getTriggerName(String item) {
+        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            item = "Launch App";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
+            item = "Battery Charging";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
+            item = "Battery percentage";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            item = "Battery temperature";
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
+            item = "Bluetooth DeviceId";
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
+            item = "Bluetooth name";
+        } else if (item.equals(Utility.TRIGGER_NFC)) {
+            item = "NFC";
+        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
+            item = "Location";
+        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            item = "Headphone jack";
+        } else if (item.equals(Utility.TRIGGER_DOCK)) {
+            item = "Dock";
+        } else if (item.equals(Utility.TRIGGER_TIME)) {
+            item = "Time";
+        } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
+            item = "Wifi DeviceID";
+        } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
+            item = "Wifi name";
+        }
+        return item;
     }
 
     private void showTriggersDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.two_line_list);
+        dialog.setContentView(R.layout.trigger_chooser_dialog);
         currentDialog = "triggers";
-        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-
-
+        dialog.findViewById(R.id.cancel).setOnClickListener(save_cancel);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Add trigger");
+        populateTriggers((LinearLayout) dialog.findViewById(R.id.content));
         dialog.show();
+    }
+
+    private void populateTriggers(LinearLayout layout) {
+
+        try {
+            layout.removeAllViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < availableTriggers.size(); i++) {
+            final String item = availableTriggers.get(i);
+            final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.setText(getTriggerName(item));
+            view.setTag("add_prohibition_" + item);
+            view.setOnClickListener(tagClickListener);
+            layout.addView(view);
+        }
+        layout.invalidate();
     }
 
     private void showRestrictionsDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.two_line_list);
+        dialog.setContentView(R.layout.trigger_chooser_dialog);
         currentDialog = "restrictions";
-        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-
-
+        dialog.findViewById(R.id.cancel).setOnClickListener(save_cancel);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Add restriction");
+        populateRestrictions((LinearLayout) dialog.findViewById(R.id.content));
         dialog.show();
+    }
+
+    private void populateRestrictions(LinearLayout layout) {
+
+        try {
+            layout.removeAllViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < availableRestrictions.size(); i++) {
+            final String item = availableRestrictions.get(i);
+            final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.setText(getTriggerName(item));
+            view.setTag("add_restriction_" + item);
+            view.setOnClickListener(tagClickListener);
+            layout.addView(view);
+        }
+        layout.invalidate();
     }
 
     private void showCommandsDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
-        dialog.setContentView(R.layout.two_line_list);
+        dialog.setContentView(R.layout.trigger_chooser_dialog);
         currentDialog = "commands";
-        findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
-        findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(save_cancel);
-
-
+        dialog.findViewById(R.id.cancel).setOnClickListener(save_cancel);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Add command");
+        populateCommands((LinearLayout) dialog.findViewById(R.id.content));
         dialog.show();
     }
+
+    private void populateCommands(LinearLayout layout) {
+
+        try {
+            layout.removeAllViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < availableCommands.size(); i++) {
+            final String item = availableCommands.get(i);
+            final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.setText(getCommandName(item));
+            view.setTag("add_command_" + item);
+            view.setOnClickListener(tagClickListener);
+            layout.addView(view);
+        }
+        layout.invalidate();
+    }
+
 
     private void showCopyFromChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
@@ -825,78 +990,10 @@ public class EditProfile extends Activity {
     }
 
 
-    private void showProhibitionTriggerChooserDialog() {
-        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo change create xml for this
-        dialog.setContentView(R.layout.list_view);
-        View view = dialog.findViewById(R.id.a);
+    private void showInfo(String id) {
 
+        //Todo if name.equals.... , show help dialog(String)
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void showAvailableCommandsChooserDialog() {
-        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo change create xml for this
-        dialog.setContentView(R.layout.list_view);
-        View view = dialog.findViewById(R.id.a);
-
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void showNormalTriggerChooserDialog() {
-        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo change create xml for this
-        dialog.setContentView(R.layout.list_view);
-        View view = dialog.findViewById(R.id.a);
-
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void showRestirctionDialogChooserDialog() {
-        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo change create xml for this
-        dialog.setContentView(R.layout.list_view);
-        View view = dialog.findViewById(R.id.a);
-
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-
-            }
-        });
-
-        dialog.show();
-    }
-
-    private void showInfo(int id) {
-        switch (id) {
-            //Todo case R.id.... , show help dialog(String)
-        }
     }
 
     private void showHelpDialogChooserDialog(String help) {
@@ -984,9 +1081,7 @@ public class EditProfile extends Activity {
 
         if (!edit)
             return;
-
         //Todo db stuff here
-
         fillInAddedCommands();
         fillInRestrictionTriggers();
         fillInProhibitionTriggers();
@@ -994,102 +1089,92 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAddedCommands() {
-        addedCommands.add();
-        availableCommands.remove()
+//        addedCommands.add();
+//        availableCommands.remove()
 
     }
 
     private void fillInRestrictionTriggers() {
-        restrictionTriggers.add();
-        availableRestrictions.remove()
+//        restrictionTriggers.add();
+//        availableRestrictions.remove()
     }
 
     private void fillInProhibitionTriggers() {
-        prohibitionTriggers.add();
-        prohibitionTriggers.remove();
+//        prohibitionTriggers.add();
+//        prohibitionTriggers.remove();
     }
 
     private void fillInNormalTriggers() {
-        normalTriggers.add();
-        normalTriggers.remove()
+//        normalTriggers.add();
+//        normalTriggers.remove();
     }
 
     private void fillInAvailableTriggers() {
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
-        availableTriggers.add();
+        availableTriggers.add("BATTERY_TEMPERATURE");
+        availableTriggers.add("BATTERY_PERCENTAGE");
+        availableTriggers.add("BATTERY_CHARGING");
+        availableTriggers.add("BLUETOOTH_BSSID");
+        availableTriggers.add("NFC");
+        availableTriggers.add("EARPHONE_JACK");
+        availableTriggers.add("DOCK");
+        availableTriggers.add("TIME");
+        availableTriggers.add("LOCATION");
+        availableTriggers.add("APP_LAUNCH");
+        availableTriggers.add("WIFI_SSID");
+        availableTriggers.add("WIFI_BSSID");
+        availableTriggers.add("BLUETOOTH_SSID");
     }
 
     private void fillInAvailableProhibitions() {
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
-        availableProhibitions.add();
+        availableProhibitions.add("BATTERY_TEMPERATURE");
+        availableProhibitions.add("BATTERY_PERCENTAGE");
+        availableProhibitions.add("BATTERY_CHARGING");
+        availableProhibitions.add("BLUETOOTH_BSSID");
+        availableProhibitions.add("NFC");
+        availableProhibitions.add("EARPHONE_JACK");
+        availableProhibitions.add("DOCK");
+        availableProhibitions.add("TIME");
+        availableProhibitions.add("LOCATION");
+        availableProhibitions.add("APP_LAUNCH");
+        availableProhibitions.add("WIFI_SSID");
+        availableProhibitions.add("WIFI_BSSID");
+        availableProhibitions.add("BLUETOOTH_SSID");
     }
 
 
     private void fillInAvailableRestrictions() {
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
-        availableRestrictions.add();
+        availableRestrictions.add("BATTERY_TEMPERATURE");
+        availableRestrictions.add("BATTERY_PERCENTAGE");
+        availableRestrictions.add("BATTERY_CHARGING");
+        availableRestrictions.add("BLUETOOTH_BSSID");
+        availableRestrictions.add("NFC");
+        availableRestrictions.add("EARPHONE_JACK");
+        availableRestrictions.add("DOCK");
+        availableRestrictions.add("TIME");
+        availableRestrictions.add("LOCATION");
+        availableRestrictions.add("APP_LAUNCH");
+        availableRestrictions.add("WIFI_SSID");
+        availableRestrictions.add("WIFI_BSSID");
+        availableRestrictions.add("BLUETOOTH_SSID");
+
     }
 
     private void fillInAvailableCommands() {
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
-        availableCommands.add();
+        availableCommands.add("WIFI_SETTING");
+        availableCommands.add("BLUETOOTH_SETTING");
+        availableCommands.add("DATA_SETTING");
+        availableCommands.add("BRIGHTNESS_SETTING");
+        availableCommands.add("BRIGHTNESS_AUTO_SETTING");
+        availableCommands.add("SILENT_MODE_SETTING");
+        availableCommands.add("NOTIFICATION_VOLUME_SETTING");
+        availableCommands.add("ALARM_VOLUME_SETTING");
+        availableCommands.add("START_MUSIC_SETTING");
+        availableCommands.add("LAUNCH_APP_SETTING");
+        availableCommands.add("WALLPAPER_SETTING");
+        availableCommands.add("RINGTONE_SETTING");
+        availableCommands.add("MEDIA_VOLUME_SETTING");
+        availableCommands.add("RINGER_VOLUME_SETTING");
+        availableCommands.add("AUTO_ROTATION_SETTING");
+        availableCommands.add("SLEEP_TIMEOUT_SETTING");
     }
 }
