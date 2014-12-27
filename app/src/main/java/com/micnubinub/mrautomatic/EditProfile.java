@@ -209,8 +209,457 @@ public class EditProfile extends Activity {
 
     }
 
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showAlarmDialog() {
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
     private void showEditorDialog(String command) {
-        View contentView = null;
 
 
         if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
@@ -272,6 +721,10 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
             //Todo make dialog
         }
+
+    }
+
+    private void showDialog(View contentView) {
         dialog.setContentView(contentView);
         dialog.show();
     }
