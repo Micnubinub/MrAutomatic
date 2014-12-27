@@ -34,6 +34,11 @@ import java.util.List;
 import tools.Command;
 import tools.Trigger;
 import tools.Utility;
+import view_classes.MaterialCheckBox;
+import view_classes.MaterialRadioButton;
+import view_classes.MaterialRadioGroup;
+import view_classes.MaterialSeekBar;
+import view_classes.MaterialSwitch;
 
 /**
  * Created by root on 21/08/14.
@@ -212,6 +217,7 @@ public class EditProfile extends Activity {
     private void showAlarmVolumeDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
+
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,89 +230,6 @@ public class EditProfile extends Activity {
 
         showDialog(view);
     }
-
-    private void showAutorotatioDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-
-    private void showBluetoothDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-
-    private void showWallPaperDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showWifiDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showBrightnessDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
 
     private void showMediaVolumeDialog() {
         //Todo make dialog
@@ -324,8 +247,7 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-
-    private void showAppLauncherDialog() {
+    private void showNotificationVolumeDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -341,8 +263,124 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
+    private void showRingtoneVolumeDialog() {
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showBrightnessDialog() {
+        //Todo default, and adding
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Brightness");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(255);
+        materialSeekBar.setProgress(50);
+
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        materialCheckBox.setVisibility(View.VISIBLE);
+        materialCheckBox.setText("Auto-Brightness");
+        materialCheckBox.setOnCheckedChangeListener(new MaterialCheckBox.OnCheckedChangedListener() {
+            @Override
+            public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
+                materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+                //Todo remove the manual brightness if added, then add this
+            }
+        });
+
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger(Utility.BRIGHTNESS_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+        showDialog(view);
+    }
+
+    private void showBatteryDialog() {
+        //Todo make dialog  battery remp, charge, percent
+
+        //Todo default, and adding
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Battery");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(100);
+        materialSeekBar.setProgress(50);
+
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        materialCheckBox.setVisibility(View.VISIBLE);
+        materialCheckBox.setText("Charging");
+        materialCheckBox.setOnCheckedChangeListener(new MaterialCheckBox.OnCheckedChangedListener() {
+            @Override
+            public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
+                materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+                //Todo remove the battery percentage if added, then add this
+            }
+        });
+
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Trigger trigger = new Trigger(Utility.TRIGGER_BATTERY_PERCENTAGE, String.valueOf(materialSeekBar.getProgress()));
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
 
     private void showDataDialog() {
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Data");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+
+        MaterialRadioButton button1 = new MaterialRadioButton(this);
+        button1.setText("Off");
+        MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setText("2G");
+        MaterialRadioButton button3 = new MaterialRadioButton(this);
+        button3.setText("3G");
+        MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setText("4G");
+
+        materialRadioGroup.addView(button1);
+        materialRadioGroup.addView(button2);
+        materialRadioGroup.addView(button3);
+        materialRadioGroup.addView(button4);
+
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+        showDialog(view);
+    }
+
+    private void showSleepTimeoutDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -376,13 +414,16 @@ public class EditProfile extends Activity {
     }
 
 
-    private void showNotificationVolumeDialog() {
-        //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+    private void showAutoRotationDialog() {
+        //Todo setDefaults
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Auto-rotation");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        materialSwitch.setText("Auto-rotation");
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
@@ -391,8 +432,66 @@ public class EditProfile extends Activity {
 
         showDialog(view);
     }
+
+
+    private void showBluetoothDialog() {
+        //Todo defaults, and reset value when clicked
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Bluetooth");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        materialSwitch.setText("Bluetooth");
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showWifiDialog() {
+        //Todo defaults, and reset value when clicked
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        materialSwitch.setText("Wifi");
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+        showDialog(view);
+    }
+
 
     private void showSilentModeDialog() {
+        //Todo defaults, and reset value when clicked
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Silent Mode");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        materialSwitch.setText("Silent Mode");
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+
+        showDialog(view);
+    }
+
+    private void showRingtoneDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -408,8 +507,7 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-
-    private void showRingtoneVolumeDialog() {
+    private void showWallPaperDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -425,8 +523,7 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-
-    private void showSleepTimeoutDialog() {
+    private void showAppLauncherDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -441,7 +538,6 @@ public class EditProfile extends Activity {
 
         showDialog(view);
     }
-
 
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
@@ -459,22 +555,6 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-
-    private void showBatteryDialog() {
-        //Todo make dialog  battery remp, charge, percent
-
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-        showDialog(view);
-    }
 
     private void showNFCDialog() {
         //Todo make dialog
@@ -510,7 +590,7 @@ public class EditProfile extends Activity {
     }
 
 
-    private void showHeadPhoneJackDialog() {
+    private void showDockDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -526,8 +606,7 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-
-    private void showDockDialog() {
+    private void showHeadPhoneJackDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -565,7 +644,7 @@ public class EditProfile extends Activity {
         if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
             showAlarmVolumeDialog();
         } else if (command.equals(Utility.AUTO_ROTATION_SETTING)) {
-            showAutorotatioDialog();
+            showAutoRotationDialog();
         } else if (command.equals(Utility.BLUETOOTH_SETTING)) {
             showBluetoothDialog();
         } else if (command.equals(Utility.WALLPAPER_SETTING)) {
@@ -589,7 +668,7 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
             showNotificationVolumeDialog();
         } else if (command.equals(Utility.RINGTONE_SETTING)) {
-            showRingtoneVolumeDialog();
+            showRingtoneDialog();
         } else if (command.equals(Utility.SILENT_MODE_SETTING)) {
             showSilentModeDialog();
         } else if (command.equals(Utility.SLEEP_TIMEOUT_SETTING)) {

@@ -46,6 +46,10 @@ public class MaterialRadioGroup extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
+    public int getSelection() {
+        return selectedRadioButton;
+    }
+
     @Override
     protected void onLayout(boolean b, int i, int i2, int i3, int i4) {
 
