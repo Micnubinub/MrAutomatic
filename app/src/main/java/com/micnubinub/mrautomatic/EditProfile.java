@@ -119,6 +119,7 @@ public class EditProfile extends Activity {
         public void onClick(View v) {
             String view = v.getTag().toString();
             //Todo split everything up >> if tag.beginswith: info, add, remove...
+            Toast.makeText(EditProfile.this, view, Toast.LENGTH_LONG).show();
 
             if (view.equals("add_prohibitions")) {
                 showProhibitionsDialog();
@@ -174,7 +175,7 @@ public class EditProfile extends Activity {
                     dialog.dismiss();
                     break;
                 case R.id.save:
-                    //Todo dialog.setTag, dialog.getTag...
+                    //Todo dialog.Tag, dialog.getTag...
                     dialog.dismiss();
                     break;
             }
@@ -281,20 +282,20 @@ public class EditProfile extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        setOldValues();
+        //setOldValues();
         close();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        setOldValues();
+        // setOldValues();
         close();
     }
 
     public void save() {
 
-        setOldValues();
+        // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
         if (!trigger_device_picked || bssid == "") {
@@ -402,7 +403,6 @@ public class EditProfile extends Activity {
 
     public void setOldValues() {
 
-
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, old_media_volume_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, old_notification_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_RING, old_incoming_call_volume);
@@ -427,7 +427,6 @@ public class EditProfile extends Activity {
 
 
     }
-
 
     private void init() {
         //Todo view = findViewbiId(R.id.dddd)/....
@@ -486,7 +485,7 @@ public class EditProfile extends Activity {
 //        });
 //        return dialog;
 //    }
-//
+
 //    private Dialog bluetooth_click_view() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
 //        dialog.setContentView(R.layout.material_profile_manager_bluetooth);
@@ -525,7 +524,7 @@ public class EditProfile extends Activity {
 //        });
 //        return dialog;
 //    }
-//
+
 //    private Dialog haptic_click_view() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
 //        dialog.setContentView(R.layout.material_profile_manager_haptic_feedback);
@@ -903,7 +902,7 @@ public class EditProfile extends Activity {
             final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             view.setText(getTriggerName(item));
-            view.setTag("add_prohibition_" + item);
+            view.setTag("add_trigger_" + item);
             view.setOnClickListener(tagClickListener);
             layout.addView(view);
         }
@@ -989,15 +988,9 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-
-    private void showInfo(String id) {
-
-        //Todo if name.equals.... , show help dialog(String)
-
-    }
-
-    private void showHelpDialogChooserDialog(String help) {
+    private void showHelpDialog(String help) {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
+        //Todo if name.equals.... , show help dialog(String)
         //Todo change create xml for this
         dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
@@ -1037,39 +1030,42 @@ public class EditProfile extends Activity {
 
     private void addProhibitionList(String name, String text) {
         prohibitionList.addView(getView(name, text));
+        //Todo avalable.remove(name);
     }
 
     private void addTriggerList(String name, String text) {
         triggerList.addView(getView(name, text));
-
+//Todo avalable.remove(name);
     }
 
     private void addRestrictionList(String name, String text) {
         restrictionList.addView(getView(name, text));
-
+//Todo avalable.remove(name);
     }
 
     private void addCommandList(String name, String text) {
         commandList.addView(getView(name, text));
+        //Todo avalable.remove(name);
     }
 
     private void removeProhibition(String name) {
         removeView(prohibitionList, name);
+        //Todo avalable.add(name);
     }
 
     private void removeTrigger(String name) {
         removeView(triggerList, name);
-
+//Todo avalable.add(name);
     }
 
     private void removeRestriction(String name) {
         removeView(restrictionList, name);
-
+//Todo avalable.add(name);
     }
 
     private void removeCommand(String name) {
         removeView(commandList, name);
-
+//Todo avalable.add(name);
     }
 
     private void fillInArrayLists() {
@@ -1110,6 +1106,7 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableTriggers() {
+        //Todo reorder these
         availableTriggers.add("BATTERY_TEMPERATURE");
         availableTriggers.add("BATTERY_PERCENTAGE");
         availableTriggers.add("BATTERY_CHARGING");
@@ -1126,6 +1123,7 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableProhibitions() {
+        //Todo reorder these
         availableProhibitions.add("BATTERY_TEMPERATURE");
         availableProhibitions.add("BATTERY_PERCENTAGE");
         availableProhibitions.add("BATTERY_CHARGING");
@@ -1143,6 +1141,7 @@ public class EditProfile extends Activity {
 
 
     private void fillInAvailableRestrictions() {
+        //Todo reorder these
         availableRestrictions.add("BATTERY_TEMPERATURE");
         availableRestrictions.add("BATTERY_PERCENTAGE");
         availableRestrictions.add("BATTERY_CHARGING");
@@ -1160,6 +1159,7 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableCommands() {
+        //Todo reorder these
         availableCommands.add("WIFI_SETTING");
         availableCommands.add("BLUETOOTH_SETTING");
         availableCommands.add("DATA_SETTING");

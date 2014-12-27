@@ -54,7 +54,6 @@ public class ProfileService extends Service {
     //Todo setting for a toast when a profile is set
     //Todo just save trigger as is, check if its a bssid by checking if it has 3 :s
 
-
     //android.intent.action.PACKAGE_ADDED
 
     //Todo at the end unregister all the receivers in on destroy
