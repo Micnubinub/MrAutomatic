@@ -17,6 +17,8 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
     public static final String TRIGGERS = "TRIGGERS";
     public static final String COMMANDS = "COMMANDS";
     public static final String PRIORITY = "PRIORITY";
+    public static final String PROHIBITIONS = "PROHIBITIONS";
+    public static final String RESTRICTIONS = "RESTRICTIONS";
 
 
     public ProfileDBHelper(Context context) {
@@ -31,7 +33,9 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
                 + PROFILE_NAME + " string not null,"
                 + COMMANDS + " string not null,"
                 + PRIORITY + " string,"
-                + TRIGGERS + " string"
+                + TRIGGERS + " string,"
+                + PROHIBITIONS + " string,"
+                + RESTRICTIONS + " string"
                 + ");";
         profiledb.execSQL(sqlStatement);
     }

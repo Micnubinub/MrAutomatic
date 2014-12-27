@@ -72,12 +72,6 @@ public class MaterialRadioGroup extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        //Todo setMeasuredDimension();
-        //Todo  measureChildWithMargins()
-        //Todo xmlns:custom="http://schemas.android.com/apk/res/com.packa..."
-
-
         int measuredHeight = 0;
         int measuredWidth = 0;
 
@@ -93,7 +87,6 @@ public class MaterialRadioGroup extends ViewGroup {
                 resolveSizeAndState(measuredHeight, heightMeasureSpec, 0));
 
     }
-    //Todo check if everything works fine, cause you removed all the other addView(...)s
 
     @Override
     public void addView(View child, int index, LayoutParams params) {

@@ -707,9 +707,9 @@ public class EditProfile extends Activity {
 ////        dialog.setContentView(R.layout.material_profile_manager_sound_volumes);
 ////        return dialog;
 ////    }
-////
-////    private Dialog silent_mode_click_view() {
-////        dialog = new Dialog(this, R.style.CustomDialog);
+//
+//    private Dialog silent_mode_click_view() {
+//        dialog = new Dialog(this, R.style.CustomDialog);
 ////
 ////        dialog.setContentView(R.layout.material_profile_manager_silentmode);
 ////
@@ -724,24 +724,7 @@ public class EditProfile extends Activity {
 //        });*/
 //        return dialog;
 //    }
-//
-//    private Dialog wifi_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_wifi);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
-//        materialSwitch.setChecked(wifi_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                wifi_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-//
+
 //    private Dialog sync_click_view() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
 //
@@ -815,28 +798,7 @@ public class EditProfile extends Activity {
 //        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
 //        return dialog;
 //    }
-//
-//    private Dialog timePicker() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-//
-//        return dialog;
-//    }
-//
-//    private Dialog locationPicker() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-//
-//        return dialog;
-//    }
-//
-//    private Dialog nfcDevicePicker() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-//        return dialog;
-//    }
-//
+
 //    private Dialog batteryPiker() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
 //

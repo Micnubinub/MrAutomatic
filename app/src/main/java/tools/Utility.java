@@ -37,7 +37,6 @@ import java.util.List;
 public class Utility {
     //Todo add Auto (captures current potential triggers and shows a dialog to choose/remove triggers)
     //Todo add help, explain the difference between bssid and ssid
-    //Todo add restrictions, triggers, not triggered
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
@@ -392,7 +391,6 @@ public class Utility {
             //
             options.inJustDecodeBounds = false;
             wpm.setBitmap(BitmapFactory.decodeStream(new FileInputStream(uri.getPath()), null, options));
-            //Todo when saving uri.toString();
             //Todo check this, make sure it doesn't run out of memory
         } catch (Exception e) {
             e.printStackTrace();
@@ -523,7 +521,6 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Todo test using car
-            //Todo apply
             Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);

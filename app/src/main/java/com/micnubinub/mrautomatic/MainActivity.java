@@ -27,18 +27,8 @@ public class MainActivity extends Activity {
     //Restrictions work on an and basis, they must ALL be satisfied, or else the profile won't be set
 
     //Prohibited must NOT be triggered, or else the profile won't be set
-    //Todo add to database
 
     //Todo refine these definitions, and come up with better words
-
-    /* <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-
-     */
 
 
     private final AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
@@ -60,7 +50,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Todo setContentView(R.layout.profile_manager_activity);
         setContentView(R.layout.profile_manager_activity);
         ListView listView = (ListView) findViewById(R.id.profile_list);
         profiles = Utility.getListProfiles(this);

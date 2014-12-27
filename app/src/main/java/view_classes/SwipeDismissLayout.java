@@ -51,9 +51,6 @@ public class SwipeDismissLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //Todo setMeasuredDimension();
-        //Todo  measureChildWithMargins()
-        //Todo xmlns:custom="http://schemas.android.com/apk/res/com.packa..."
 
         int measuredHeight = 0;
         int measuredWidth = 0;

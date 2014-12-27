@@ -138,11 +138,6 @@ public class MaterialSwitch extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        //Todo setMeasuredDimension();
-        //Todo  measureChildWithMargins()
-        //Todo xmlns:custom="http://schemas.android.com/apk/res/com.packa..."
-        // measureChildren(widthMeasureSpec, heightMeasureSpec);
-
         int measuredHeight = 0;
         int measuredWidth = 0;
 
