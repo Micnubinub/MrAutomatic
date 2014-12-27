@@ -73,7 +73,6 @@
             android:name=".ProfileService$AlarmReceiver"
             android:enabled="true" />
 
-
         <receiver
             android:name=".ProfileService$BootUpReceiver"
             android:enabled="true">
@@ -89,6 +88,7 @@
                 <action android:name="android.intent.action.DOCK_EVENT" />
             </intent-filter>
         </receiver>
+
 
         <receiver
             android:name="tools.Utility$SmsReceiver"

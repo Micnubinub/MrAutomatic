@@ -451,12 +451,80 @@ public class Utility {
         }
     }
 
+    public static String getCommandName(String item) {
+        if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
+            item = "Alarm Volume";
+        } else if (item.equals(Utility.AUTO_ROTATION_SETTING)) {
+            item = "Auto rotation";
+        } else if (item.equals(Utility.BLUETOOTH_SETTING)) {
+            item = "Bluetooth";
+        } else if (item.equals(Utility.WALLPAPER_SETTING)) {
+            item = "Wallpaper";
+        } else if (item.equals(Utility.WIFI_SETTING)) {
+            item = "Wifi";
+        } else if (item.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
+            item = "Auto brightness";
+        } else if (item.equals(Utility.MEDIA_VOLUME_SETTING)) {
+            item = "Media volume";
+        } else if (item.equals(Utility.LAUNCH_APP_SETTING)) {
+            item = "Launch app";
+        } else if (item.equals(Utility.DATA_SETTING)) {
+            item = "Data";
+        } else if (item.equals(Utility.BRIGHTNESS_SETTING)) {
+            item = "Brightness";
+        } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
+            item = "Ringtone volume";
+        } else if (item.equals(Utility.START_MUSIC_SETTING)) {
+            item = "Music control";
+        } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+            item = "Notification volume";
+        } else if (item.equals(Utility.RINGTONE_SETTING)) {
+            item = "Ringtone";
+        } else if (item.equals(Utility.SILENT_MODE_SETTING)) {
+            item = "Silent mode";
+        } else if (item.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+            item = "Screen timeout";
+        }
+        return item;
+    }
+
+    public static String getTriggerName(String item) {
+        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            item = "Launch App";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
+            item = "Battery Charging";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
+            item = "Battery percentage";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            item = "Battery temperature";
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
+            item = "Bluetooth DeviceId";
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
+            item = "Bluetooth name";
+        } else if (item.equals(Utility.TRIGGER_NFC)) {
+            item = "NFC";
+        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
+            item = "Location";
+        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            item = "Headphone jack";
+        } else if (item.equals(Utility.TRIGGER_DOCK)) {
+            item = "Dock";
+        } else if (item.equals(Utility.TRIGGER_TIME)) {
+            item = "Time";
+        } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
+            item = "Wifi DeviceID";
+        } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
+            item = "Wifi name";
+        }
+        return item;
+    }
+
     public static class EarphoneJackReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Todo test using car
             //Todo apply
-
+            Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
 

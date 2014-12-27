@@ -120,7 +120,6 @@ public class EditProfile extends Activity {
         public void onClick(View v) {
             String view = v.getTag().toString();
             //Todo split everything up >> if tag.beginswith: info, add, remove...
-            Toast.makeText(EditProfile.this, view, Toast.LENGTH_LONG).show();
 
             if (view.equals("add_prohibitions")) {
                 showProhibitionsDialog();
@@ -130,6 +129,8 @@ public class EditProfile extends Activity {
                 showRestrictionsDialog();
             } else if (view.equals("add_triggers")) {
                 showTriggersDialog();
+            } else if (view.startsWith("info")) {
+                showInfo(view);
             } else {
                 checkLongString(view);
             }
@@ -178,14 +179,16 @@ public class EditProfile extends Activity {
 
             if (action.toLowerCase().equals("add")) {
                 if (type.contains("restri")) {
-                    addRestrictionList(getTriggerName(actor), actor);
+                    addRestrictionList(Utility.getTriggerName(actor), actor);
                 } else if (type.contains("prohib")) {
-                    addProhibitionList(getTriggerName(actor), actor);
+                    addProhibitionList(Utility.getTriggerName(actor), actor);
                 } else if (type.contains("trig")) {
-                    addTriggerList(getTriggerName(actor), actor);
+                    addTriggerList(Utility.getTriggerName(actor), actor);
                 } else {
-                    addCommandList(getCommandName(actor), actor);
+                    addCommandList(Utility.getCommandName(actor), actor);
                 }
+                showEditorDialog(actor);
+
             } else {
                 if (type.contains("restri")) {
                     removeRestriction(actor);
@@ -198,34 +201,95 @@ public class EditProfile extends Activity {
                 }
             }
 
-            dialog.dismiss();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        } else if (view.equals("")) {
-//
-//        }
 
+
+    }
+
+    private void showEditorDialog(String command) {
+        View contentView = null;
+
+
+        if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.AUTO_ROTATION_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.BLUETOOTH_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.WALLPAPER_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.WIFI_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.MEDIA_VOLUME_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.LAUNCH_APP_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.DATA_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.BRIGHTNESS_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.RINGER_VOLUME_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.START_MUSIC_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.RINGTONE_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.SILENT_MODE_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_NFC)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_LOCATION)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_DOCK)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_TIME)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_WIFI_SSID)) {
+            //Todo make dialog
+        } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
+            //Todo make dialog
+        }
+        dialog.setContentView(contentView);
+        dialog.show();
+    }
+
+    private void showInfo(String infoType) {
+        if (infoType.contains("restric")) {
+            //Todo restrictions help
+            showHelpDialog("Restrictions", "restrictions help");
+        } else if (infoType.contains("prohib")) {
+            //Todo prohib help
+            showHelpDialog("Prohibitions", "prohibitions help");
+        } else if (infoType.contains("trig")) {
+            //Todo trigger help
+            showHelpDialog("Triggers", "triggers help");
+        } else {
+            //Todo commands help
+            showHelpDialog("Commands", "commands help");
+        }
     }
 
     @Override
@@ -235,13 +299,21 @@ public class EditProfile extends Activity {
         //Bundle.getExtra edit/new >> if new fill in commands...
         setContentView(R.layout.profile_manager_editor);
         try {
-            String shouldEdit = savedInstanceState.getString(Utility.EDIT_PROFILE);
+            final String shouldEdit = savedInstanceState.getString(Utility.EDIT_PROFILE);
             edit = !(shouldEdit == null || shouldEdit.length() < 2);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (edit)
             profileId = savedInstanceState.getInt(Utility.PROFILE_ID);
+
+        profile_name = (EditText) findViewById(R.id.profile_name);
+        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancel();
+            }
+        });
         getLayouts();
         setInfoOnClickListeners();
         setAddItemOnClickListeners();
@@ -426,7 +498,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    public void cancel(View view) {
+    public void cancel() {
         finish();
     }
 
@@ -832,7 +904,7 @@ public class EditProfile extends Activity {
             final String item = availableProhibitions.get(i);
             final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            view.setText(getTriggerName(item));
+            view.setText(Utility.getTriggerName(item));
             view.setTag("add_prohibition_" + item);
             view.setOnClickListener(tagClickListener);
             layout.addView(view);
@@ -840,73 +912,6 @@ public class EditProfile extends Activity {
         layout.invalidate();
     }
 
-    private String getCommandName(String item) {
-        if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
-            item = "Alarm Volume";
-        } else if (item.equals(Utility.AUTO_ROTATION_SETTING)) {
-            item = "Auto rotation";
-        } else if (item.equals(Utility.BLUETOOTH_SETTING)) {
-            item = "Bluetooth";
-        } else if (item.equals(Utility.WALLPAPER_SETTING)) {
-            item = "Wallpaper";
-        } else if (item.equals(Utility.WIFI_SETTING)) {
-            item = "Wifi";
-        } else if (item.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
-            item = "Auto brightness";
-        } else if (item.equals(Utility.MEDIA_VOLUME_SETTING)) {
-            item = "Media volume";
-        } else if (item.equals(Utility.LAUNCH_APP_SETTING)) {
-            item = "Launch app";
-        } else if (item.equals(Utility.DATA_SETTING)) {
-            item = "Data";
-        } else if (item.equals(Utility.BRIGHTNESS_SETTING)) {
-            item = "Brightness";
-        } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
-            item = "Ringtone volume";
-        } else if (item.equals(Utility.START_MUSIC_SETTING)) {
-            item = "Music control";
-        } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
-            item = "Notification volume";
-        } else if (item.equals(Utility.RINGTONE_SETTING)) {
-            item = "Ringtone";
-        } else if (item.equals(Utility.SILENT_MODE_SETTING)) {
-            item = "Silent mode";
-        } else if (item.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
-            item = "Screen timeout";
-        }
-        return item;
-    }
-
-    private String getTriggerName(String item) {
-        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            item = "Launch App";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
-            item = "Battery Charging";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
-            item = "Battery percentage";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            item = "Battery temperature";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            item = "Bluetooth DeviceId";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
-            item = "Bluetooth name";
-        } else if (item.equals(Utility.TRIGGER_NFC)) {
-            item = "NFC";
-        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
-            item = "Location";
-        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            item = "Headphone jack";
-        } else if (item.equals(Utility.TRIGGER_DOCK)) {
-            item = "Dock";
-        } else if (item.equals(Utility.TRIGGER_TIME)) {
-            item = "Time";
-        } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
-            item = "Wifi DeviceID";
-        } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            item = "Wifi name";
-        }
-        return item;
-    }
 
     private void showTriggersDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
@@ -930,7 +935,7 @@ public class EditProfile extends Activity {
             final String item = availableTriggers.get(i);
             final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            view.setText(getTriggerName(item));
+            view.setText(Utility.getTriggerName(item));
             view.setTag("add_trigger_" + item);
             view.setOnClickListener(tagClickListener);
             layout.addView(view);
@@ -960,7 +965,7 @@ public class EditProfile extends Activity {
             final String item = availableRestrictions.get(i);
             final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            view.setText(getTriggerName(item));
+            view.setText(Utility.getTriggerName(item));
             view.setTag("add_restriction_" + item);
             view.setOnClickListener(tagClickListener);
             layout.addView(view);
@@ -990,7 +995,7 @@ public class EditProfile extends Activity {
             final String item = availableCommands.get(i);
             final TextView view = (TextView) View.inflate(this, R.layout.command_item, null);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            view.setText(getCommandName(item));
+            view.setText(Utility.getCommandName(item));
             view.setTag("add_command_" + item);
             view.setOnClickListener(tagClickListener);
             layout.addView(view);
@@ -1017,19 +1022,21 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showHelpDialog(String help) {
-        final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo if name.equals.... , show help dialog(String)
-        //Todo change create xml for this
-        dialog.setContentView(R.layout.list_view);
-        View view = dialog.findViewById(R.id.a);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
+    private void showHelpDialog(String titleText, String help) {
+        dialog = new Dialog(this, R.style.CustomDialog);
+        dialog.setContentView(R.layout.help_dialog);
+        final TextView title = (TextView) dialog.findViewById(R.id.title);
+        final TextView text = (TextView) dialog.findViewById(R.id.text);
 
+        title.setText(titleText);
+        text.setText(help);
+
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
-
         dialog.show();
     }
 

@@ -25,7 +25,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
         android:background="@drawable/info_button_selector"
-        android:padding="10dp"
+        android:padding="12dp"
         android:scaleType="centerInside"
         android:src="@drawable/remove" />
 

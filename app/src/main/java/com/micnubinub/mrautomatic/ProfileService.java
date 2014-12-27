@@ -76,6 +76,15 @@ public class ProfileService extends Service {
     //Todo use this array, to check for restrictions and prohibitions
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
 
+
+    //Todo IMPORTANT
+    /**
+     * final IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+     * final Utility.EarphoneJackReceiver receiver = new Utility.EarphoneJackReceiver();
+     * context.registerReceiver(receiver, receiverFilter);
+     * <p/>
+     * * do for all broadcasts with "Intent.FLAG_RECEIVER_REGISTERED_ONLY"
+     */
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
@@ -420,6 +429,10 @@ public class ProfileService extends Service {
     public static class BootUpReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            final IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+            final Utility.EarphoneJackReceiver receiver = new Utility.EarphoneJackReceiver();
+            context.registerReceiver(receiver, receiverFilter);
+
             try {
 //                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.AUTO_START_BOOL, false)) {
                 Intent myIntent = new Intent(context, ProfileService.class);
