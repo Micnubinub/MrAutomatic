@@ -79,44 +79,8 @@ public class EditProfile extends Activity {
                     break;
 
                 case R.id.cancel:
-                    EditProfile.this.finish();
+                    finish();
                     break;
-                case R.id.trigger:
-                    // trigger().show();
-                    break;
-//                case R.id.airplane_mode_click_view:
-//                    airplane_mode_click_view().show();
-//                    break;
-//                case R.id.bluetooth_click_view:
-//                    bluetooth_click_view().show();
-//                    break;
-//
-//                case R.id.data_mode_click_view:
-//                    data_mode_click_view().show();
-//                    break;
-//                case R.id.gps_click_view:
-//                    gps_click_view().show();
-//                    break;
-//                case R.id.haptic_click_view:
-//                    haptic_click_view().show();
-//                    break;
-//                case R.id.screen_settings_click_view:
-//                    screen_settings_click_view().show();
-//                    break;
-//                case R.id.sound_click_view:
-//                    sound_click_view().show();
-//                    break;
-//                case R.id.silent_mode_click_view:
-//                    silent_mode_click_view().show();
-//                    break;
-//                case R.id.wifi_click_view:
-//                    wifi_click_view().show();
-//                    break;
-//                case R.id.sync_click_view:
-//                    sync_click_view().show();
-//                    break;
-
-
             }
         }
     };
@@ -163,7 +127,7 @@ public class EditProfile extends Activity {
     private boolean edit = false;
     private EditText profile_name;
     private String ssid, bssid, trigger_type, update_profile, profile_name_text;
-    private boolean update = false, trigger_device_picked = false;
+    private boolean trigger_device_picked = false;
     private Resources res;
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
@@ -205,7 +169,6 @@ public class EditProfile extends Activity {
                     removeCommand(actor);
                 }
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,7 +221,6 @@ public class EditProfile extends Activity {
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -343,7 +305,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -354,13 +315,13 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.title)).setText("Data");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
 
-        MaterialRadioButton button1 = new MaterialRadioButton(this);
+        final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setText("Off");
-        MaterialRadioButton button2 = new MaterialRadioButton(this);
+        final MaterialRadioButton button2 = new MaterialRadioButton(this);
         button2.setText("2G");
-        MaterialRadioButton button3 = new MaterialRadioButton(this);
+        final MaterialRadioButton button3 = new MaterialRadioButton(this);
         button3.setText("3G");
-        MaterialRadioButton button4 = new MaterialRadioButton(this);
+        final MaterialRadioButton button4 = new MaterialRadioButton(this);
         button4.setText("4G");
 
         materialRadioGroup.addView(button1);
@@ -382,11 +343,40 @@ public class EditProfile extends Activity {
 
     private void showSleepTimeoutDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Data");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+
+        final MaterialRadioButton button1 = new MaterialRadioButton(this);
+        button1.setText("10 secs");
+        final MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setText("30 secs");
+        final MaterialRadioButton button3 = new MaterialRadioButton(this);
+        button3.setText("1 min");
+        final MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setText("2 min");
+        final MaterialRadioButton button5 = new MaterialRadioButton(this);
+        button1.setText("5 min");
+        final MaterialRadioButton button6 = new MaterialRadioButton(this);
+        button2.setText("10 min");
+        final MaterialRadioButton button7 = new MaterialRadioButton(this);
+        button3.setText("15 min");
+        final MaterialRadioButton button8 = new MaterialRadioButton(this);
+        button4.setText("30 min");
+
+        materialRadioGroup.addView(button1);
+        materialRadioGroup.addView(button2);
+        materialRadioGroup.addView(button3);
+        materialRadioGroup.addView(button5);
+        materialRadioGroup.addView(button6);
+        materialRadioGroup.addView(button7);
+        materialRadioGroup.addView(button8);
+
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
@@ -399,16 +389,36 @@ public class EditProfile extends Activity {
 
     private void showMusicPlayerDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Media Control");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+
+        final MaterialRadioButton button1 = new MaterialRadioButton(this);
+        button1.setText("Play");
+        final MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setText("Pause");
+        final MaterialRadioButton button3 = new MaterialRadioButton(this);
+        button3.setText("Toggle");
+        final MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setText("Skip");
+        final MaterialRadioButton button5 = new MaterialRadioButton(this);
+        button4.setText("Previous");
+
+        materialRadioGroup.addView(button1);
+        materialRadioGroup.addView(button2);
+        materialRadioGroup.addView(button3);
+        materialRadioGroup.addView(button4);
+        materialRadioGroup.addView(button5);
+
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -449,7 +459,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -487,7 +496,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -519,7 +527,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -535,7 +542,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -550,7 +556,6 @@ public class EditProfile extends Activity {
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -568,7 +573,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -584,7 +588,6 @@ public class EditProfile extends Activity {
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -602,7 +605,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -618,7 +620,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -633,7 +634,6 @@ public class EditProfile extends Activity {
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -740,12 +740,9 @@ public class EditProfile extends Activity {
             profileId = savedInstanceState.getInt(Utility.PROFILE_ID);
 
         profile_name = (EditText) findViewById(R.id.profile_name);
-        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        findViewById(R.id.cancel).setOnClickListener(listener);
+        findViewById(R.id.save).setOnClickListener(listener);
+
         getLayouts();
         setInfoOnClickListeners();
         setAddItemOnClickListeners();
@@ -801,7 +798,7 @@ public class EditProfile extends Activity {
     }
 
     private void editProfile(String id) {
-        update = true;
+
         getProfileValues(id);
         setViewValues();
     }
@@ -827,7 +824,7 @@ public class EditProfile extends Activity {
     }
 
     public void save() {
-
+        //Todo for loop going through all the arrays building a string to be saved
         // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
@@ -836,31 +833,18 @@ public class EditProfile extends Activity {
             Toast.makeText(this, "You need a trigger device", Toast.LENGTH_LONG).show();
         } else {
 
-//            String wifi_value_string = String.valueOf(wifi_value);
-//            String bluetooth_value_string = String.valueOf(bluetooth_value);
-//            String gps_value_string = String.valueOf(gps_value);
-//            String auto_brightness_value_string = String.valueOf(autobrightness_value);
-//            String brightness_value_string = String.valueOf(brightness_value);
-//            String data_value_string = String.valueOf(data_value);
-//            String media_volume_string = String.valueOf(media_volume);
-//            String notification_value_string = String.valueOf(notification_volume);
-//            String ringer_phone_call_volume_string = String.valueOf(ringer_phonecall_volume);
-//            String sleep_timeout_string = String.valueOf(sleep_timeout);
-//            String haptic_feedback_value_string = String.valueOf(haptic_feedback_value);
-//            String airplane_mode_value_string = String.valueOf(airplane_mode_value);
-//            String sync_value_string = String.valueOf(sync_value);
             String profile_name_string = profile_name.getText().toString();
 
-            if (profile_name_string.length() < 1 || profile_name_string == null)
+            if (profile_name_string == null || profile_name_string.length() < 1)
                 profile_name_string = "Untitled";
 
             content_values = new ContentValues();
 
             content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
             content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-            //Todo
 
-            if (update) {
+
+            if (edit) {
                 try {
                     Log.e("write update", "passed");
                     profiledb.update(ProfileDBHelper.PROFILE_TABLE, content_values, ProfileDBHelper.ID + "=" + update_profile, null);
@@ -878,7 +862,7 @@ public class EditProfile extends Activity {
                 }
             }
             close();
-            this.finish();
+            finish();
         }
     }
 
@@ -894,48 +878,45 @@ public class EditProfile extends Activity {
         else
             wifi_old_value = 0;
 
-
         try {
             brightness_auto_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         try {
             alarm_old_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_ALARM);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         try {
             brightness_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         try {
             old_notification_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
             old_incoming_call_volume = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_RING);
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
             old_media_volume_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_MUSIC);
-
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void cancel() {
-        finish();
-    }
 
     public void setOldValues() {
-
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, old_media_volume_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, old_notification_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_RING, old_incoming_call_volume);
@@ -958,29 +939,11 @@ public class EditProfile extends Activity {
         else
             wifiManager.setWifiEnabled(true);
 
-
     }
 
     private void init() {
-        //Todo view = findViewbiId(R.id.dddd)/....
         res = getResources();
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
-
-//        profile_name = (EditText) findViewById(R.id.profile_name);
-//
-//        findViewById(R.id.airplane_mode_click_view).setOnClickListener(listener);
-//        findViewById(R.id.bluetooth_click_view).setOnClickListener(listener);
-//        findViewById(R.id.save).setOnClickListener(listener);
-//        findViewById(R.id.cancel).setOnClickListener(listener);
-//        findViewById(R.id.data_mode_click_view).setOnClickListener(listener);
-//        findViewById(R.id.gps_click_view).setOnClickListener(listener);
-//        findViewById(R.id.haptic_click_view).setOnClickListener(listener);
-//        findViewById(R.id.screen_settings_click_view).setOnClickListener(listener);
-//        findViewById(R.id.sound_click_view).setOnClickListener(listener);
-//        findViewById(R.id.silent_mode_click_view).setOnClickListener(listener);
-//        findViewById(R.id.wifi_click_view).setOnClickListener(listener);
-//        findViewById(R.id.sync_click_view).setOnClickListener(listener);
     }
 
     public void getProfileValues(String ID) {
@@ -1003,190 +966,6 @@ public class EditProfile extends Activity {
         }
     }
 
-//    private Dialog airplane_mode_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_airplane);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.airplane_mode_switch);
-//        materialSwitch.setChecked(airplane_mode_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                airplane_mode_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-
-//    private Dialog bluetooth_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_bluetooth);
-//
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.bluetooth_switch);
-//        materialSwitch.setChecked(bluetooth_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                bluetooth_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-//
-//    private Dialog data_mode_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        return dialog;
-//    }
-//
-//    private Dialog gps_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_gps);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.gps_switch);
-//        materialSwitch.setChecked(gps_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                gps_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-
-//    private Dialog haptic_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.material_profile_manager_haptic_feedback);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.haptic_switch);
-//        materialSwitch.setChecked(haptic_feedback_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                haptic_feedback_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-//
-//    private Dialog screen_settings_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_screen_settings);
-//        final View brightnessBarLayout = dialog.findViewById(R.id.brightness_seekbar_layout);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.auto_brightness_switch);
-//        materialSwitch.setChecked(autobrightness_value == 1 ? true : false);
-////        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
-////            @Override
-////            public void onCheckedChange(boolean isChecked) {
-////                if (!isChecked) {
-////                    brightnessBarLayout.setVisibility(View.VISIBLE);
-////                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-////
-////                } else {
-////                    brightnessBarLayout.setVisibility(View.GONE);
-////                    try {
-////                        Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-////                    } catch (Exception e) {
-////                    }
-////                }
-////
-//                brightness_auto = isChecked ? 1 : 0;
-//            }
-//        });
-
-//        final MaterialSeekBar brightness = (MaterialSeekBar) dialog.findViewById(R.id.brightness_seekbar_level);
-//        brightness.setMax(255);
-//        try {
-//            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//            brightness.setProgress(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS));
-//        } catch (Exception e) {
-//        }
-//
-//
-////        brightness.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
-////            @Override
-////            public void onProgressChanged(int progress) {
-////                brightness_value = progress;
-////                Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, progress);
-////            }
-////        });
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                if (brightness_auto_old_value != 1) {
-//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightness_old_value);
-//                } else {
-//                    Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-//                }
-//            }
-//        });
-//
-//        return dialog;
-//    }
-////
-////    private Dialog sound_click_view() {
-////        dialog = new Dialog(this, R.style.CustomDialog);
-////
-////        dialog.setContentView(R.layout.material_profile_manager_sound_volumes);
-////        return dialog;
-////    }
-//
-//    private Dialog silent_mode_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-////
-////        dialog.setContentView(R.layout.material_profile_manager_silentmode);
-////
-////        /*final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.wifi_switch);
-////        materialSwitch.setChecked(wifi_value == 1 ? true : false);
-////
-////        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-////            @Override
-////            public void onDismiss(DialogInterface dialog) {
-//                wifi_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });*/
-//        return dialog;
-//    }
-
-//    private Dialog sync_click_view() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_sync);
-//
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.sync_switch);
-//        materialSwitch.setChecked(sync_value == 1 ? true : false);
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                sync_value = materialSwitch.isChecked() ? 1 : 0;
-//            }
-//        });
-//        return dialog;
-//    }
-//
-//    private Dialog trigger() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_trigger_chooser);
-//        dialog.findViewById(R.id.wifi_click_view).setOnClickListener(triggerDialogClick);
-//        dialog.findViewById(R.id.bluetooth_click_view).setOnClickListener(triggerDialogClick);
-//        dialog.findViewById(R.id.time_click_view).setOnClickListener(triggerDialogClick);
-//        dialog.findViewById(R.id.gps_click_view).setOnClickListener(triggerDialogClick);
-//        dialog.findViewById(R.id.nfc_click_view).setOnClickListener(triggerDialogClick);
-//        dialog.findViewById(R.id.battery_click_view).setOnClickListener(triggerDialogClick);
-//        return dialog;
-//    }
-//
 //    private Dialog wifiDevicePicker() {
 //        dialog = new Dialog(this, R.style.CustomDialog);
 //
@@ -1231,50 +1010,6 @@ public class EditProfile extends Activity {
 //        return dialog;
 //    }
 
-//    private Dialog batteryPiker() {
-//        dialog = new Dialog(this, R.style.CustomDialog);
-//
-//        dialog.setContentView(R.layout.material_profile_manager_battery);
-//        final View batteryBarLayout = dialog.findViewById(R.id.battery_seekbar_layout);
-//        final MaterialSeekBar battery_seekbar = (MaterialSeekBar) dialog.findViewById(R.id.battery_seekbar_level);
-//        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.battery_charging_switch);
-//        final TextView percentage = (TextView) dialog.findViewById(R.id.battery_percentage);
-//        //Todo charging is -1
-//        battery_seekbar.setMax(100);
-//        battery_seekbar.setProgress(50);
-//        bssid = "50";
-//        percentage.setText("Battery level: " + bssid + "%");
-//
-//        materialSwitch.setChecked(battery_level == -1 ? true : false);
-////        materialSwitch.setOnCheckedChangeListener(new MaterialSwitch.OnCheckedChangedListener() {
-////            @Override
-////            public void onCheckedChange(boolean isChecked) {
-////                if (!isChecked)
-////                    batteryBarLayout.setVisibility(View.VISIBLE);
-////                else
-////                    batteryBarLayout.setVisibility(View.GONE);
-////            }
-////        });
-//
-////        battery_seekbar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
-////            @Override
-////            public void onProgressChanged(int progress) {
-////                bssid = String.valueOf(progress);
-////                percentage.setText("Battery level: " + bssid + "%");
-////            }
-////        });
-//
-//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//            @Override
-//            public void onDismiss(DialogInterface dialog) {
-//                //trigger_type = Utility.TRIGGER_BATTERY;
-//                trigger_device_picked = true;
-//                if (materialSwitch.isChecked())
-//                    bssid = String.valueOf(-1);
-//        });
-//
-//        return dialog;
-//    }
 
     private void showProhibitionsDialog() {
         dialog = new Dialog(this, R.style.CustomDialog);
@@ -1287,7 +1022,6 @@ public class EditProfile extends Activity {
     }
 
     private void populateProhibitions(LinearLayout layout) {
-
         try {
             layout.removeAllViews();
         } catch (Exception e) {
@@ -1318,7 +1052,6 @@ public class EditProfile extends Activity {
     }
 
     private void populateTriggers(LinearLayout layout) {
-
         try {
             layout.removeAllViews();
         } catch (Exception e) {
@@ -1348,7 +1081,6 @@ public class EditProfile extends Activity {
     }
 
     private void populateRestrictions(LinearLayout layout) {
-
         try {
             layout.removeAllViews();
         } catch (Exception e) {
@@ -1378,7 +1110,6 @@ public class EditProfile extends Activity {
     }
 
     private void populateCommands(LinearLayout layout) {
-
         try {
             layout.removeAllViews();
         } catch (Exception e) {
@@ -1397,14 +1128,12 @@ public class EditProfile extends Activity {
         layout.invalidate();
     }
 
-
     private void showCopyFromChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
         //Todo change create xml for this
         currentDialog = "copy_from";
         dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
-
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -1468,50 +1197,45 @@ public class EditProfile extends Activity {
     private void addProhibitionList(String name, String command) {
         prohibitionList.addView(getView(name, "prohibition_", command), 0);
         availableProhibitions.remove(command);
-
-        //Todo avalable.remove(name);
     }
 
     private void addTriggerList(String name, String command) {
         triggerList.addView(getView(name, "trigger_", command), 0);
         availableTriggers.remove(command);
-//Todo avalable.remove(name);
+
     }
 
     private void addRestrictionList(String name, String command) {
         restrictionList.addView(getView(name, "restriction_", command), 0);
         availableRestrictions.remove(command);
-//Todo avalable.remove(name);
     }
 
     private void addCommandList(String name, String command) {
         commandList.addView(getView(name, "command_", command), 0);
         availableCommands.remove(command);
-        //Todo avalable.remove(name);
     }
 
     private void removeProhibition(String name) {
         removeView(prohibitionList, name);
-        //Todo avalable.add(name);
+        availableProhibitions.add(name);
     }
 
     private void removeTrigger(String name) {
         removeView(triggerList, name);
-//Todo avalable.add(name);
+        availableTriggers.add(name);
     }
 
     private void removeRestriction(String name) {
         removeView(restrictionList, name);
-//Todo avalable.add(name);
+        availableRestrictions.add(name);
     }
 
     private void removeCommand(String name) {
         removeView(commandList, name);
-//Todo avalable.add(name);
+        availableCommands.add(name);
     }
 
     private void fillInArrayLists() {
-        //Todo consider using {"command"}
         fillInAvailableCommands();
         fillInAvailableTriggers();
         fillInAvailableRestrictions();
@@ -1548,56 +1272,53 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableTriggers() {
-        //Todo reorder these
+        //Todo consider removing ssid/bssid in favor of a checkbox in the dialog for for the bssid or ssid
+        availableTriggers.add("BLUETOOTH_SSID");
+        availableTriggers.add("BLUETOOTH_BSSID");
+        availableTriggers.add("WIFI_SSID");
+        availableTriggers.add("WIFI_BSSID");
         availableTriggers.add("BATTERY_TEMPERATURE");
         availableTriggers.add("BATTERY_PERCENTAGE");
         availableTriggers.add("BATTERY_CHARGING");
-        availableTriggers.add("BLUETOOTH_BSSID");
         availableTriggers.add("NFC");
         availableTriggers.add("EARPHONE_JACK");
         availableTriggers.add("DOCK");
         availableTriggers.add("TIME");
         availableTriggers.add("LOCATION");
         availableTriggers.add("APP_LAUNCH");
-        availableTriggers.add("WIFI_SSID");
-        availableTriggers.add("WIFI_BSSID");
-        availableTriggers.add("BLUETOOTH_SSID");
     }
 
     private void fillInAvailableProhibitions() {
-        //Todo reorder these
+        availableProhibitions.add("BLUETOOTH_SSID");
+        availableProhibitions.add("BLUETOOTH_BSSID");
+        availableProhibitions.add("WIFI_SSID");
+        availableProhibitions.add("WIFI_BSSID");
         availableProhibitions.add("BATTERY_TEMPERATURE");
         availableProhibitions.add("BATTERY_PERCENTAGE");
         availableProhibitions.add("BATTERY_CHARGING");
-        availableProhibitions.add("BLUETOOTH_BSSID");
         availableProhibitions.add("NFC");
         availableProhibitions.add("EARPHONE_JACK");
         availableProhibitions.add("DOCK");
         availableProhibitions.add("TIME");
         availableProhibitions.add("LOCATION");
         availableProhibitions.add("APP_LAUNCH");
-        availableProhibitions.add("WIFI_SSID");
-        availableProhibitions.add("WIFI_BSSID");
-        availableProhibitions.add("BLUETOOTH_SSID");
     }
 
 
     private void fillInAvailableRestrictions() {
-        //Todo reorder these
+        availableRestrictions.add("BLUETOOTH_SSID");
+        availableRestrictions.add("BLUETOOTH_BSSID");
+        availableRestrictions.add("WIFI_SSID");
+        availableRestrictions.add("WIFI_BSSID");
         availableRestrictions.add("BATTERY_TEMPERATURE");
         availableRestrictions.add("BATTERY_PERCENTAGE");
         availableRestrictions.add("BATTERY_CHARGING");
-        availableRestrictions.add("BLUETOOTH_BSSID");
         availableRestrictions.add("NFC");
         availableRestrictions.add("EARPHONE_JACK");
         availableRestrictions.add("DOCK");
         availableRestrictions.add("TIME");
         availableRestrictions.add("LOCATION");
         availableRestrictions.add("APP_LAUNCH");
-        availableRestrictions.add("WIFI_SSID");
-        availableRestrictions.add("WIFI_BSSID");
-        availableRestrictions.add("BLUETOOTH_SSID");
-
     }
 
     private void fillInAvailableCommands() {
