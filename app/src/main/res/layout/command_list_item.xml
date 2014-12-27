@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/delete"
+        android:layout_toLeftOf="@+id/remove"
         android:background="@drawable/white_button_selector"
         android:ellipsize="end"
         android:maxLines="1"
@@ -19,11 +19,14 @@
         android:textSize="22sp" />
 
     <ImageView
-        android:id="@+id/delete"
+        android:id="@+id/remove"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="8dp"
-        android:scaleType="centerInside" />
+        android:background="@drawable/info_button_selector"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/remove" />
 
 </RelativeLayout>

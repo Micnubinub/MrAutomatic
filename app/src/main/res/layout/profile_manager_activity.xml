@@ -30,7 +30,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:layout_toLeftOf="@+id/delete"
+        android:layout_toLeftOf="@+id/remove"
         android:background="@drawable/fab"
         android:gravity="center"
         android:scaleType="centerInside"

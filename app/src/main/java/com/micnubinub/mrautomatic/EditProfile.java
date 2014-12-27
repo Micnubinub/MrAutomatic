@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tools.Command;
@@ -129,40 +130,8 @@ public class EditProfile extends Activity {
                 showRestrictionsDialog();
             } else if (view.equals("add_triggers")) {
                 showTriggersDialog();
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
-            } else if (view.equals("")) {
-
+            } else {
+                checkLongString(view);
             }
         }
     };
@@ -181,7 +150,7 @@ public class EditProfile extends Activity {
             }
         }
     };
-    int brightness_auto_old_value, ringer_phonecall_volume, ringer_old_value, alarm_old_value, alarm_volume, sleep_timeout;
+    int brightness_auto_old_value, ringer_old_value, alarm_old_value;
     int wifi_old_value, bluetooth_old_value, brightness_old_value, media_volume, old_media_volume_value, notification_volume, old_notification_value, old_incoming_call_volume;
     int profileId;
     private String currentDialog;
@@ -198,6 +167,66 @@ public class EditProfile extends Activity {
     private Uri notification;
     private Cursor cursor;
     private SQLiteDatabase profiledb;
+
+    private void checkLongString(String string) {
+        try {
+            final String[] split = string.split("_", 3);
+            Toast.makeText(this, Arrays.toString(split), Toast.LENGTH_LONG).show();
+            final String action = split[0];
+            final String type = split[1];
+            final String actor = split[2];
+
+            if (action.toLowerCase().equals("add")) {
+                if (type.contains("restri")) {
+                    addRestrictionList(getTriggerName(actor), actor);
+                } else if (type.contains("prohib")) {
+                    addProhibitionList(getTriggerName(actor), actor);
+                } else if (type.contains("trig")) {
+                    addTriggerList(getTriggerName(actor), actor);
+                } else {
+                    addCommandList(getCommandName(actor), actor);
+                }
+            } else {
+                if (type.contains("restri")) {
+                    removeRestriction(actor);
+                } else if (type.contains("prohib")) {
+                    removeProhibition(actor);
+                } else if (type.contains("trig")) {
+                    removeTrigger(actor);
+                } else {
+                    removeCommand(actor);
+                }
+            }
+
+            dialog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        } else if (view.equals("")) {
+//
+//        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,36 +393,36 @@ public class EditProfile extends Activity {
 
         try {
             brightness_auto_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
 
 
         try {
             alarm_old_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_ALARM);
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
 
 
         try {
             brightness_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
 
 
         try {
             old_notification_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION);
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
 
         try {
             old_incoming_call_volume = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_RING);
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
 
         try {
             old_media_volume_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_MUSIC);
 
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (Exception e) {
         }
     }
 
@@ -573,7 +602,7 @@ public class EditProfile extends Activity {
 //        try {
 //            Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
 //            brightness.setProgress(Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS));
-//        } catch (Settings.SettingNotFoundException e) {
+//        } catch (Exception e) {
 //        }
 //
 //
@@ -1004,47 +1033,59 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private View getView(String name, String text) {
-        final View view = View.inflate(this, R.layout.command_list_item, null);
+    private View getView(String viewName, String type, String viewCommand) {
+        final View view = View.inflate(EditProfile.this, R.layout.command_list_item, null);
         view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         //Todo fix this
-        view.findViewById(R.id.text).setTag("open_" + name);
+        view.findViewById(R.id.text).setTag("open_" + type + viewCommand);
         view.findViewById(R.id.text).setOnClickListener(tagClickListener);
         //Todo fix this
-        view.findViewById(R.id.delete).setTag("delete_" + name);
-        view.findViewById(R.id.delete).setOnClickListener(tagClickListener);
+        view.findViewById(R.id.remove).setTag("remove_" + type + viewCommand);
+        view.findViewById(R.id.remove).setOnClickListener(tagClickListener);
+        view.setTag(viewCommand);
 
-        ((TextView) view.findViewById(R.id.text)).setText(text);
+        ((TextView) view.findViewById(R.id.text)).setText(viewName);
+
         return view;
     }
 
     private void removeView(LinearLayout layout, String name) {
+        Toast.makeText(this, String.format("lChildCo, name : %d, %s", layout.getChildCount(), name), Toast.LENGTH_LONG).show();
+
         for (int i = 0; i < layout.getChildCount(); i++) {
-            View view = layout.getChildAt(i);
-            if (view.getTag().toString().equals(name)) {
+            final View view = layout.getChildAt(i);
+            Toast.makeText(this, "checking view tag :" + view.getTag().toString(), Toast.LENGTH_LONG).show();
+            if (view.getTag().toString().contains(name)) {
                 layout.removeView(view);
+                layout.invalidate();
                 return;
             }
         }
     }
 
-    private void addProhibitionList(String name, String text) {
-        prohibitionList.addView(getView(name, text));
+    private void addProhibitionList(String name, String command) {
+        prohibitionList.addView(getView(name, "prohibition_", command), 0);
+        availableProhibitions.remove(command);
+
         //Todo avalable.remove(name);
     }
 
-    private void addTriggerList(String name, String text) {
-        triggerList.addView(getView(name, text));
+    private void addTriggerList(String name, String command) {
+        triggerList.addView(getView(name, "trigger_", command), 0);
+        availableTriggers.remove(command);
 //Todo avalable.remove(name);
     }
 
-    private void addRestrictionList(String name, String text) {
-        restrictionList.addView(getView(name, text));
+    private void addRestrictionList(String name, String command) {
+        restrictionList.addView(getView(name, "restriction_", command), 0);
+        availableRestrictions.remove(command);
 //Todo avalable.remove(name);
     }
 
-    private void addCommandList(String name, String text) {
-        commandList.addView(getView(name, text));
+    private void addCommandList(String name, String command) {
+        commandList.addView(getView(name, "command_", command), 0);
+        availableCommands.remove(command);
         //Todo avalable.remove(name);
     }
 

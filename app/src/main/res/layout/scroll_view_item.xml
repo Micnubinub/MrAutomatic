@@ -30,7 +30,7 @@
             android:layout_margin="4dp"
             android:background="@drawable/info_button_selector"
             android:padding="8dp"
-            android:src="@android:drawable/ic_menu_info_details" />
+            android:src="@drawable/info" />
     </RelativeLayout>
 
     <view_classes.Card xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -45,6 +45,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/add_item"
                 android:layout_width="fill_parent"
