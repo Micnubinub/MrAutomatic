@@ -209,7 +209,8 @@ public class EditProfile extends Activity {
 
     }
 
-    private void showAlarmDialog() {
+    private void showAlarmVolumeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,7 +225,8 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+    private void showAutorotatioDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,7 +241,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showBluetoothDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +258,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showWallPaperDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,7 +275,8 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+    private void showWifiDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,7 +291,8 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+    private void showBrightnessDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,7 +307,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showMediaVolumeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,7 +324,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showAppLauncherDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,7 +341,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showDataDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -344,7 +358,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showMusicPlayerDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,7 +375,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showNotificationVolumeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,7 +392,8 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+    private void showSilentModeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,7 +408,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showRingtoneVolumeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -404,7 +425,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showSleepTimeoutDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -419,7 +442,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showAppLaunchListenerDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,7 +459,25 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showBatteryDialog() {
+        //Todo make dialog  battery remp, charge, percent
+
+        final View view = View.inflate(EditProfile.this, R.layout., null);
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Trigger trigger = new Trigger("Type", "value");
+                normalTriggers.add(trigger);
+                dialog.dismiss();
+            }
+        });
+
+        showDialog(view);
+    }
+
+    private void showNFCDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -449,7 +492,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showLocationDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -464,7 +509,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showHeadPhoneJackDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -479,7 +526,9 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
+
+    private void showDockDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -494,157 +543,8 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
-        final View view = View.inflate(EditProfile.this, R.layout., null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
-                normalTriggers.add(trigger);
-                dialog.dismiss();
-            }
-        });
-
-
-        showDialog(view);
-    }
-
-    private void showAlarmDialog() {
+    private void showTimeDialog() {
+        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout., null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -663,63 +563,63 @@ public class EditProfile extends Activity {
 
 
         if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
-            //Todo make dialog
+            showAlarmVolumeDialog();
         } else if (command.equals(Utility.AUTO_ROTATION_SETTING)) {
-            //Todo make dialog
+            showAutorotatioDialog();
         } else if (command.equals(Utility.BLUETOOTH_SETTING)) {
-            //Todo make dialog
+            showBluetoothDialog();
         } else if (command.equals(Utility.WALLPAPER_SETTING)) {
-            //Todo make dialog
+            showWallPaperDialog();
         } else if (command.equals(Utility.WIFI_SETTING)) {
-            //Todo make dialog
+            showWifiDialog();
         } else if (command.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
-            //Todo make dialog
+            showBrightnessDialog();
         } else if (command.equals(Utility.MEDIA_VOLUME_SETTING)) {
-            //Todo make dialog
+            showMediaVolumeDialog();
         } else if (command.equals(Utility.LAUNCH_APP_SETTING)) {
-            //Todo make dialog
+            showAppLauncherDialog();
         } else if (command.equals(Utility.DATA_SETTING)) {
-            //Todo make dialog
+            showDataDialog();
         } else if (command.equals(Utility.BRIGHTNESS_SETTING)) {
-            //Todo make dialog
+            showBrightnessDialog();
         } else if (command.equals(Utility.RINGER_VOLUME_SETTING)) {
-            //Todo make dialog
+            showRingtoneVolumeDialog();
         } else if (command.equals(Utility.START_MUSIC_SETTING)) {
-            //Todo make dialog
+            showMusicPlayerDialog();
         } else if (command.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
-            //Todo make dialog
+            showNotificationVolumeDialog();
         } else if (command.equals(Utility.RINGTONE_SETTING)) {
-            //Todo make dialog
+            showRingtoneVolumeDialog();
         } else if (command.equals(Utility.SILENT_MODE_SETTING)) {
-            //Todo make dialog
+            showSilentModeDialog();
         } else if (command.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
-            //Todo make dialog
+            showSleepTimeoutDialog();
         } else if (command.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            //Todo make dialog
+            showAppLaunchListenerDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
-            //Todo make dialog
+            showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
-            //Todo make dialog
+            showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            //Todo make dialog
+            showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            //Todo make dialog
+            showBluetoothDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
-            //Todo make dialog
+            showBluetoothDialog();
         } else if (command.equals(Utility.TRIGGER_NFC)) {
-            //Todo make dialog
+            showNFCDialog();
         } else if (command.equals(Utility.TRIGGER_LOCATION)) {
-            //Todo make dialog
+            showLocationDialog();
         } else if (command.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            //Todo make dialog
+            showHeadPhoneJackDialog();
         } else if (command.equals(Utility.TRIGGER_DOCK)) {
-            //Todo make dialog
+            showDockDialog();
         } else if (command.equals(Utility.TRIGGER_TIME)) {
-            //Todo make dialog
+            showTimeDialog();
         } else if (command.equals(Utility.TRIGGER_WIFI_SSID)) {
-            //Todo make dialog
+            showWifiDialog();
         } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            //Todo make dialog
+            showWifiDialog();
         }
 
     }
