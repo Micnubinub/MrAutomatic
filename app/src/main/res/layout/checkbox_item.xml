@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:layout_marginTop="12dp"
+    android:background="@drawable/round_rect"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_button_selector"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="Title"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+
+    <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/material_checkbox"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_below="@+id/title"
+        android:layout_margin="8dp"
+        app:text="Text" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/white_button_selector"
+        android:minWidth="120dp"
+        android:padding="8dp"
+        android:text="Dismiss"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="18sp" />
+
+</RelativeLayout>

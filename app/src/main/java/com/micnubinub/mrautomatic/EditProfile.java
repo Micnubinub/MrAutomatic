@@ -174,17 +174,26 @@ public class EditProfile extends Activity {
             e.printStackTrace();
         }
 
-
     }
 
     private void showAlarmVolumeDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Alarm");
+        ((TextView) view.findViewById(R.id.text)).setText("Alarm volume");
 
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(7);
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+
+            }
+        });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
@@ -196,27 +205,48 @@ public class EditProfile extends Activity {
 
     private void showMediaVolumeDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Media");
+        ((TextView) view.findViewById(R.id.text)).setText("Media volume");
+
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(15);
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+//Todo
+            }
+        });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
 
     private void showNotificationVolumeDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Notifications");
+        ((TextView) view.findViewById(R.id.text)).setText("Notification volume");
+
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(7);
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+
+            }
+        });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
@@ -227,16 +257,26 @@ public class EditProfile extends Activity {
 
     private void showRingtoneVolumeDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Ringtones");
+        ((TextView) view.findViewById(R.id.text)).setText("Ringtone volume");
+
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(7);
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+
+            }
+        });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
         });
-
 
         showDialog(view);
     }
@@ -249,6 +289,12 @@ public class EditProfile extends Activity {
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(255);
         materialSeekBar.setProgress(50);
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+
+            }
+        });
 
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
         materialCheckBox.setVisibility(View.VISIBLE);
@@ -501,7 +547,8 @@ public class EditProfile extends Activity {
 
     private void showRingtoneDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -517,7 +564,8 @@ public class EditProfile extends Activity {
 
     private void showWallPaperDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -532,7 +580,8 @@ public class EditProfile extends Activity {
 
     private void showAppLauncherDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -547,7 +596,8 @@ public class EditProfile extends Activity {
 
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -563,7 +613,8 @@ public class EditProfile extends Activity {
 
     private void showNFCDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -579,7 +630,8 @@ public class EditProfile extends Activity {
 
     private void showLocationDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -595,7 +647,8 @@ public class EditProfile extends Activity {
 
     private void showDockDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -610,11 +663,14 @@ public class EditProfile extends Activity {
 
     private void showHeadPhoneJackDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        final View view = View.inflate(EditProfile.this, R.layout.checkbox_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Headphone Jack");
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        materialCheckBox.setText("Jack connect");
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Trigger trigger = new Trigger("Type", "value");
+                Trigger trigger = new Trigger(Utility.TRIGGER_EARPHONE_JACK, materialCheckBox.isChecked() ? "1" : "0");
                 normalTriggers.add(trigger);
                 dialog.dismiss();
             }
@@ -625,7 +681,8 @@ public class EditProfile extends Activity {
 
     private void showTimeDialog() {
         //Todo make dialog
-        final View view = View.inflate(EditProfile.this, R.layout., null);
+        //Todo make dialog
+        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -750,7 +807,7 @@ public class EditProfile extends Activity {
         fillInArrayLists();
 
 //        init();
-//        getOldValues();
+        getOldValues();
 
     }
 
@@ -868,15 +925,10 @@ public class EditProfile extends Activity {
 
     public void getOldValues() {
 
-        if (adapter.isEnabled())
-            bluetooth_old_value = 1;
-        else
-            bluetooth_old_value = 0;
+        bluetooth_old_value = adapter.isEnabled() ? 1 : 0;
 
-        if (wifiManager.isWifiEnabled())
-            wifi_old_value = 1;
-        else
-            wifi_old_value = 0;
+        wifi_old_value = wifiManager.isWifiEnabled() ? 1 : 0;
+
 
         try {
             brightness_auto_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE);
@@ -928,16 +980,14 @@ public class EditProfile extends Activity {
             Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
         }
 
-        if (bluetooth_old_value == 1)
+        if (bluetooth_old_value == 1) {
             if (!adapter.isEnabled())
                 adapter.enable();
-            else if (adapter.isEnabled())
-                adapter.disable();
+        } else if (adapter.isEnabled())
+            adapter.disable();
 
-        if (wifi_old_value == 0)
-            wifiManager.setWifiEnabled(false);
-        else
-            wifiManager.setWifiEnabled(true);
+        wifiManager.setWifiEnabled(wifi_old_value == 0 ? false : true);
+
 
     }
 
@@ -948,7 +998,6 @@ public class EditProfile extends Activity {
 
     public void getProfileValues(String ID) {
         profiledb = profileDBHelper.getReadableDatabase();
-        // cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         cursor.moveToPosition(Integer.parseInt(ID));
 
         update_profile = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID));
