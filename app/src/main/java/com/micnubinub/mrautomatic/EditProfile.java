@@ -20,6 +20,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -28,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import tools.Command;
@@ -141,10 +141,10 @@ public class EditProfile extends Activity {
     private void checkLongString(String string) {
         try {
             final String[] split = string.split("_", 3);
-            Toast.makeText(this, Arrays.toString(split), Toast.LENGTH_LONG).show();
             final String action = split[0];
             final String type = split[1];
             final String actor = split[2];
+            currentDialog = type;
 
             if (action.toLowerCase().equals("add")) {
                 if (type.contains("restri")) {
@@ -158,6 +158,9 @@ public class EditProfile extends Activity {
                 }
                 showEditorDialog(actor);
 
+            } else if (action.toLowerCase().equals("open")) {
+
+                showEditorDialog(actor);
             } else {
                 if (type.contains("restri")) {
                     removeRestriction(actor);
@@ -173,7 +176,6 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void showAlarmVolumeDialog() {
@@ -187,7 +189,7 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d", progress));
             }
         });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -215,6 +217,7 @@ public class EditProfile extends Activity {
             @Override
             public void onProgressChanged(int max, int progress) {
 //Todo
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Media volume will be set to: %d", progress));
             }
         });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -240,7 +243,7 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Notification volume will be set to: %d", progress));
             }
         });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -255,6 +258,10 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
+    private int dpToPixels(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+
     private void showRingtoneVolumeDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
@@ -266,7 +273,7 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Ringtone volume will be set to: %d", progress));
             }
         });
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
@@ -360,14 +367,19 @@ public class EditProfile extends Activity {
 
         ((TextView) view.findViewById(R.id.title)).setText("Data");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
+        button1.setLayoutParams(params);
         button1.setText("Off");
         final MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setLayoutParams(params);
         button2.setText("2G");
         final MaterialRadioButton button3 = new MaterialRadioButton(this);
+        button3.setLayoutParams(params);
         button3.setText("3G");
         final MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setLayoutParams(params);
         button4.setText("4G");
 
         materialRadioGroup.addView(button1);
@@ -393,23 +405,33 @@ public class EditProfile extends Activity {
 
         ((TextView) view.findViewById(R.id.title)).setText("Data");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
+
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
+        button1.setLayoutParams(params);
         button1.setText("10 secs");
         final MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setLayoutParams(params);
         button2.setText("30 secs");
         final MaterialRadioButton button3 = new MaterialRadioButton(this);
+        button3.setLayoutParams(params);
         button3.setText("1 min");
         final MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setLayoutParams(params);
         button4.setText("2 min");
         final MaterialRadioButton button5 = new MaterialRadioButton(this);
-        button1.setText("5 min");
+        button5.setLayoutParams(params);
+        button5.setText("5 min");
         final MaterialRadioButton button6 = new MaterialRadioButton(this);
-        button2.setText("10 min");
+        button6.setLayoutParams(params);
+        button6.setText("10 min");
         final MaterialRadioButton button7 = new MaterialRadioButton(this);
-        button3.setText("15 min");
+        button7.setLayoutParams(params);
+        button7.setText("15 min");
         final MaterialRadioButton button8 = new MaterialRadioButton(this);
-        button4.setText("30 min");
+        button8.setLayoutParams(params);
+        button8.setText("30 min");
 
         materialRadioGroup.addView(button1);
         materialRadioGroup.addView(button2);
@@ -439,23 +461,25 @@ public class EditProfile extends Activity {
 
         ((TextView) view.findViewById(R.id.title)).setText("Media Control");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setText("Play");
+        button1.setLayoutParams(params);
         final MaterialRadioButton button2 = new MaterialRadioButton(this);
+        button2.setLayoutParams(params);
         button2.setText("Pause");
         final MaterialRadioButton button3 = new MaterialRadioButton(this);
-        button3.setText("Toggle");
+        button3.setLayoutParams(params);
+        button3.setText("Previous");
         final MaterialRadioButton button4 = new MaterialRadioButton(this);
+        button4.setLayoutParams(params);
         button4.setText("Skip");
-        final MaterialRadioButton button5 = new MaterialRadioButton(this);
-        button4.setText("Previous");
 
         materialRadioGroup.addView(button1);
         materialRadioGroup.addView(button2);
         materialRadioGroup.addView(button3);
         materialRadioGroup.addView(button4);
-        materialRadioGroup.addView(button5);
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -526,6 +550,23 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
+    private void showBluetoothDevicePickerDialog() {
+        //Todo defaults, and reset value when clicked
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
+
+
+        showDialog(view);
+    }
+
+    private void showWifiDevicePickerDialog() {
+        //Todo defaults, and reset value when clicked
+        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
+
+
+        showDialog(view);
+    }
 
     private void showSilentModeDialog() {
         //Todo defaults, and reset value when clicked
@@ -696,8 +737,6 @@ public class EditProfile extends Activity {
     }
 
     private void showEditorDialog(String command) {
-
-
         if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
             showAlarmVolumeDialog();
         } else if (command.equals(Utility.AUTO_ROTATION_SETTING)) {
@@ -739,9 +778,9 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            showBluetoothDialog();
+            showBluetoothDevicePickerDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
-            showBluetoothDialog();
+            showBluetoothDevicePickerDialog();
         } else if (command.equals(Utility.TRIGGER_NFC)) {
             showNFCDialog();
         } else if (command.equals(Utility.TRIGGER_LOCATION)) {
@@ -753,9 +792,9 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.TRIGGER_TIME)) {
             showTimeDialog();
         } else if (command.equals(Utility.TRIGGER_WIFI_SSID)) {
-            showWifiDialog();
+            showWifiDevicePickerDialog();
         } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            showWifiDialog();
+            showWifiDevicePickerDialog();
         }
 
     }
@@ -784,8 +823,6 @@ public class EditProfile extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Bundle.getExtra edit/new >> if new fill in commands...
         setContentView(R.layout.profile_manager_editor);
         try {
             final String shouldEdit = savedInstanceState.getString(Utility.EDIT_PROFILE);
@@ -799,7 +836,7 @@ public class EditProfile extends Activity {
         profile_name = (EditText) findViewById(R.id.profile_name);
         findViewById(R.id.cancel).setOnClickListener(listener);
         findViewById(R.id.save).setOnClickListener(listener);
-
+        init();
         getLayouts();
         setInfoOnClickListeners();
         setAddItemOnClickListeners();
@@ -1323,9 +1360,7 @@ public class EditProfile extends Activity {
     private void fillInAvailableTriggers() {
         //Todo consider removing ssid/bssid in favor of a checkbox in the dialog for for the bssid or ssid
         availableTriggers.add("BLUETOOTH_SSID");
-        availableTriggers.add("BLUETOOTH_BSSID");
         availableTriggers.add("WIFI_SSID");
-        availableTriggers.add("WIFI_BSSID");
         availableTriggers.add("BATTERY_TEMPERATURE");
         availableTriggers.add("BATTERY_PERCENTAGE");
         availableTriggers.add("BATTERY_CHARGING");
@@ -1339,9 +1374,7 @@ public class EditProfile extends Activity {
 
     private void fillInAvailableProhibitions() {
         availableProhibitions.add("BLUETOOTH_SSID");
-        availableProhibitions.add("BLUETOOTH_BSSID");
         availableProhibitions.add("WIFI_SSID");
-        availableProhibitions.add("WIFI_BSSID");
         availableProhibitions.add("BATTERY_TEMPERATURE");
         availableProhibitions.add("BATTERY_PERCENTAGE");
         availableProhibitions.add("BATTERY_CHARGING");
@@ -1356,9 +1389,7 @@ public class EditProfile extends Activity {
 
     private void fillInAvailableRestrictions() {
         availableRestrictions.add("BLUETOOTH_SSID");
-        availableRestrictions.add("BLUETOOTH_BSSID");
         availableRestrictions.add("WIFI_SSID");
-        availableRestrictions.add("WIFI_BSSID");
         availableRestrictions.add("BATTERY_TEMPERATURE");
         availableRestrictions.add("BATTERY_PERCENTAGE");
         availableRestrictions.add("BATTERY_CHARGING");

@@ -50,7 +50,7 @@
     <view_classes.MaterialSeekBar
         android:id="@+id/material_seekbar"
         android:layout_width="fill_parent"
-        android:layout_height="28dp"
+        android:layout_height="24dp"
         android:layout_below="@+id/text"
         android:layout_margin="8dp" />
 

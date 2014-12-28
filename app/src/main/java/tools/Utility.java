@@ -496,9 +496,9 @@ public class Utility {
         } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             item = "Battery temperature";
         } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            item = "Bluetooth DeviceId";
+            item = "Bluetooth Device";
         } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
-            item = "Bluetooth name";
+            item = "Bluetooth Device";
         } else if (item.equals(Utility.TRIGGER_NFC)) {
             item = "NFC";
         } else if (item.equals(Utility.TRIGGER_LOCATION)) {
@@ -510,9 +510,9 @@ public class Utility {
         } else if (item.equals(Utility.TRIGGER_TIME)) {
             item = "Time";
         } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
-            item = "Wifi DeviceID";
+            item = "Wifi Device";
         } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            item = "Wifi name";
+            item = "Wifi Device";
         }
         return item;
     }
