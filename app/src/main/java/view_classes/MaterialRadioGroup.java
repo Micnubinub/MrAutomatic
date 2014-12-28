@@ -106,6 +106,20 @@ public class MaterialRadioGroup extends ViewGroup {
         }
     }
 
+    public void setSelected(int i) {
+        try {
+            ((MaterialRadioButton) getChildAt(selectedRadioButton)).setChecked(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ((MaterialRadioButton) getChildAt(i)).setChecked(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setOnSelectionChanged(OnSelectionChangedListener selectionChanged) {
         this.selectionChanged = selectionChanged;
     }

@@ -26,13 +26,12 @@
         android:textStyle="bold" />
 
 
-    <view_classes.MaterialSwitch xmlns:app="http://schemas.android.com/apk/res-auto"
+    <view_classes.MaterialSwitch
         android:id="@+id/material_switch"
         android:layout_width="fill_parent"
-        android:layout_height="35dp"
+        android:layout_height="48dp"
         android:layout_below="@+id/title"
-        android:layout_margin="8dp"
-        app:text="Text" />
+        android:layout_margin="8dp" />
 
     <Button
         android:id="@+id/cancel"

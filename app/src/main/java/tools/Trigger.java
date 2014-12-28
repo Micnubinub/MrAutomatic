@@ -5,10 +5,22 @@ package tools;
  */
 public class Trigger {
     private final String type;
-    private final String value;
+    private String value;
 
     public Trigger(String type, String value) {
         this.type = type;
+        this.value = value;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
         this.value = value;
     }
 }

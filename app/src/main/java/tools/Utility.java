@@ -37,6 +37,7 @@ import java.util.List;
 public class Utility {
     //Todo add Auto (captures current potential triggers and shows a dialog to choose/remove triggers)
     //Todo add help, explain the difference between bssid and ssid
+    //Todo int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
@@ -69,7 +70,7 @@ public class Utility {
     public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
     public static final String RINGTONE_SETTING = "RINGTONE_SETTING";
     public static final String LAUNCH_APP_SETTING = "LAUNCH_APP_SETTING";
-    public static final String START_MUSIC_SETTING = "START_MUSIC_SETTING";
+    public static final String MEDIA_CONTROL = "MEDIA_CONTROL";
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
 
     public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
@@ -472,7 +473,7 @@ public class Utility {
             item = "Brightness";
         } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
             item = "Ringtone volume";
-        } else if (item.equals(Utility.START_MUSIC_SETTING)) {
+        } else if (item.equals(Utility.MEDIA_CONTROL)) {
             item = "Music control";
         } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
             item = "Notification volume";
