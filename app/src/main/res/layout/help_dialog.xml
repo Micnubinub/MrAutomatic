@@ -23,34 +23,45 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/text"
+    <ScrollView
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/cancel"
-        android:layout_below="@+id/title"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ellipsize="end"
-        android:padding="8dp"
-        android:text="Secondary"
-        android:textColor="@color/dark_grey_text"
-        android:textSize="18sp" />
+        android:layout_below="@+id/title">
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/white_button_selector"
-        android:minWidth="120dp"
-        android:padding="8dp"
-        android:text="Dismiss"
-        android:textColor="@color/dark_grey_text"
-        android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:ellipsize="end"
+                android:padding="8dp"
+                android:text="Secondary"
+                android:textColor="@color/dark_grey_text"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/white_button_selector"
+                android:minWidth="120dp"
+                android:padding="8dp"
+                android:text="Dismiss"
+                android:textColor="@color/dark_grey_text"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

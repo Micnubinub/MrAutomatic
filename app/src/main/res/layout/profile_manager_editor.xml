@@ -19,6 +19,18 @@
             android:scaleType="centerInside"
             android:src="@drawable/back" />
 
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/save"
+            android:layout_toRightOf="@+id/cancel"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="28sp" />
+
         <ImageView
             android:id="@+id/save"
             android:layout_width="64dp"

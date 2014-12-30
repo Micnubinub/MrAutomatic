@@ -205,7 +205,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -241,7 +241,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -273,7 +273,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -310,7 +310,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -352,7 +352,15 @@ public class EditProfile extends Activity {
         } else {
             trigger.setValue(value);
         }
+    }
 
+    private void setCommandValue(String type, String value) {
+        final Command command = getCommandFromArray(type);
+
+        if (command == null)
+            addedCommands.add(new Command(type, value));
+        else
+            command.setValue(value);
 
     }
 
@@ -401,7 +409,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.BRIGHTNESS_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.BRIGHTNESS_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -477,7 +485,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 dialog.dismiss();
             }
         });
@@ -535,7 +543,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 dialog.dismiss();
             }
         });
@@ -579,7 +587,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 dialog.dismiss();
             }
         });
@@ -603,7 +611,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 dialog.dismiss();
             }
         });
@@ -628,7 +636,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 dialog.dismiss();
             }
         });
@@ -651,7 +659,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 dialog.dismiss();
             }
         });
@@ -693,7 +701,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 dialog.dismiss();
             }
         });
@@ -854,7 +862,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue("Type", "value");
+                setCommandValue("Type", "value");
                 dialog.dismiss();
             }
         });
@@ -944,6 +952,11 @@ public class EditProfile extends Activity {
             //Todo commands help
             showHelpDialog("Commands", "commands help");
         }
+
+        Log.e("Commands", addedCommands.toString());
+        Log.e("Restrictions", restrictionTriggers.toString());
+        Log.e("Normal", normalTriggers.toString());
+        Log.e("Prohib", prohibitionTriggers.toString());
     }
 
     @Override
@@ -956,8 +969,13 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (edit)
+
+        if (edit) {
             profileId = savedInstanceState.getInt(Utility.PROFILE_ID);
+            ((TextView) findViewById(R.id.title)).setText("Edit Profile");
+        } else {
+            ((TextView) findViewById(R.id.title)).setText("New Profile");
+        }
 
         profile_name = (EditText) findViewById(R.id.profile_name);
         findViewById(R.id.cancel).setOnClickListener(listener);
