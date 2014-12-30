@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_manager_activity);
         ListView listView = (ListView) findViewById(R.id.profile_list);
-        profiles = Utility.getListProfiles(this);
+        profiles = Utility.getProfiles(this);
         adapter = new ProfileManagerAdapter(this, profiles);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(listener);
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        profiles = Utility.getListProfiles(this);
+        profiles = Utility.getProfiles(this);
         adapter.setProfiles(profiles);
         adapter.notifyDataSetChanged();
     }

@@ -40,8 +40,7 @@ public class Utility {
     //Todo int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
-    public static final String TRIGGER_BATTERY_PERCENTAGE = "BATTERY_PERCENTAGE";
-    public static final String TRIGGER_BATTERY_CHARGING = "BATTERY_CHARGING";
+    public static final String TRIGGER_BATTERY = "BATTERY_CHARGING";
     public static final String TRIGGER_BLUETOOTH_BSSID = "BLUETOOTH_BSSID";
     public static final String TRIGGER_BLUETOOTH_SSID = "BLUETOOTH_SSID";
     public static final String TRIGGER_WIFI_BSSID = "WIFI_BSSID";
@@ -58,7 +57,6 @@ public class Utility {
     public static final String BLUETOOTH_SETTING = "BLUETOOTH_SETTING";
     public static final String DATA_SETTING = "DATA_SETTING";
     public static final String BRIGHTNESS_SETTING = "BRIGHTNESS_SETTING";
-    public static final String BRIGHTNESS_AUTO_SETTING = "BRIGHTNESS_AUTO_SETTING";
     //public static final String AIRPLANE_SETTING = "AIRPLANE_SETTING";
     public static final String SILENT_MODE_SETTING = "SILENT_MODE_SETTING";
     public static final String NOTIFICATION_VOLUME_SETTING = "NOTIFICATION_VOLUME_SETTING";
@@ -70,7 +68,7 @@ public class Utility {
     public static final String WALLPAPER_SETTING = "WALLPAPER_SETTING";
     public static final String RINGTONE_SETTING = "RINGTONE_SETTING";
     public static final String LAUNCH_APP_SETTING = "LAUNCH_APP_SETTING";
-    public static final String MEDIA_CONTROL = "MEDIA_CONTROL";
+    public static final String MEDIA_CONTROL_SETTING = "MEDIA_CONTROL_SETTING";
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
 
     public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
@@ -167,11 +165,11 @@ public class Utility {
     }
 
 
-    public static ArrayList<Profile> getListProfiles(Context context) {
+    public static ArrayList<Profile> getProfiles(Context context) {
         final ArrayList<Profile> profiles = new ArrayList<Profile>();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
-        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PRIORITY};
+        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PROHIBITIONS, ProfileDBHelper.RESTRICTIONS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         try {
             cursor.moveToPosition(0);
@@ -190,6 +188,8 @@ public class Utility {
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)),
+                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)),
+                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)),
                                 priority
                         )
@@ -461,8 +461,6 @@ public class Utility {
             item = "Wallpaper";
         } else if (item.equals(Utility.WIFI_SETTING)) {
             item = "Wifi";
-        } else if (item.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
-            item = "Auto brightness";
         } else if (item.equals(Utility.MEDIA_VOLUME_SETTING)) {
             item = "Media volume";
         } else if (item.equals(Utility.LAUNCH_APP_SETTING)) {
@@ -473,7 +471,7 @@ public class Utility {
             item = "Brightness";
         } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
             item = "Ringtone volume";
-        } else if (item.equals(Utility.MEDIA_CONTROL)) {
+        } else if (item.equals(Utility.MEDIA_CONTROL_SETTING)) {
             item = "Music control";
         } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
             item = "Notification volume";
@@ -508,10 +506,8 @@ public class Utility {
     public static String getTriggerName(String item) {
         if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
             item = "Launch App";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
-            item = "Battery Charging";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
-            item = "Battery percentage";
+        } else if (item.equals(Utility.TRIGGER_BATTERY)) {
+            item = "Battery";
         } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             item = "Battery temperature";
         } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {

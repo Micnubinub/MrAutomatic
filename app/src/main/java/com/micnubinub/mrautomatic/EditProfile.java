@@ -141,11 +141,13 @@ public class EditProfile extends Activity {
     private SQLiteDatabase profiledb;
 
     private void checkLongString(String string) {
+
         try {
             final String[] split = string.split("_", 3);
             final String action = split[0];
             final String type = split[1];
             final String actor = split[2];
+
             currentDialog = type;
 
             if (action.toLowerCase().equals("add")) {
@@ -337,6 +339,7 @@ public class EditProfile extends Activity {
     }
 
     private void setValue(String type, String value) {
+        toast(String.format("save in %s : %s , %s", currentDialog, type, value));
         Trigger trigger = getTriggerFromArray(type);
 
         if (trigger == null) {
@@ -399,17 +402,21 @@ public class EditProfile extends Activity {
             }
         });
 
-        final Command command = getCommandFromArray(Utility.BRIGHTNESS_AUTO_SETTING);
-        if (command != null)
-            materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
-        else
+        final Command command = getCommandFromArray(Utility.BRIGHTNESS_SETTING);
+        if (command != null) {
+            if (command.getValue().equals("-1"))
+                materialCheckBox.setChecked(true);
+            else
+                materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
+        } else
             materialSeekBar.setProgress(5);
+
         //Todo do the same inside, more complex, redo above
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.BRIGHTNESS_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -418,7 +425,7 @@ public class EditProfile extends Activity {
     }
 
     private void showBatteryDialog() {
-        //Todo make dialog  battery remp, charge, percent
+        //Todo make dialog  battery temp
 
         //Todo default, and adding
         final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
@@ -439,11 +446,20 @@ public class EditProfile extends Activity {
             }
         });
 
+        final Trigger trigger = getTriggerFromArray(Utility.TRIGGER_BATTERY);
+        if (trigger != null) {
+            if (trigger.getValue().equals("-1"))
+                materialCheckBox.setChecked(true);
+            else
+                materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
+        } else
+            materialSeekBar.setProgress(50);
+
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(Utility.TRIGGER_BATTERY_PERCENTAGE, String.valueOf(materialSeekBar.getProgress()));
+                setValue(Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -579,7 +595,7 @@ public class EditProfile extends Activity {
         materialRadioGroup.addView(button3);
         materialRadioGroup.addView(button4);
 
-        final Command command = getCommandFromArray(Utility.MEDIA_CONTROL);
+        final Command command = getCommandFromArray(Utility.MEDIA_CONTROL_SETTING);
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
         //Todo do the same inside
@@ -587,7 +603,7 @@ public class EditProfile extends Activity {
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.MEDIA_CONTROL_SETTING, String.valueOf(materialRadioGroup.getSelection()));
                 dialog.dismiss();
             }
         });
@@ -881,7 +897,7 @@ public class EditProfile extends Activity {
             showWallPaperDialog();
         } else if (command.equals(Utility.WIFI_SETTING)) {
             showWifiDialog();
-        } else if (command.equals(Utility.BRIGHTNESS_AUTO_SETTING)) {
+        } else if (command.equals(Utility.BRIGHTNESS_SETTING)) {
             showBrightnessDialog();
         } else if (command.equals(Utility.MEDIA_VOLUME_SETTING)) {
             showMediaVolumeDialog();
@@ -893,7 +909,7 @@ public class EditProfile extends Activity {
             showBrightnessDialog();
         } else if (command.equals(Utility.RINGER_VOLUME_SETTING)) {
             showRingtoneVolumeDialog();
-        } else if (command.equals(Utility.MEDIA_CONTROL)) {
+        } else if (command.equals(Utility.MEDIA_CONTROL_SETTING)) {
             showMusicPlayerDialog();
         } else if (command.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
             showNotificationVolumeDialog();
@@ -905,9 +921,7 @@ public class EditProfile extends Activity {
             showSleepTimeoutDialog();
         } else if (command.equals(Utility.TRIGGER_APP_LAUNCH)) {
             showAppLaunchListenerDialog();
-        } else if (command.equals(Utility.TRIGGER_BATTERY_CHARGING)) {
-            showBatteryDialog();
-        } else if (command.equals(Utility.TRIGGER_BATTERY_PERCENTAGE)) {
+        } else if (command.equals(Utility.TRIGGER_BATTERY)) {
             showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             showBatteryDialog();
@@ -1412,11 +1426,8 @@ public class EditProfile extends Activity {
     }
 
     private void removeView(LinearLayout layout, String name) {
-        Toast.makeText(this, String.format("lChildCo, name : %d, %s", layout.getChildCount(), name), Toast.LENGTH_LONG).show();
-
         for (int i = 0; i < layout.getChildCount(); i++) {
             final View view = layout.getChildAt(i);
-            Toast.makeText(this, "checking view tag :" + view.getTag().toString(), Toast.LENGTH_LONG).show();
             if (view.getTag().toString().contains(name)) {
                 layout.removeView(view);
                 layout.invalidate();
@@ -1507,7 +1518,6 @@ public class EditProfile extends Activity {
         availableTriggers.add("BLUETOOTH_SSID");
         availableTriggers.add("WIFI_SSID");
         availableTriggers.add("BATTERY_TEMPERATURE");
-        availableTriggers.add("BATTERY_PERCENTAGE");
         availableTriggers.add("BATTERY_CHARGING");
         availableTriggers.add("NFC");
         availableTriggers.add("EARPHONE_JACK");
@@ -1521,7 +1531,6 @@ public class EditProfile extends Activity {
         availableProhibitions.add("BLUETOOTH_SSID");
         availableProhibitions.add("WIFI_SSID");
         availableProhibitions.add("BATTERY_TEMPERATURE");
-        availableProhibitions.add("BATTERY_PERCENTAGE");
         availableProhibitions.add("BATTERY_CHARGING");
         availableProhibitions.add("NFC");
         availableProhibitions.add("EARPHONE_JACK");
@@ -1536,7 +1545,6 @@ public class EditProfile extends Activity {
         availableRestrictions.add("BLUETOOTH_SSID");
         availableRestrictions.add("WIFI_SSID");
         availableRestrictions.add("BATTERY_TEMPERATURE");
-        availableRestrictions.add("BATTERY_PERCENTAGE");
         availableRestrictions.add("BATTERY_CHARGING");
         availableRestrictions.add("NFC");
         availableRestrictions.add("EARPHONE_JACK");
@@ -1552,11 +1560,10 @@ public class EditProfile extends Activity {
         availableCommands.add("BLUETOOTH_SETTING");
         availableCommands.add("DATA_SETTING");
         availableCommands.add("BRIGHTNESS_SETTING");
-        availableCommands.add("BRIGHTNESS_AUTO_SETTING");
         availableCommands.add("SILENT_MODE_SETTING");
         availableCommands.add("NOTIFICATION_VOLUME_SETTING");
         availableCommands.add("ALARM_VOLUME_SETTING");
-        availableCommands.add("MEDIA_CONTROL");
+        availableCommands.add("MEDIA_CONTROL_SETTING");
         availableCommands.add("LAUNCH_APP_SETTING");
         availableCommands.add("WALLPAPER_SETTING");
         availableCommands.add("RINGTONE_SETTING");
@@ -1564,5 +1571,9 @@ public class EditProfile extends Activity {
         availableCommands.add("RINGER_VOLUME_SETTING");
         availableCommands.add("AUTO_ROTATION_SETTING");
         availableCommands.add("SLEEP_TIMEOUT_SETTING");
+    }
+
+    private void toast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

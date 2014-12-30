@@ -90,7 +90,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
 //            return context.getResources().getDrawable(R.drawable.ic_launcher);
         if (triggerType.equals(Utility.TRIGGER_LOCATION))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
-        if (triggerType.equals(Utility.TRIGGER_BATTERY_CHARGING))
+        if (triggerType.equals(Utility.TRIGGER_BATTERY))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
         if (triggerType.equals(Utility.TRIGGER_TIME))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
