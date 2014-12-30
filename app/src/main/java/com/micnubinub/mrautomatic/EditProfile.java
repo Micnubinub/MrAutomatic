@@ -50,6 +50,7 @@ public class EditProfile extends Activity {
     //Todo might wnd up removing the cards and makin the view flat
     //Todo preference to play preview/display preview when a value is set, e.g. brightness, volume
     //TODO IMPORTANT check if all the strings are correct
+    //TODO setValue for commands
 
     private static final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {

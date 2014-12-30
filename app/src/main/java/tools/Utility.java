@@ -487,6 +487,24 @@ public class Utility {
         return item;
     }
 
+    public static ArrayList<Command> getCommands(String commands) {
+        final ArrayList<Command> commandList = new ArrayList<Command>();
+        for (String s : commands.split(",")) {
+            final String[] array = s.split(":", 2);
+            commandList.add(new Command(array[0], array[1]));
+        }
+        return commandList;
+    }
+
+    public static ArrayList<Trigger> getTriggers(String triggers) {
+        final ArrayList<Trigger> triggerList = new ArrayList<Trigger>();
+        for (String s : triggers.split(",")) {
+            final String[] array = s.split(":", 2);
+            triggerList.add(new Trigger(array[0], array[1]));
+        }
+        return triggerList;
+    }
+
     public static String getTriggerName(String item) {
         if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
             item = "Launch App";
