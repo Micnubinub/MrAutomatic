@@ -10,6 +10,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tools.Command;
+import tools.Device;
 import tools.Trigger;
 import tools.Utility;
 import view_classes.MaterialCheckBox;
@@ -52,14 +54,6 @@ public class EditProfile extends Activity {
     //TODO IMPORTANT check if all the strings are correct
     //TODO setValue for commands
 
-    private static final BroadcastReceiver receiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
-// Get the BluetoothDevice object from the Intent
-                //devices.add((BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-            }
-        }
-    };
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>();
     private static final ArrayList<String> availableTriggers = new ArrayList<String>();
@@ -69,7 +63,7 @@ public class EditProfile extends Activity {
     private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>();
     private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>();
-    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList;
+    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList, deviceList;
     private static Dialog dialog;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -128,7 +122,31 @@ public class EditProfile extends Activity {
     private String currentDialog;
     private boolean edit = false;
     private EditText profile_name;
-    private String ssid, bssid, trigger_type, update_profile, profile_name_text;
+    private String currentScan, update_profile, profile_name_text;
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            //Todo current scan in wifi
+            currentScan = "BLUETOOTH";
+            if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
+                final BluetoothDevice bTDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+                try {
+                    if (deviceList != null) {
+                        final Device device = new Device(bTDevice.getName(), bTDevice.getAddress());
+                        final View view = View.inflate(context, R.layout.two_line_list, null);
+                        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        view.setTag(device);
+                        view.setOnClickListener(tagClickListener);
+                        ((TextView) findViewById(R.id.primary)).setText(device.getSsid());
+                        ((TextView) findViewById(R.id.secondary)).setText(device.getBssid());
+                        deviceList.addView(view);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
     private boolean trigger_device_picked = false;
     private Resources res;
     private WifiManager wifiManager;
@@ -688,6 +706,12 @@ public class EditProfile extends Activity {
         final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
         ((TextView) view.findViewById(R.id.title)).setText("Wifi");
 
+        final IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(receiver, filter);
+
+        if (adapter != null) {
+            adapter.startDiscovery();
+        }
 
         showDialog(view);
     }
@@ -1072,6 +1096,11 @@ public class EditProfile extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+
+        }
         // setOldValues();
         close();
     }
@@ -1081,8 +1110,8 @@ public class EditProfile extends Activity {
         // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
-        if (!trigger_device_picked || bssid == "") {
-            //trigger().show();
+        if (normalTriggers.size() < 1) {
+            //Todo maybe show the trigger chooser
             Toast.makeText(this, "You need a trigger device", Toast.LENGTH_LONG).show();
         } else {
 
