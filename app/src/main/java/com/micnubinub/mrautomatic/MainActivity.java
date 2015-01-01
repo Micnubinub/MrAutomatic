@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             try {
                 Intent intent = new Intent(MainActivity.this, EditProfile.class);
-//                intent.putExtra(Utility.EDIT_PROFILE, profiles.get(position).getID());
+                intent.putExtra(Utility.EDIT_PROFILE, profiles.get(position).getID());
                 MainActivity.this.startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -59,12 +59,12 @@ public class MainActivity extends Activity {
         findViewById(R.id.new_profile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditProfile.class);
+                final Intent intent = new Intent(MainActivity.this, EditProfile.class);
                 MainActivity.this.startActivity(intent);
             }
         });
 
-        Intent intent = new Intent(this, ProfileService.class);
+        final Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
     }
 

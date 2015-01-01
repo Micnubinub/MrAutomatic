@@ -527,7 +527,7 @@ public class Utility {
         } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
             item = "Wifi device";
         } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            item = "Wifi device";
+            item = "Wifi evice";
         }
         return item;
     }
@@ -605,7 +605,6 @@ public class Utility {
 
         }
     }
-
 
     public static class WifiStateReceiver extends BroadcastReceiver {
         @Override

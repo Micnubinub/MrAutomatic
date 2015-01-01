@@ -53,11 +53,10 @@ public class ProfileService extends Service {
     //Todo then when done sort the fully triggered profiles by priority and set the first
     //Todo setting for a toast when a profile is set
     //Todo just save trigger as is, check if its a bssid by checking if it has 3 :s
-
+    //Todo set up the time alarms at boot
     //android.intent.action.PACKAGE_ADDED
 
     //Todo at the end unregister all the receivers in on destroy
-
 
     //TODO Scans :
     //Todo private int triggers triggered,reset on CheckProfile scan, use for combos
@@ -75,7 +74,6 @@ public class ProfileService extends Service {
     //Todo if trigger is triggered add them into the viable list of triggers
     //Todo use this array, to check for restrictions and prohibitions
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
-
 
     //Todo IMPORTANT
     /**

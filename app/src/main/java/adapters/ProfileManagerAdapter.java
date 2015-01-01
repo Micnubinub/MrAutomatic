@@ -50,6 +50,7 @@ public class ProfileManagerAdapter extends BaseAdapter {
         final Profile profile = profiles.get(position);
 
         if (convertView == null) {
+            //Todo redo the xml
             convertView = View.inflate(context, R.layout.profile_list_item, null);
             holder = new ViewHolder();
             holder.icon = (ImageView) convertView.findViewById(R.id.trigger_icon);
