@@ -53,7 +53,7 @@ public class EditProfile extends Activity {
     //Todo preference to play preview/display preview when a value is set, e.g. brightness, volume
     //TODO IMPORTANT check if all the strings are correct
     //TODO setValue for commands
-//Todo fixing filling in at start up
+    //Todo fixing filling in at start up
 
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>(15);

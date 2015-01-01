@@ -3,6 +3,7 @@ package com.micnubinub.mrautomatic;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity {
         ListView listView = (ListView) findViewById(R.id.profile_list);
         profiles = Utility.getProfiles(this);
         adapter = new ProfileManagerAdapter(this, profiles);
+        Log.e("profiles", profiles.toString());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(listener);
 

@@ -62,4 +62,9 @@ public class Profile {
     public String getID() {
         return iD;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s. %s | %s | %s | %s | %s \n", iD, name, triggers.toString(), prohibitions.toString(), restrictions.toString(), commands.toString());
+    }
 }
