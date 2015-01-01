@@ -505,15 +505,15 @@ public class Utility {
 
     public static String getTriggerName(String item) {
         if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            item = "Launch App";
+            item = "App launch";
         } else if (item.equals(Utility.TRIGGER_BATTERY)) {
             item = "Battery";
         } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             item = "Battery temperature";
         } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            item = "Bluetooth Device";
+            item = "Bluetooth device";
         } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
-            item = "Bluetooth Device";
+            item = "Bluetooth device";
         } else if (item.equals(Utility.TRIGGER_NFC)) {
             item = "NFC";
         } else if (item.equals(Utility.TRIGGER_LOCATION)) {
@@ -525,9 +525,9 @@ public class Utility {
         } else if (item.equals(Utility.TRIGGER_TIME)) {
             item = "Time";
         } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
-            item = "Wifi Device";
+            item = "Wifi device";
         } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
-            item = "Wifi Device";
+            item = "Wifi device";
         }
         return item;
     }

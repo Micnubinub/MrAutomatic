@@ -230,33 +230,6 @@ public class ProfileService extends Service {
         wifiManager.setWifiEnabled(wifi_old_value > 0);
     }
 
-    private ArrayList<Profile> refreshProfiles() {
-        profiles = new ArrayList<Profile>();
-        profiledb = profileDBHelper.getReadableDatabase();
-
-        cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, new String[]{ProfileDBHelper.ID, ProfileDBHelper.PRIORITY, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS}, null, null, null, null, null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            try {
-                profiles.add(
-                        new Profile(
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)),
-                                Integer.parseInt(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PRIORITY)))));
-            } catch (Exception e) {
-            }
-        }
-        try {
-            cursor.close();
-            profiledb.close();
-        } catch (Exception e) {
-        }
-
-        return profiles;
-    }
-
     private void getProfile(String profile_id) {
         setOldValues();
 

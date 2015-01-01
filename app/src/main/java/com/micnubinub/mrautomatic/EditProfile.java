@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,21 +49,20 @@ import view_classes.MaterialSwitch;
 public class EditProfile extends Activity {
 
     //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
-    //Todo ad info button at the far right of a scrollview MenuItem
     //Todo might wnd up removing the cards and makin the view flat
     //Todo preference to play preview/display preview when a value is set, e.g. brightness, volume
     //TODO IMPORTANT check if all the strings are correct
     //TODO setValue for commands
 
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-    private static final ArrayList<String> availableCommands = new ArrayList<String>();
-    private static final ArrayList<String> availableTriggers = new ArrayList<String>();
-    private static final ArrayList<String> availableProhibitions = new ArrayList<String>();
-    private static final ArrayList<String> availableRestrictions = new ArrayList<String>();
-    private static final ArrayList<Command> addedCommands = new ArrayList<Command>();
-    private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>();
-    private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>();
-    private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>();
+    private static final ArrayList<String> availableCommands = new ArrayList<String>(15);
+    private static final ArrayList<String> availableTriggers = new ArrayList<String>(10);
+    private static final ArrayList<String> availableProhibitions = new ArrayList<String>(10);
+    private static final ArrayList<String> availableRestrictions = new ArrayList<String>(10);
+    private static final ArrayList<Command> addedCommands = new ArrayList<Command>(15);
+    private static final ArrayList<Trigger> restrictionTriggers = new ArrayList<Trigger>(10);
+    private static final ArrayList<Trigger> prohibitionTriggers = new ArrayList<Trigger>(10);
+    private static final ArrayList<Trigger> normalTriggers = new ArrayList<Trigger>(10);
     private static LinearLayout prohibitionList, triggerList, restrictionList, commandList, deviceList;
     private static Dialog dialog;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
@@ -122,14 +122,15 @@ public class EditProfile extends Activity {
     private String currentDialog;
     private boolean edit = false;
     private EditText profile_name;
-    private String currentScan, update_profile, profile_name_text;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private String currentScan, profile_name_text;
+    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             //Todo current scan in wifi
+
             currentScan = "BLUETOOTH";
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 final BluetoothDevice bTDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
+                deviceList.removeAllViews();
                 try {
                     if (deviceList != null) {
                         final Device device = new Device(bTDevice.getName(), bTDevice.getAddress());
@@ -137,8 +138,8 @@ public class EditProfile extends Activity {
                         view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         view.setTag(device);
                         view.setOnClickListener(tagClickListener);
-                        ((TextView) findViewById(R.id.primary)).setText(device.getSsid());
-                        ((TextView) findViewById(R.id.secondary)).setText(device.getBssid());
+                        ((TextView) view.findViewById(R.id.primary)).setText(device.getSsid());
+                        ((TextView) view.findViewById(R.id.secondary)).setText(device.getBssid());
                         deviceList.addView(view);
                     }
                 } catch (Exception e) {
@@ -147,13 +148,37 @@ public class EditProfile extends Activity {
             }
         }
     };
+
+    private final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            //Todo current scan in wifi
+            currentScan = "WIFI";
+
+            final List<ScanResult> scanResults = wifiManager.getScanResults();
+            deviceList.removeAllViews();
+
+            if (deviceList != null) {
+                for (ScanResult bTDevice : scanResults) {
+                    final Device device = new Device(bTDevice.SSID, bTDevice.BSSID);
+                    final View view = View.inflate(context, R.layout.two_line_list, null);
+                    view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    view.setTag(device);
+                    view.setOnClickListener(tagClickListener);
+                    ((TextView) view.findViewById(R.id.primary)).setText(device.getSsid());
+                    ((TextView) view.findViewById(R.id.secondary)).setText(device.getBssid());
+                    deviceList.addView(view);
+                }
+            }
+
+        }
+    };
     private boolean trigger_device_picked = false;
     private Resources res;
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
     private ContentValues content_values;
     private AudioManager audioManager;
-    private List<ScanResult> wifi_scan_results;
+
     private Uri notification;
     private Cursor cursor;
     private SQLiteDatabase profiledb;
@@ -220,7 +245,6 @@ public class EditProfile extends Activity {
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
             materialSeekBar.setProgress(5);
-        //Todo do the same inside
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,7 +270,6 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-//Todo
                 ((TextView) view.findViewById(R.id.text)).setText(String.format("Media volume will be set to: %d", progress));
             }
         });
@@ -357,7 +380,6 @@ public class EditProfile extends Activity {
     }
 
     private void setValue(String type, String value) {
-        toast(String.format("save in %s : %s , %s", currentDialog, type, value));
         Trigger trigger = getTriggerFromArray(type);
 
         if (trigger == null) {
@@ -405,10 +427,9 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Brightness will be set to : %d%s", Math.round((progress / (float) max) * 100), "%"));
             }
         });
-
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
         materialCheckBox.setVisibility(View.VISIBLE);
         materialCheckBox.setText("Auto-Brightness");
@@ -416,7 +437,7 @@ public class EditProfile extends Activity {
             @Override
             public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
                 materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-                //Todo remove the manual brightness if added, then add this
+                view.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -453,6 +474,13 @@ public class EditProfile extends Activity {
         materialSeekBar.setMax(100);
         materialSeekBar.setProgress(50);
 
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Triggered when less than : %d%s", progress, "%"));
+            }
+        });
+
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
         materialCheckBox.setVisibility(View.VISIBLE);
         materialCheckBox.setText("Charging");
@@ -460,7 +488,7 @@ public class EditProfile extends Activity {
             @Override
             public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
                 materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-                //Todo remove the battery percentage if added, then add this
+                view.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -484,6 +512,43 @@ public class EditProfile extends Activity {
 
         showDialog(view);
     }
+
+
+    private void showBatteryTemperatureDialog() {
+        //Todo make dialog  battery temp
+
+        //Todo default, and adding
+        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+
+        ((TextView) view.findViewById(R.id.title)).setText("Battery temperate");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        materialSeekBar.setMax(60);
+
+        materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int max, int progress) {
+                ((TextView) view.findViewById(R.id.text)).setText(String.format("Triggered when the temp greater than : %d %s", progress, "degCelsius"));
+            }
+        });
+
+        materialSeekBar.setProgress(20);
+
+        final Trigger trigger = getTriggerFromArray(Utility.TRIGGER_BATTERY_TEMPERATURE);
+
+        if (trigger != null)
+            materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
+
+        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setValue(Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
+            }
+        });
+
+        showDialog(view);
+    }
+
 
     private void showDataDialog() {
         //Todo make dialog
@@ -527,6 +592,10 @@ public class EditProfile extends Activity {
         showDialog(view);
     }
 
+    private void snapShot() {
+        //Todo add all available triggers, if multiple triggers available allow them to remove some e.g multiple wifi devices
+    }
+
     private void showSleepTimeoutDialog() {
         //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
@@ -535,6 +604,7 @@ public class EditProfile extends Activity {
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
+        //Todo get the values from this and add them to the profile service
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setLayoutParams(params);
@@ -594,6 +664,8 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.title)).setText("Media Control");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
+
+        //Todo get the values from this and add them to the profile service
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setText("Play");
@@ -702,12 +774,17 @@ public class EditProfile extends Activity {
     }
 
     private void showBluetoothDevicePickerDialog() {
+        try {
+            unregisterReceiver(wifiReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //Todo defaults, and reset value when clicked
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
+        final View view = View.inflate(EditProfile.this, R.layout.trigger_chooser_dialog, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Bluetooth Trigger");
+        deviceList = (LinearLayout) view.findViewById(R.id.content);
 
-        final IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(receiver, filter);
+        registerReceiver(bluetoothReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
         if (adapter != null) {
             adapter.startDiscovery();
@@ -717,10 +794,18 @@ public class EditProfile extends Activity {
     }
 
     private void showWifiDevicePickerDialog() {
+        try {
+            unregisterReceiver(bluetoothReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //Todo defaults, and reset value when clicked
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
+        final View view = View.inflate(EditProfile.this, R.layout.trigger_chooser_dialog, null);
+        ((TextView) view.findViewById(R.id.title)).setText("Wifi Trigger");
 
+        deviceList = (LinearLayout) view.findViewById(R.id.content);
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
 
         showDialog(view);
     }
@@ -796,6 +881,7 @@ public class EditProfile extends Activity {
 
         showDialog(view);
     }
+
 
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
@@ -948,7 +1034,7 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.TRIGGER_BATTERY)) {
             showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            showBatteryDialog();
+            showBatteryTemperatureDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
             showBluetoothDevicePickerDialog();
         } else if (command.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
@@ -968,7 +1054,6 @@ public class EditProfile extends Activity {
         } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
             showWifiDevicePickerDialog();
         }
-
     }
 
     private void showDialog(View contentView) {
@@ -978,23 +1063,14 @@ public class EditProfile extends Activity {
 
     private void showInfo(String infoType) {
         if (infoType.contains("restric")) {
-            //Todo restrictions help
-            showHelpDialog("Restrictions", "restrictions help");
+            showHelpDialog("Restriction Help", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
         } else if (infoType.contains("prohib")) {
-            //Todo prohib help
-            showHelpDialog("Prohibitions", "prohibitions help");
+            showHelpDialog("Prohibition Help", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
         } else if (infoType.contains("trig")) {
-            //Todo trigger help
-            showHelpDialog("Triggers", "triggers help");
+            showHelpDialog("Trigger Help", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
         } else {
-            //Todo commands help
-            showHelpDialog("Commands", "commands help");
+            showHelpDialog("Command Help", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
         }
-
-        Log.e("Commands", addedCommands.toString());
-        Log.e("Restrictions", restrictionTriggers.toString());
-        Log.e("Normal", normalTriggers.toString());
-        Log.e("Prohib", prohibitionTriggers.toString());
     }
 
     @Override
@@ -1034,15 +1110,19 @@ public class EditProfile extends Activity {
     private void getLayouts() {
         prohibitionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.prohibitions).findViewById(R.id.title))).setText("Prohibitions");
+        ((Button) (findViewById(R.id.prohibitions).findViewById(R.id.add_item))).setText("Add Prohibitions");
 
         triggerList = (LinearLayout) findViewById(R.id.triggers).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.triggers).findViewById(R.id.title))).setText("Triggers");
+        ((Button) (findViewById(R.id.triggers).findViewById(R.id.add_item))).setText("Add Triggers");
 
         restrictionList = (LinearLayout) findViewById(R.id.restrictions).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.restrictions).findViewById(R.id.title))).setText("Restrictions");
+        ((Button) (findViewById(R.id.restrictions).findViewById(R.id.add_item))).setText("Add Restrictions");
 
         commandList = (LinearLayout) findViewById(R.id.commands).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.commands).findViewById(R.id.title))).setText("Commands");
+        ((Button) (findViewById(R.id.commands).findViewById(R.id.add_item))).setText("Add Commands");
     }
 
     private void setInfoOnClickListeners() {
@@ -1093,16 +1173,64 @@ public class EditProfile extends Activity {
         close();
     }
 
+    private void unregisterReceivers() {
+        try {
+            unregisterReceiver(bluetoothReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            unregisterReceiver(wifiReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceivers();
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-            unregisterReceiver(receiver);
-        } catch (Exception e) {
-
-        }
+        unregisterReceivers();
         // setOldValues();
         close();
+    }
+
+    private String getStringOfTriggers(ArrayList<Trigger> triggers) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < triggers.size(); i++) {
+            final Trigger trigger = triggers.get(i);
+            builder.append(trigger.getType());
+            builder.append(":");
+            builder.append(trigger.getValue());
+
+            if (i < (triggers.size() - 1))
+                builder.append(",");
+        }
+
+        return builder.toString();
+    }
+
+    private String getStringOfCommands(ArrayList<Command> commands) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < commands.size(); i++) {
+            final Command command = commands.get(i);
+            builder.append(command.getType());
+            builder.append(":");
+            builder.append(command.getValue());
+
+            if (i < (commands.size() - 1))
+                builder.append(",");
+        }
+
+        return builder.toString();
     }
 
     public void save() {
@@ -1110,42 +1238,43 @@ public class EditProfile extends Activity {
         // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
-        if (normalTriggers.size() < 1) {
-            //Todo maybe show the trigger chooser
-            Toast.makeText(this, "You need a trigger device", Toast.LENGTH_LONG).show();
+//        if (normalTriggers.size() < 1) {
+//            //Todo maybe show the trigger chooser
+//            toast("You need a trigger device");
+//        } else {
+
+        String profile_name_string = profile_name.getText().toString();
+
+        if (profile_name_string == null || profile_name_string.length() < 1)
+            profile_name_string = "Untitled";
+
+        content_values = new ContentValues();
+
+        content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
+        content_values.put(ProfileDBHelper.TRIGGERS, getStringOfTriggers(normalTriggers));
+        content_values.put(ProfileDBHelper.PROHIBITIONS, getStringOfTriggers(prohibitionTriggers));
+        content_values.put(ProfileDBHelper.RESTRICTIONS, getStringOfTriggers(restrictionTriggers));
+        content_values.put(ProfileDBHelper.COMMANDS, getStringOfCommands(addedCommands));
+
+        Log.e("Content values", content_values.toString());
+        if (edit) {
+            try {
+                Log.e("write update", "passed");
+                profiledb.update(ProfileDBHelper.PROFILE_TABLE, content_values, ProfileDBHelper.ID + "=" + profileId, null);
+            } catch (Exception e) {
+                Log.e("write update", "failed");
+                e.printStackTrace();
+            }
         } else {
-
-            String profile_name_string = profile_name.getText().toString();
-
-            if (profile_name_string == null || profile_name_string.length() < 1)
-                profile_name_string = "Untitled";
-
-            content_values = new ContentValues();
-
-            content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-            content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-
-
-            if (edit) {
-                try {
-                    Log.e("write update", "passed");
-                    profiledb.update(ProfileDBHelper.PROFILE_TABLE, content_values, ProfileDBHelper.ID + "=" + update_profile, null);
-                } catch (Exception e) {
-                    Log.e("write update", "failed");
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    profiledb.insert(ProfileDBHelper.PROFILE_TABLE, null, content_values);
-                    Log.e("write insert", "passed");
+            try {
+                profiledb.insert(ProfileDBHelper.PROFILE_TABLE, null, content_values);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("write insert", "failed");
                 }
             }
             close();
             finish();
-        }
+        //   }
     }
 
     public void getOldValues() {
@@ -1225,7 +1354,7 @@ public class EditProfile extends Activity {
         profiledb = profileDBHelper.getReadableDatabase();
         cursor.moveToPosition(Integer.parseInt(ID));
 
-        update_profile = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID));
+        //update_profile = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID));
         profile_name_text = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME));
 
         close();
