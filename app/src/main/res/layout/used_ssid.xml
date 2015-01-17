@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <view_classes.MaterialCheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        app:text="Use BSSID?" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="SSID refers to the device name, and BSSID refers to the device address. The default is SSID, is triggered when a device with the same name is detected. SSID on the other hand  when used, that device, and that device only can trigger a response"
+        android:textSize="18sp" />
+
+</LinearLayout>

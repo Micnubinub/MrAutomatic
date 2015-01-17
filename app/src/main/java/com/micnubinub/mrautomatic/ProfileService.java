@@ -12,15 +12,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -39,16 +36,11 @@ import tools.Utility;
 
 
 public class ProfileService extends Service {
-//TODO FRIDAY :
 
     //Todo Onpreference changed listener
     //Todo private static scanInterval
-    //Todo dont run service if>>
-    //Todo           numProfiles =0
-    //Todo       allProfiles can be handled with broadcasts
+    //Todo dont run service if>> numProfiles =0 or if allProfiles can be handled with broadcasts
     //Todo make sure you have old values saved before a scan, and reset them after, before setting the profile
-    //Todo have all the listed broadcast receivers work in parallel
-    //Todo have a method getAdapters(), which happens after you've gotten the profiles, gets needed adapters, nullifies others
     //Todo make an arraylist of triggered profiles, from that group, check which ones satisfy the ristrictions, then from those check prohibitions...
     //Todo then when done sort the fully triggered profiles by priority and set the first
     //Todo setting for a toast when a profile is set
@@ -64,16 +56,12 @@ public class ProfileService extends Service {
     //Todo group scans, so that scans happen once per respective adapter>>
     //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
 
-    //TODO scan order:
-    //Todo get list of all triggers
     //Todo group by type (use sort)
-    //Todo call enable adapters >> enable if in list
-    //Todo start scans of wifi and bt using the interface, while that's happening >
     //Todo might actually have to make a list of type device while scanning,to check for restrictions and prohibitions later on, instead of doing another scan, set old values then
-    //Todo scan for the triggers that don't require a scan
     //Todo if trigger is triggered add them into the viable list of triggers
     //Todo use this array, to check for restrictions and prohibitions
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
+    //Todo fix the explanation in use-ssid, and use it
 
     //Todo IMPORTANT
     /**
@@ -109,15 +97,11 @@ public class ProfileService extends Service {
     private static ArrayList<Device> devices = new ArrayList<Device>();
     private static PendingIntent alarmIntent;
     private static AlarmManager alarmManager;
-    private static Cursor cursor;
     private static WifiManager wifiManager;
     private static ArrayList<Profile> profiles;
-    //Todo Sort array by combo number
-    private static SQLiteDatabase profiledb;
     //Todo init and make sure you unregister receivers
     private static ScanListener bluetoothScanListener, wifiScanLListener;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
-    boolean trigger_found;
     int scan_interval, retries;
     int bluetooth_old_value, wifi_old_value;
 
@@ -154,14 +138,9 @@ public class ProfileService extends Service {
         }
     }
 
-    public static ArrayList<Profile> getProfiles() {
-        return profiles;
-    }
-
     private void findBluetoothDevices() {
 
         devices = new ArrayList<Device>();
-
         try {
             adapter.startDiscovery();
             IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -181,8 +160,6 @@ public class ProfileService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        //Todo consider making the string "profile" an ID rather than a bssid
         final Notification.Builder builder = new Notification.Builder(this)
                 // Todo  .setSmallIcon(R.drawable.service_running, 0)
                 .setContentTitle("Notification:")
@@ -204,16 +181,9 @@ public class ProfileService extends Service {
 
     public void getOldValues() {
         //Todo check this
-        if (adapter.isEnabled())
-            bluetooth_old_value = 1;
-        else
-            bluetooth_old_value = 0;
+        bluetooth_old_value = adapter.isEnabled() ? 1 : 0;
+        wifi_old_value = wifiManager.isWifiEnabled() ? 1 : 0;
 
-
-        if (wifiManager.isWifiEnabled())
-            wifi_old_value = 1;
-        else
-            wifi_old_value = 0;
     }
 
     public void setOldValues() {
@@ -226,22 +196,7 @@ public class ProfileService extends Service {
         }
 
         wifiManager.setWifiEnabled(wifi_old_value > 0);
-    }
 
-    private void getProfile(String profile_id) {
-        setOldValues();
-
-
-        if (Integer.parseInt(profile_id) >= 0 && Integer.parseInt(profile_id) < cursor.getCount()) {
-            cursor.moveToPosition(Integer.parseInt(profile_id));
-            profiledb.close();
-            cursor.close();
-
-        } else {
-            Log.e("Made it to get profile", "but trigger wasn't found");
-            cursor.close();
-            profiledb.close();
-        }
     }
 
     @Override
@@ -292,20 +247,6 @@ public class ProfileService extends Service {
 
     }
 
-    private void getAdapters() {
-        //Todo may be a waste of time
-        boolean getBluetoothAdapter, getWifiAdapter;
-
-        for (Profile profile : profiles) {
-            if (profile.getTriggers().contains(Utility.TRIGGER_WIFI_BSSID) || profile.getTriggers().contains(Utility.TRIGGER_WIFI_SSID))
-                getWifiAdapter = true;
-
-            if (profile.getTriggers().contains(Utility.TRIGGER_BLUETOOTH_BSSID) || profile.getTriggers().contains(Utility.TRIGGER_BLUETOOTH_SSID))
-                getBluetoothAdapter = true;
-
-        }
-    }
-
     private void checkBattery(final Profile profile) {
 
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -323,9 +264,6 @@ public class ProfileService extends Service {
     }
 
     public void checkBluetooth(final Profile profile) {
-
-        //Todo get Old values and set them soon after scan ** if there is no profile found
-
         if (adapter.isEnabled()) {
             findBluetoothDevices();
 
@@ -357,7 +295,6 @@ public class ProfileService extends Service {
         }
 
         wifiManager.startScan();
-        //Todo  wifiScanResults = wifiManager.getScanResults(); >> use broadcast bluetoothReceiver
         IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(wifiReceiver, filter);
     }
@@ -389,7 +326,6 @@ public class ProfileService extends Service {
     private void checkProfiles() {
 //Todo
 
-
     }
 
     //Todo use this interface to for wifi and bluetooth
@@ -418,24 +354,7 @@ public class ProfileService extends Service {
     public static class AlarmReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            if (isServiceRunning) {
-//                try {
-//                    if (loadAd) {
-//                        bannerPopup.loadFullScreenAd();
-//                        scheduleNext(context, false);
-//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.TOAST_BEFORE_BOOL, true))
-//                            Toast.makeText(context, "Showing Ad in 10 secs", Toast.LENGTH_LONG).show();
-//                        return;
-//                    } else {
-//                        bannerPopup.showFullScreenAd();
-//                        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Utils.LOOP_SCHEDULE, false))
             scheduleNext(context, true);
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
 
         }
     }
