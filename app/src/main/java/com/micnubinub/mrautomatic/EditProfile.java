@@ -48,12 +48,12 @@ import view_classes.MaterialSwitch;
  */
 public class EditProfile extends Activity {
 
-    //Todo copy from>> toast with 4 ticks : triggers, ristrictions, prohibitions and commands
-    //Todo might end up removing the cards and making the view flat
-    //Todo preference to play preview/display preview when a value is set, e.g. brightness, volume
+    //Todo copy from>> toast with 4 ticks : triggers, restrictions, prohibitions and commands
+    //Todo preference to play preview / display preview when a value is set, e.g. brightness, volume
     //TODO IMPORTANT check if all the strings are correct
     //TODO setValue for commands
     //Todo fixing filling in at start up
+    //Todo int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>(15);
@@ -114,11 +114,9 @@ public class EditProfile extends Activity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.cancel:
-                    //Todo check current dialog
                     dialog.dismiss();
                     break;
                 case R.id.save:
-                    //Todo dialog.Tag, dialog.getTag...
                     dialog.dismiss();
                     break;
             }
@@ -756,9 +754,6 @@ public class EditProfile extends Activity {
     }
 
     private void showBluetoothDevicePickerDialog() {
-        //Todo make a checkbox of wheather to use the BSSID, or SSID
-
-
         try {
             if (!adapter.isEnabled())
                 adapter.enable();
@@ -782,7 +777,6 @@ public class EditProfile extends Activity {
     }
 
     private void showWifiDevicePickerDialog() {
-        //Todo make a checkbox of wheather to use the BSSID, or SSID
         try {
             if (!wifiManager.isWifiEnabled())
                 wifiManager.setWifiEnabled(true);
@@ -916,7 +910,6 @@ public class EditProfile extends Activity {
 
 
     private void showDockDialog() {
-        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout.checkbox_item, null);
 
         ((TextView) view.findViewById(R.id.title)).setText("Dock");
@@ -934,7 +927,6 @@ public class EditProfile extends Activity {
     }
 
     private void showHeadPhoneJackDialog() {
-        //Todo make dialog
         final View view = View.inflate(EditProfile.this, R.layout.checkbox_item, null);
         ((TextView) view.findViewById(R.id.title)).setText("Headphone Jack");
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
@@ -1009,9 +1001,7 @@ public class EditProfile extends Activity {
             showBatteryDialog();
         } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             showBatteryTemperatureDialog();
-        } else if (command.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            showBluetoothDevicePickerDialog();
-        } else if (command.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
+        } else if (command.equals(Utility.TRIGGER_BLUETOOTH)) {
             showBluetoothDevicePickerDialog();
         } else if (command.equals(Utility.TRIGGER_NFC)) {
             showNFCDialog();
@@ -1023,9 +1013,7 @@ public class EditProfile extends Activity {
             showDockDialog();
         } else if (command.equals(Utility.TRIGGER_TIME)) {
             showTimeDialog();
-        } else if (command.equals(Utility.TRIGGER_WIFI_SSID)) {
-            showWifiDevicePickerDialog();
-        } else if (command.equals(Utility.TRIGGER_WIFI_BSSID)) {
+        } else if (command.equals(Utility.TRIGGER_WIFI)) {
             showWifiDevicePickerDialog();
         }
     }
@@ -1214,43 +1202,42 @@ public class EditProfile extends Activity {
         // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
-//        if (normalTriggers.size() < 1) {
-//            //Todo maybe show the trigger chooser
-//            toast("You need a trigger device");
-//        } else {
-
-        String profile_name_string = profile_name.getText().toString();
-
-        if (profile_name_string == null || profile_name_string.length() < 1)
-            profile_name_string = "Untitled";
-
-        content_values = new ContentValues();
-
-        content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-        content_values.put(ProfileDBHelper.TRIGGERS, getStringOfTriggers(normalTriggers));
-        content_values.put(ProfileDBHelper.PROHIBITIONS, getStringOfTriggers(prohibitionTriggers));
-        content_values.put(ProfileDBHelper.RESTRICTIONS, getStringOfTriggers(restrictionTriggers));
-        content_values.put(ProfileDBHelper.COMMANDS, getStringOfCommands(addedCommands));
-
-        Log.e("Content values", content_values.toString());
-        if (edit) {
-            try {
-                Log.e("write update", "passed");
-                profiledb.update(ProfileDBHelper.PROFILE_TABLE, content_values, ProfileDBHelper.ID + "=" + profileId, null);
-            } catch (Exception e) {
-                Log.e("write update", "failed");
-                e.printStackTrace();
-            }
+        if (normalTriggers.size() < 1) {
+            toast("You need a trigger device");
         } else {
-            try {
-                profiledb.insert(ProfileDBHelper.PROFILE_TABLE, null, content_values);
+
+            String profile_name_string = profile_name.getText().toString();
+
+            if (profile_name_string == null || profile_name_string.length() < 1)
+                profile_name_string = "Untitled";
+
+            content_values = new ContentValues();
+
+            content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
+            content_values.put(ProfileDBHelper.TRIGGERS, getStringOfTriggers(normalTriggers));
+            content_values.put(ProfileDBHelper.PROHIBITIONS, getStringOfTriggers(prohibitionTriggers));
+            content_values.put(ProfileDBHelper.RESTRICTIONS, getStringOfTriggers(restrictionTriggers));
+            content_values.put(ProfileDBHelper.COMMANDS, getStringOfCommands(addedCommands));
+
+            Log.e("Content values", content_values.toString());
+            if (edit) {
+                try {
+                    Log.e("write update", "passed");
+                    profiledb.update(ProfileDBHelper.PROFILE_TABLE, content_values, ProfileDBHelper.ID + "=" + profileId, null);
+                } catch (Exception e) {
+                    Log.e("write update", "failed");
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    profiledb.insert(ProfileDBHelper.PROFILE_TABLE, null, content_values);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             close();
             finish();
-        //   }
+        }
     }
 
     public void getOldValues() {
@@ -1513,7 +1500,7 @@ public class EditProfile extends Activity {
 
     private void showCopyFromChooserDialog() {
         final Dialog dialog = new Dialog(this, R.style.CustomDialog);
-        //Todo change create xml for this
+        //Todo create xml for this
         currentDialog = "copy_from";
         dialog.setContentView(R.layout.list_view);
         View view = dialog.findViewById(R.id.a);
@@ -1733,7 +1720,6 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableCommands() {
-        //Todo reorder these
         availableCommands.add("WIFI_SETTING");
         availableCommands.add("BLUETOOTH_SETTING");
         availableCommands.add("DATA_SETTING");

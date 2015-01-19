@@ -10,7 +10,6 @@ import android.view.ViewGroup;
  * Created by root on 18/12/14.
  */
 public class SwipeDismissLayout extends ViewGroup {
-    //Todo touch slop
 
     public SwipeDismissLayout(Context context) {
         super(context);

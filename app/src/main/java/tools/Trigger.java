@@ -6,6 +6,7 @@ package tools;
 public class Trigger {
     private final String type;
     private String value;
+    private String profile_id;
 
     public Trigger(String type, String value) {
         this.type = type;
@@ -22,6 +23,14 @@ public class Trigger {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getProfileID() {
+        return profile_id;
+    }
+
+    public void setProfileID(String profile_id) {
+        this.profile_id = profile_id;
     }
 
     @Override

@@ -22,7 +22,6 @@ import tools.WirelessDevice;
  * Created by root on 25/08/14.
  */
 public class WifiListAdapter extends BaseAdapter {
-    //Todo unregister receivers inondestroy
     private final Context context;
     private final ArrayList<WirelessDevice> devices = new ArrayList<WirelessDevice>();
     private final WifiManager manager;
@@ -130,7 +129,6 @@ public class WifiListAdapter extends BaseAdapter {
         public void onReceive(Context context, Intent intent) {
             if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
                 context.unregisterReceiver(receiver);
-                //Todo show that the device is currently scanning
                 manager.startScan();
                 wifi_scan_results = manager.getScanResults();
                 registerReceiver();

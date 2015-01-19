@@ -29,6 +29,18 @@ public class Profile {
         this.prohibitions = Utility.getTriggers(prohibitions);
         this.triggers = Utility.getTriggers(triggers);
 
+        for (int i = 0; i < this.restrictions.size(); i++) {
+            this.restrictions.get(i).setProfileID(iD);
+        }
+
+        for (int i = 0; i < this.triggers.size(); i++) {
+            this.triggers.get(i).setProfileID(iD);
+        }
+
+        for (int i = 0; i < this.prohibitions.size(); i++) {
+            this.prohibitions.get(i).setProfileID(iD);
+        }
+
     }
 
     public String getName() {

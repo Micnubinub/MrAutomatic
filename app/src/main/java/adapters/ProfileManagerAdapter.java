@@ -95,8 +95,6 @@ public class ProfileManagerAdapter extends BaseAdapter {
             return context.getResources().getDrawable(R.drawable.ic_launcher);
         if (triggerType.equals(Utility.TRIGGER_TIME))
             return context.getResources().getDrawable(R.drawable.ic_launcher);
-
-        //Todo make this equal to nfc
         return context.getResources().getDrawable(R.drawable.fab);
     }
 

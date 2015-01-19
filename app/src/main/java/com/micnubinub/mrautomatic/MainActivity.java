@@ -22,14 +22,12 @@ public class MainActivity extends Activity {
     //Triggers work at an OR basis, if any one of them is triggered, it will check through the restriction, if those
     //are met, the profile will be set
     //* there must be a minimum of one trigger
-    //Todo ad ID (from db) to Profile.class and make add that to Trigger.class too, so when checking the triggers you can track the profile easily
 
     //Restrictions work on an and basis, they must ALL be satisfied, or else the profile won't be set
 
     //Prohibited must NOT be triggered, or else the profile won't be set
 
     //Todo refine these definitions, and come up with better words
-
 
     private final AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
         @Override

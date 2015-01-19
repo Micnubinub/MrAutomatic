@@ -35,16 +35,11 @@ import java.util.List;
  * Created by root on 9/07/14.
  */
 public class Utility {
-    //Todo add Auto (captures current potential triggers and shows a dialog to choose/remove triggers)
-    //Todo add help, explain the difference between bssid and ssid
-    //Todo int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY = "BATTERY_CHARGING";
-    public static final String TRIGGER_BLUETOOTH_BSSID = "BLUETOOTH_BSSID";
-    public static final String TRIGGER_BLUETOOTH_SSID = "BLUETOOTH_SSID";
-    public static final String TRIGGER_WIFI_BSSID = "WIFI_BSSID";
-    public static final String TRIGGER_WIFI_SSID = "WIFI_SSID";
+    public static final String TRIGGER_BLUETOOTH = "BLUETOOTH_SSID";
+    public static final String TRIGGER_WIFI = "WIFI_SSID";
     public static final String TRIGGER_APP_LAUNCH = "APP_LAUNCH";
     public static final String TRIGGER_LOCATION = "LOCATION";
     public static final String TRIGGER_TIME = "TIME";
@@ -77,10 +72,11 @@ public class Utility {
     //Profile editor
     public static final String EDIT_PROFILE = "EDIT_PROFILE";
     public static final String PROFILE_ID = "PROFILE_ID";
-
+    //Todo setting for a toast when a profile is set
+    public static final String TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
     /*
 
-     public static final String a = " ";
+
      public static final String a = " ";
      public static final String a = " ";
      public static final String a = " ";
@@ -203,15 +199,6 @@ public class Utility {
             profiledb.close();
         } catch (Exception e) {
         }
-
-        Collections.sort(profiles, new Comparator<Profile>() {
-            //Todo not working right
-
-            @Override
-            public int compare(Profile lhs, Profile rhs) {
-                return lhs.getName().compareToIgnoreCase(lhs.getName());
-            }
-        });
         return profiles;
     }
 
@@ -351,7 +338,6 @@ public class Utility {
 
     public static void setAirplaneMode(Context context, int value) {
         try {
-
             //Todo airplane ** only up to 16
             Settings.System.putInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, (value > 0) ? 0 : 1);
 
@@ -363,7 +349,6 @@ public class Utility {
             e.printStackTrace();
         }
     }
-
 
     public static void playMusic(Context context) {
         try {
@@ -424,7 +409,6 @@ public class Utility {
     public static void setSetRingtone(Context context, String value) {
         try {
             Settings.System.putString(context.getContentResolver(), Settings.System.RINGTONE, value);
-            //Todo when saving uri.toString();
 //            AudioManager.setRingerMode(RINGER_MODE_NORMAL);
 //            AudioManager.setRingerMode(RINGER_MODE_SILENT);
 //            AudioManager.setRingerMode(RINGER_MODE_VIBRATE);
@@ -510,9 +494,7 @@ public class Utility {
             item = "Battery";
         } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             item = "Battery temperature";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_BSSID)) {
-            item = "Bluetooth device";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH_SSID)) {
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH)) {
             item = "Bluetooth device";
         } else if (item.equals(Utility.TRIGGER_NFC)) {
             item = "NFC";
@@ -524,9 +506,7 @@ public class Utility {
             item = "Dock";
         } else if (item.equals(Utility.TRIGGER_TIME)) {
             item = "Time";
-        } else if (item.equals(Utility.TRIGGER_WIFI_SSID)) {
-            item = "Wifi device";
-        } else if (item.equals(Utility.TRIGGER_WIFI_BSSID)) {
+        } else if (item.equals(Utility.TRIGGER_WIFI)) {
             item = "Wifi evice";
         }
         return item;
@@ -535,7 +515,6 @@ public class Utility {
     public static class EarphoneJackReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Todo test using car
             Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
