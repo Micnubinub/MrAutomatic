@@ -47,13 +47,16 @@ import view_classes.MaterialSwitch;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
-
     //Todo copy from>> toast with 4 ticks : triggers, restrictions, prohibitions and commands
-    //Todo preference to play preview / display preview when a value is set, e.g. brightness, volume
-    //TODO IMPORTANT check if all the strings are correct
-    //TODO setValue for commands
-    //Todo fixing filling in at start up
-    //Todo int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+    //Todo preference to play preview
+    //TODO ---- IMPORTANT check if all the strings are correct
+    //Todo make google maps view
+    //TODO IMPORTANT and time consuming :
+    /**
+     * make a view pager that has tabs for file chooser like the wallpaper, ringtone, notification,
+     * use the code from bass jump
+     * list the files and the system wallpapers/ringtones...
+     */
 
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>(15);
@@ -85,7 +88,6 @@ public class EditProfile extends Activity {
         @Override
         public void onClick(View v) {
             String view = v.getTag().toString();
-
             if (view.equals("add_prohibitions")) {
                 showProhibitionsDialog();
             } else if (view.equals("add_commands")) {
@@ -155,7 +157,6 @@ public class EditProfile extends Activity {
     private final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             currentScan = "WIFI";
-
             final List<ScanResult> scanResults = wifiManager.getScanResults();
             deviceList.removeAllViews();
 
@@ -184,9 +185,9 @@ public class EditProfile extends Activity {
     private Uri notification;
     private Cursor cursor;
     private SQLiteDatabase profiledb;
+    //Todo items should be Wifi(asnd[ac:as:2s:as...])
 
     private void checkLongString(String string) {
-
         try {
             final String[] split = string.split("_", 3);
             final String action = split[0];
@@ -233,7 +234,7 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.text)).setText("Alarm volume");
 
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
-        materialSeekBar.setMax(7);
+        materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
@@ -255,7 +256,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -266,15 +266,17 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.text)).setText("Media volume");
 
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
-        materialSeekBar.setMax(15);
+        materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
                 ((TextView) view.findViewById(R.id.text)).setText(String.format("Media volume will be set to: %d", progress));
+                //Todo play preview on all other seekbars
             }
         });
 
         final Command command = getCommandFromArray(Utility.MEDIA_VOLUME_SETTING);
+
         if (command != null)
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
@@ -297,7 +299,7 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.text)).setText("Notification volume");
 
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
-        materialSeekBar.setMax(7);
+        materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
@@ -332,7 +334,7 @@ public class EditProfile extends Activity {
         ((TextView) view.findViewById(R.id.text)).setText("Ringtone volume");
 
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
-        materialSeekBar.setMax(7);
+        materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
@@ -447,8 +449,6 @@ public class EditProfile extends Activity {
                 materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         } else
             materialSeekBar.setProgress(5);
-
-        //Todo do the same inside, more complex, redo above
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1055,7 +1055,7 @@ public class EditProfile extends Activity {
         } else {
             ((TextView) findViewById(R.id.title)).setText("New Profile");
         }
-
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         profile_name = (EditText) findViewById(R.id.profile_name);
         findViewById(R.id.cancel).setOnClickListener(listener);
         findViewById(R.id.save).setOnClickListener(listener);
@@ -1680,8 +1680,8 @@ public class EditProfile extends Activity {
 
     private void fillInAvailableTriggers() {
         //Todo consider removing ssid/bssid in favor of a checkbox in the dialog for for the bssid or ssid
-        availableTriggers.add("BLUETOOTH_SSID");
-        availableTriggers.add("WIFI_SSID");
+        availableTriggers.add("BLUETOOTH");
+        availableTriggers.add("WIFI");
         availableTriggers.add("BATTERY_TEMPERATURE");
         availableTriggers.add("BATTERY_CHARGING");
         availableTriggers.add("NFC");
@@ -1693,8 +1693,8 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAvailableProhibitions() {
-        availableProhibitions.add("BLUETOOTH_SSID");
-        availableProhibitions.add("WIFI_SSID");
+        availableProhibitions.add("BLUETOOTH");
+        availableProhibitions.add("WIFI");
         availableProhibitions.add("BATTERY_TEMPERATURE");
         availableProhibitions.add("BATTERY_CHARGING");
         availableProhibitions.add("NFC");
@@ -1707,8 +1707,8 @@ public class EditProfile extends Activity {
 
 
     private void fillInAvailableRestrictions() {
-        availableRestrictions.add("BLUETOOTH_SSID");
-        availableRestrictions.add("WIFI_SSID");
+        availableRestrictions.add("BLUETOOTH");
+        availableRestrictions.add("WIFI");
         availableRestrictions.add("BATTERY_TEMPERATURE");
         availableRestrictions.add("BATTERY_CHARGING");
         availableRestrictions.add("NFC");

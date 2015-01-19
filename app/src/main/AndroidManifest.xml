@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.LOCATION_HARDWARE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -61,6 +61,7 @@
                 <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name="tools.Utility$BluetoothStateReceiver"
             android:enabled="true">
@@ -68,6 +69,13 @@
                 <action android:name="android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <uses-feature
+            android:glEsVersion="0x00020000"
+            android:required="true" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="API_KEY" />
 
         <receiver
             android:name=".ProfileService$AlarmReceiver"
@@ -89,6 +97,9 @@
             </intent-filter>
         </receiver>
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <receiver
             android:name="tools.Utility$SmsReceiver"

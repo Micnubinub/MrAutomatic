@@ -38,8 +38,8 @@ public class Utility {
     public static final String CURRENT_PROFILE = "CURRENT_PROFILE";
     public static final String TRIGGER_BATTERY_TEMPERATURE = "BATTERY_TEMPERATURE";
     public static final String TRIGGER_BATTERY = "BATTERY_CHARGING";
-    public static final String TRIGGER_BLUETOOTH = "BLUETOOTH_SSID";
-    public static final String TRIGGER_WIFI = "WIFI_SSID";
+    public static final String TRIGGER_BLUETOOTH = "BLUETOOTH";
+    public static final String TRIGGER_WIFI = "WIFI";
     public static final String TRIGGER_APP_LAUNCH = "APP_LAUNCH";
     public static final String TRIGGER_LOCATION = "LOCATION";
     public static final String TRIGGER_TIME = "TIME";
@@ -75,8 +75,6 @@ public class Utility {
     //Todo setting for a toast when a profile is set
     public static final String TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
     /*
-
-
      public static final String a = " ";
      public static final String a = " ";
      public static final String a = " ";
@@ -103,7 +101,6 @@ public class Utility {
         apps = new ArrayList<App>(list.size());
 
         for (ResolveInfo info : list) {
-            //Todo packages and figure out if you should add bitmap to the App class
             apps.add(new App(info.loadLabel(manager).toString(), info.activityInfo.packageName, info.loadIcon(manager)));
         }
 
@@ -340,8 +337,6 @@ public class Utility {
         try {
             //Todo airplane ** only up to 16
             Settings.System.putInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, (value > 0) ? 0 : 1);
-
-// Post an intent to reload.
             Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
             intent.putExtra("state", !(value > 0));
             context.sendBroadcast(intent);
