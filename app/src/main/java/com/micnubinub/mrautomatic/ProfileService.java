@@ -28,9 +28,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tools.Command;
 import tools.Device;
-import tools.Trigger;
+import tools.TriggerOrCommand;
 import tools.Utility;
 
 /**
@@ -42,11 +41,10 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
-    //Todo make sure you have old values saved before a scan, and reset them after, before setting the profile
+    //Todo make a list of all the use full broadcast receivers and triggers and make a class full of enums to be used to proceessss>>continue adding some
+
     //Todo then when done sort the fully triggered profiles by priority and set the first
-    //Todo set up the time alarms at boot
-    //Todo group scans, so that scans happen once per respective adapter>>
-    //Todo        checkWifiProfiles(){ profiles.for > if profile.getType().equals("wifi")....}
+    //Todo        checkWifiProfiles(){ profiles.for > if profile.getCategory().equals("wifi")....}
     //Todo if trigger is triggered add them into the viable list of triggers, use this array, to check for restrictions and prohibitions
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
     //Todo fix the explanation in use-ssid, and use it
@@ -85,16 +83,16 @@ public class ProfileService extends Service {
     private static ScanListener bluetoothScanListener = new ScanListener() {
         @Override
         public void onScanComplete(ArrayList<Device> devices) {
-            final ArrayList<Trigger> triggers = new ArrayList<>();
+            final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
             for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<Trigger> triggers1 = profiles.get(i).getTriggers();
+                final ArrayList<TriggerOrCommand> triggers1 = profiles.get(i).getTriggers();
                 for (int j = 0; j < triggers1.size(); j++) {
                     triggers.add(triggers1.get(j));
                 }
             }
 
             for (int i = 0; i < triggers.size(); i++) {
-                final Trigger trigger = triggers.get(i);
+                final TriggerOrCommand trigger = triggers.get(i);
                 for (int j = 0; j < devices.size(); j++) {
                     final Device device = devices.get(j);
                     if (device.getBssid().equals(trigger.getValue()) || device.getSsid().equals(trigger.getValue()))
@@ -107,19 +105,20 @@ public class ProfileService extends Service {
                 wifi_or_bluetooth_complete = true;
         }
     };
+
     private static ScanListener wifiScanLListener = new ScanListener() {
         @Override
         public void onScanComplete(ArrayList<Device> devices) {
-            final ArrayList<Trigger> triggers = new ArrayList<>();
+            final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
             for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<Trigger> triggers1 = profiles.get(i).getTriggers();
+                final ArrayList<TriggerOrCommand> triggers1 = profiles.get(i).getTriggers();
                 for (int j = 0; j < triggers1.size(); j++) {
                     triggers.add(triggers1.get(j));
                 }
             }
 
             for (int i = 0; i < triggers.size(); i++) {
-                final Trigger trigger = triggers.get(i);
+                final TriggerOrCommand trigger = triggers.get(i);
                 for (int j = 0; j < devices.size(); j++) {
                     final Device device = devices.get(j);
                     if (device.getBssid().equals(trigger.getValue()) || device.getSsid().equals(trigger.getValue()))
@@ -163,7 +162,7 @@ public class ProfileService extends Service {
          */
     }
 
-    private static boolean checkBattery(final Trigger profile) {
+    private static boolean checkBattery(final TriggerOrCommand profile) {
         if (context == null)
             return false;
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -184,13 +183,13 @@ public class ProfileService extends Service {
             final Profile profile = viableProfiles.get(i);
 
             for (int j = 0; i < profile.getProhibitions().size(); j++) {
-                final Trigger prohib = profile.getProhibitions().get(j);
+                final TriggerOrCommand prohib = profile.getProhibitions().get(j);
                 if (isTriggerTriggered(prohib))
                     removeProfileFromViableList(prohib.getProfileID());
             }
 
             for (int j = 0; i < profile.getRestrictions().size(); j++) {
-                final Trigger restriction = profile.getRestrictions().get(j);
+                final TriggerOrCommand restriction = profile.getRestrictions().get(j);
                 if (!isTriggerTriggered(restriction))
                     removeProfileFromViableList(restriction.getProfileID());
             }
@@ -200,13 +199,14 @@ public class ProfileService extends Service {
         setProfile("");
     }
 
-    private static boolean isTriggerTriggered(Trigger trigger) {
+    private static boolean isTriggerTriggered(TriggerOrCommand trigger) {
         //Todo
 
         return false;
     }
 
     private static void checkProfiles() {
+        getOldValues();
         if (context == null)
             return;
 
@@ -258,8 +258,8 @@ public class ProfileService extends Service {
         for (int i = 0; i < profiles.size(); i++) {
             final Profile profile = profiles.get(i);
             for (int j = 0; j < profile.getTriggers().size(); i++) {
-                final Trigger trigger = profile.getTriggers().get(j);
-                final String type = trigger.getType();
+                final TriggerOrCommand trigger = profile.getTriggers().get(j);
+                final String type = trigger.getCategory();
                 //Todo ---- might be more
                 if (type.equals(Utility.TRIGGER_BLUETOOTH) || type.equals(Utility.TRIGGER_BATTERY) || type.equals(Utility.TRIGGER_WIFI) || type.equals(Utility.TRIGGER_LOCATION)) {
                     return;
@@ -282,7 +282,7 @@ public class ProfileService extends Service {
             return;
         } else {
             for (int i = 0; i < profile.getCommands().size(); i++) {
-                final Command command = profile.getCommands().get(i);
+                final TriggerOrCommand command = profile.getCommands().get(i);
                 //Todo set commands
             }
             completeScan();
@@ -349,7 +349,6 @@ public class ProfileService extends Service {
 
     private static void location(String location) {
         //Todo check location
-
     }
 
     @Override
@@ -425,7 +424,6 @@ public class ProfileService extends Service {
     }
 
     private void checkLocation() {
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
 
@@ -436,6 +434,8 @@ public class ProfileService extends Service {
     public static class BootUpReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //Todo set up the time alarms at boot, bluetooth jack and all the other broadcast receivers that need to be activated from here
+
             final IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
             final Utility.EarphoneJackReceiver receiver = new Utility.EarphoneJackReceiver();
             context.registerReceiver(receiver, receiverFilter);
@@ -455,7 +455,6 @@ public class ProfileService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             scheduleNext(context);
-
         }
     }
 
@@ -463,12 +462,10 @@ public class ProfileService extends Service {
 
         @Override
         public void onLocationChanged(Location loc) {
-
             String longitude = "Longitude: " + loc.getLongitude();
             String latitude = "Latitude: " + loc.getLatitude();
 
-            //Todo
-            /**
+            /**Todo
              boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
              // check if enabled and if not send user to the GSP settings
              // Better solution would be to display a dialog and suggesting to
@@ -484,7 +481,6 @@ public class ProfileService extends Service {
              if (result[0] < 5000) {
              // distance between first and second location is less than 5km
              }
-
              **/
             //Todo unregister when received, or make it so that its registered to receive the updated every scan_interval
         }

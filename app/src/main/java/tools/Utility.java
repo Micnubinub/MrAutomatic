@@ -108,12 +108,12 @@ public class Utility {
 
     }
 
-    public static ArrayList<Command> processCommands(String commands) {
-        final ArrayList<Command> commandList = new ArrayList<Command>();
+    public static ArrayList<TriggerOrCommand> processCommands(String commands) {
+        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
         final String[] commandArray = commands.split(",");
         for (String s : commandArray) {
             final String[] tmp = s.split(":");
-            commandList.add(new Command(tmp[0], tmp[1]));
+            commandList.add(new TriggerOrCommand(tmp[0], tmp[1]));
         }
         return commandList;
     }
@@ -464,20 +464,20 @@ public class Utility {
         return item;
     }
 
-    public static ArrayList<Command> getCommands(String commands) {
-        final ArrayList<Command> commandList = new ArrayList<Command>();
+    public static ArrayList<TriggerOrCommand> getCommands(String commands) {
+        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
         for (String s : commands.split(",")) {
             final String[] array = s.split(":", 2);
-            commandList.add(new Command(array[0], array[1]));
+            commandList.add(new TriggerOrCommand(array[0], array[1]));
         }
         return commandList;
     }
 
-    public static ArrayList<Trigger> getTriggers(String triggers) {
-        final ArrayList<Trigger> triggerList = new ArrayList<Trigger>();
+    public static ArrayList<TriggerOrCommand> getTriggers(String triggers) {
+        final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
         for (String s : triggers.split(",")) {
             final String[] array = s.split(":", 2);
-            triggerList.add(new Trigger(array[0], array[1]));
+            triggerList.add(new TriggerOrCommand(array[0], array[1]));
         }
         return triggerList;
     }

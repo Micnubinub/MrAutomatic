@@ -3,8 +3,7 @@ package com.micnubinub.mrautomatic;
 
 import java.util.ArrayList;
 
-import tools.Command;
-import tools.Trigger;
+import tools.TriggerOrCommand;
 import tools.Utility;
 
 /**
@@ -13,10 +12,10 @@ import tools.Utility;
 public class Profile {
     private final String iD;
     private final String name;
-    private final ArrayList<Command> commands;
-    private final ArrayList<Trigger> triggers;
-    private final ArrayList<Trigger> restrictions;
-    private final ArrayList<Trigger> prohibitions;
+    private final ArrayList<TriggerOrCommand> commands;
+    private final ArrayList<TriggerOrCommand> triggers;
+    private final ArrayList<TriggerOrCommand> restrictions;
+    private final ArrayList<TriggerOrCommand> prohibitions;
     private final int priority;
 
     public Profile(String iD, String name, String triggers, String restrictions, String prohibitions, String commands, int priority) {
@@ -51,19 +50,19 @@ public class Profile {
         return iD;
     }
 
-    public ArrayList<Command> getCommands() {
+    public ArrayList<TriggerOrCommand> getCommands() {
         return commands;
     }
 
-    public ArrayList<Trigger> getTriggers() {
+    public ArrayList<TriggerOrCommand> getTriggers() {
         return triggers;
     }
 
-    public ArrayList<Trigger> getRestrictions() {
+    public ArrayList<TriggerOrCommand> getRestrictions() {
         return restrictions;
     }
 
-    public ArrayList<Trigger> getProhibitions() {
+    public ArrayList<TriggerOrCommand> getProhibitions() {
         return prohibitions;
     }
 
