@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import tools.TriggerOrCommand.Type;
+
 /**
  * Created by root on 9/07/14.
  */
@@ -113,7 +115,8 @@ public class Utility {
         final String[] commandArray = commands.split(",");
         for (String s : commandArray) {
             final String[] tmp = s.split(":");
-            commandList.add(new TriggerOrCommand(tmp[0], tmp[1]));
+            //Todo fix this
+            commandList.add(new TriggerOrCommand(Type.TRIGGER, tmp[0], tmp[1]));
         }
         return commandList;
     }
@@ -468,7 +471,8 @@ public class Utility {
         final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
         for (String s : commands.split(",")) {
             final String[] array = s.split(":", 2);
-            commandList.add(new TriggerOrCommand(array[0], array[1]));
+            //Todo fix this
+            commandList.add(new TriggerOrCommand(Type.COMMAND, array[0], array[1]));
         }
         return commandList;
     }
@@ -477,7 +481,8 @@ public class Utility {
         final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
         for (String s : triggers.split(",")) {
             final String[] array = s.split(":", 2);
-            triggerList.add(new TriggerOrCommand(array[0], array[1]));
+            //Todo fix this
+            triggerList.add(new TriggerOrCommand(Type.TRIGGER, array[0], array[1]));
         }
         return triggerList;
     }

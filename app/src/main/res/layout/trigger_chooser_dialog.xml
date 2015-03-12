@@ -25,7 +25,7 @@
         android:id="@+id/sv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/cancel"
+        android:layout_above="@+id/save_cancel"
         android:layout_below="@+id/title">
 
         <LinearLayout
@@ -35,19 +35,13 @@
             android:orientation="vertical" />
     </ScrollView>
 
-    <Button
-        android:id="@+id/cancel"
+    <include
+        android:id="@+id/save_cancel"
+        layout="@layout/save_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/white_button_selector"
-        android:minWidth="120dp"
-        android:padding="8dp"
-        android:text="Cancel"
-        android:textColor="@color/dark_grey_text"
-        android:textSize="18sp" />
+        android:layout_below="@+id/material_seekbar" />
 
 </RelativeLayout>

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
@@ -35,6 +34,7 @@ import java.util.List;
 
 import tools.Device;
 import tools.TriggerOrCommand;
+import tools.TriggerOrCommand.Type;
 import tools.Utility;
 import view_classes.MaterialCheckBox;
 import view_classes.MaterialRadioButton;
@@ -52,6 +52,7 @@ public class EditProfile extends Activity {
     //TODO ---- IMPORTANT check if all the strings are correct
     //Todo make google maps view
     //TODO IMPORTANT and time consuming :
+    //Todo add save_cancel to all dialogs, so users can dismiss without saving
 
     /**
      * make a view pager that has tabs for file chooser like the wallpaper, ringtone, notification,
@@ -132,10 +133,12 @@ public class EditProfile extends Activity {
     private String currentScan, profile_name_text;
     private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            //Todo convert to listView
             currentScan = "BLUETOOTH";
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 final BluetoothDevice bTDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 deviceList.removeAllViews();
+
                 try {
                     if (deviceList != null) {
                         final Device device = new Device(bTDevice.getName(), bTDevice.getAddress());
@@ -156,6 +159,7 @@ public class EditProfile extends Activity {
 
     private final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            //Todo convert to listView
             currentScan = "WIFI";
             final List<ScanResult> scanResults = wifiManager.getScanResults();
             deviceList.removeAllViews();
@@ -176,7 +180,6 @@ public class EditProfile extends Activity {
         }
     };
     private boolean trigger_device_picked = false;
-    private Resources res;
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
     private ContentValues content_values;
@@ -190,13 +193,13 @@ public class EditProfile extends Activity {
     private void checkLongString(String string) {
         try {
             final String[] split = string.split("_", 3);
-            final String action = split[0];
+            final String action = split[0].toLowerCase();
             final String type = split[1];
             final String actor = split[2];
 
             currentDialog = type;
 
-            if (action.toLowerCase().equals("add")) {
+            if (action.equals("add")) {
                 if (type.contains("restri")) {
                     addRestrictionList(Utility.getTriggerName(actor), actor);
                 } else if (type.contains("prohib")) {
@@ -208,8 +211,7 @@ public class EditProfile extends Activity {
                 }
                 showEditorDialog(actor);
 
-            } else if (action.toLowerCase().equals("open")) {
-
+            } else if (action.equals("open")) {
                 showEditorDialog(actor);
             } else {
                 if (type.contains("restri")) {
@@ -247,14 +249,20 @@ public class EditProfile extends Activity {
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
             materialSeekBar.setProgress(5);
-
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+            }
+        });
+
 
         showDialog(view);
     }
@@ -282,14 +290,19 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
 
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+            }
+        });
         showDialog(view);
     }
 
@@ -313,11 +326,17 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
-                dialog.dismiss();
             }
         });
 
@@ -348,13 +367,21 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+            }
+        });
+
 
         showDialog(view);
     }
@@ -381,7 +408,8 @@ public class EditProfile extends Activity {
         TriggerOrCommand trigger = getTriggerFromArray(type);
 
         if (trigger == null) {
-            trigger = new TriggerOrCommand(type, value);
+            //Todo fix this
+            trigger = new TriggerOrCommand(Type.TRIGGER, type, value);
 
             if (currentDialog.toLowerCase().contains("restric")) {
                 restrictionTriggers.add(trigger);
@@ -396,12 +424,13 @@ public class EditProfile extends Activity {
         } else {
             trigger.setValue(value);
         }
+
     }
 
     private void setCommandValue(String type, String value) {
         final TriggerOrCommand command = getCommandFromArray(type);
         if (command == null)
-            addedCommands.add(new TriggerOrCommand(type, value));
+            addedCommands.add(new TriggerOrCommand(Type.TRIGGER, type, value));
         else
             command.setValue(value);
 
@@ -450,11 +479,17 @@ public class EditProfile extends Activity {
         } else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
-                dialog.dismiss();
             }
         });
 
@@ -496,12 +531,17 @@ public class EditProfile extends Activity {
         } else
             materialSeekBar.setProgress(50);
 
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
-                dialog.dismiss();
             }
         });
 
@@ -530,11 +570,18 @@ public class EditProfile extends Activity {
         if (trigger != null)
             materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()));
-                dialog.dismiss();
             }
         });
 
@@ -1358,7 +1405,6 @@ public class EditProfile extends Activity {
     }
 
     private void init() {
-        res = getResources();
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -1695,7 +1741,7 @@ public class EditProfile extends Activity {
         final ArrayList<TriggerOrCommand> setCommands = Utility.getCommands(commands);
         for (int i = 0; i < setCommands.size(); i++) {
             final TriggerOrCommand command = setCommands.get(i);
-            setCommandValue(command.getType(), command.getValue());
+            //Todo fix this setCommandValue(command.getType(), command.getValue());
         }
     }
 

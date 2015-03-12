@@ -36,7 +36,8 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
-import bigshots.people_helping_people.R;
+import com.micnubinub.mrautomatic.R;
+
 
 /**
  * Spinner wheel horizontal view.

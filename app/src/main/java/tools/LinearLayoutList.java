@@ -57,6 +57,19 @@ public class LinearLayoutList extends LinearLayout {
         }
     }
 
+    public void remove(String category) {
+        if (items != null) {
+            for (int i = 0; i < items.size(); i++) {
+                final TriggerOrCommand triggerOrCommand = items.get(i);
+                if (triggerOrCommand.getCategory().equals(category)) {
+                    items.remove(triggerOrCommand);
+                    getViews();
+                }
+            }
+
+        }
+    }
+
     public void remove(TriggerOrCommand triggerOrCommand) {
         if (items != null && (items.contains(triggerOrCommand))) {
             items.remove(triggerOrCommand);
