@@ -77,6 +77,7 @@ public class WifiListAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selected_item = i;
+                notifyDataSetChanged();
             }
         });
 
@@ -141,7 +142,7 @@ public class WifiListAdapter extends BaseAdapter {
         if (!manager.isWifiEnabled())
             manager.setWifiEnabled(true);
 
-        return true;
+        return manager.isWifiEnabled();
     }
 
     public void cancelScan() {

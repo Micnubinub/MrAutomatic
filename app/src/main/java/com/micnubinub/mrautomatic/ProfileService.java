@@ -42,7 +42,7 @@ import tools.Utility;
 
 public class ProfileService extends Service {
     //Todo make a list of all the use full broadcast receivers and triggers and make a class full of enums to be used to proceessss>>continue adding some
-
+    //Todo extract all the scanning code in wifiListAdapter and bTListAdapter
     //Todo then when done sort the fully triggered profiles by priority and set the first
     //Todo        checkWifiProfiles(){ profiles.for > if profile.getCategory().equals("wifi")....}
     //Todo if trigger is triggered add them into the viable list of triggers, use this array, to check for restrictions and prohibitions

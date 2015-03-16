@@ -14,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.micnubinub.mrautomatic.EditProfile;
 import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class BluetoothListAdapter extends BaseAdapter {
         }
     };
     private final ArrayList<Device> devices = new ArrayList<Device>();
-    private final BluetoothAdapter adapter = EditProfile.adapter;
+    private final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private final BroadcastReceiver initReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) {
@@ -76,6 +75,7 @@ public class BluetoothListAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selected_item = i;
+                notifyDataSetChanged();
             }
         });
 
@@ -108,7 +108,7 @@ public class BluetoothListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View converiew, ViewGroup parent) {
+    public View getView(int position, View f, ViewGroup parent) {
         final Device device = devices.get(position);
         final View view = View.inflate(context, R.layout.two_line_list, null);
         ((TextView) view.findViewById(R.id.primary)).setText(device.getName());
@@ -123,7 +123,7 @@ public class BluetoothListAdapter extends BaseAdapter {
     }
 
     private void startScan() {
-        if ((adapter == null) && turnBluetoothOn()) {
+        if (!(adapter == null) && turnBluetoothOn()) {
 
             try {
                 registerReceiver();
@@ -142,6 +142,7 @@ public class BluetoothListAdapter extends BaseAdapter {
             } catch (Exception e) {
             }
         } else {
+            turnBluetoothOn();
             Toast.makeText(context, "Failed to scan, try again in 5 seconds", Toast.LENGTH_LONG).show();
         }
 
@@ -155,7 +156,7 @@ public class BluetoothListAdapter extends BaseAdapter {
         if (!adapter.isEnabled())
             adapter.enable();
 
-        return true;
+        return adapter.isEnabled();
     }
 
     public void cancelScan() {

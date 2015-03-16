@@ -49,6 +49,7 @@ public class EditProfile extends Activity {
     //Todo make google maps view
     //TODO IMPORTANT and time consuming :
     //Todo add save_cancel to all dialogs, so users can dismiss without saving
+    //Todo don't add item to the list of addedProhibTrigComm... if not properly setup
 
     /**
      * make a view pager that has tabs for file chooser like the wallpaper, ringtone, notification,
