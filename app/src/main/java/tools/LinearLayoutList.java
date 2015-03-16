@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
 
@@ -14,19 +17,11 @@ public class LinearLayoutList extends LinearLayout {
     private final OnClickListener listener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case 2:
-
-                    break;
-                case 3:
-                    remove((int) v.getTag());
-                    break;
-            }
+            //Todo impl
         }
     };
     //Todo use this in the app
     private ArrayList<TriggerOrCommand> items = new ArrayList<>();
-
 
     public LinearLayoutList(Context context) {
         super(context);
@@ -34,10 +29,6 @@ public class LinearLayoutList extends LinearLayout {
 
     public LinearLayoutList(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public LinearLayoutList(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
     }
 
     public void editItem(int pos) {
@@ -89,10 +80,10 @@ public class LinearLayoutList extends LinearLayout {
         removeAllViews();
         for (int i = 0; i < items.size(); i++) {
             final TriggerOrCommand triggerOrCommand = items.get(i);
-            final View v = inflate(getContext(), 2, null);
+            final TextView v = (TextView) View.inflate(getContext(), R.layout.command_item, null);
             v.setTag(i);
-            v.findViewById(3).setOnClickListener(listener);
-
+            v.setOnClickListener(listener);
+            addView(v);
         }
     }
 

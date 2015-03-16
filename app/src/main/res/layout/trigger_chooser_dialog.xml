@@ -28,7 +28,7 @@
         android:layout_above="@+id/save_cancel"
         android:layout_below="@+id/title">
 
-        <LinearLayout
+        <tools.LinearLayoutList
             android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
