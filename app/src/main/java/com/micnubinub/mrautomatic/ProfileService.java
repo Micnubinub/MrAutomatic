@@ -95,7 +95,7 @@ public class ProfileService extends Service {
                 final TriggerOrCommand trigger = triggers.get(i);
                 for (int j = 0; j < devices.size(); j++) {
                     final Device device = devices.get(j);
-                    if (device.getBssid().equals(trigger.getValue()) || device.getSsid().equals(trigger.getValue()))
+                    if (device.getAddress().equals(trigger.getValue()) || device.getName().equals(trigger.getValue()))
                         addProfileToViableList(trigger.getProfileID());
                 }
             }
@@ -121,7 +121,7 @@ public class ProfileService extends Service {
                 final TriggerOrCommand trigger = triggers.get(i);
                 for (int j = 0; j < devices.size(); j++) {
                     final Device device = devices.get(j);
-                    if (device.getBssid().equals(trigger.getValue()) || device.getSsid().equals(trigger.getValue()))
+                    if (device.getAddress().equals(trigger.getValue()) || device.getName().equals(trigger.getValue()))
                         addProfileToViableList(trigger.getProfileID());
                 }
             }

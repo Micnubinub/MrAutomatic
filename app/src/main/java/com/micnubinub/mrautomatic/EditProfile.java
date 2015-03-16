@@ -3,19 +3,14 @@ package com.micnubinub.mrautomatic;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,8 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import adapters.BluetoothListAdapter;
+import adapters.WifiListAdapter;
+import tools.CustomListView;
 import tools.Device;
 import tools.TriggerOrCommand;
 import tools.TriggerOrCommand.Type;
@@ -46,7 +43,6 @@ import view_classes.MaterialSwitch;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
-    //Todo consider: implement proximity sensor profile activation
     //Todo copy from>> toast with 4 ticks : triggers, restrictions, prohibitions and commands
     //Todo preference to play preview
     //TODO ---- IMPORTANT check if all the strings are correct
@@ -59,8 +55,7 @@ public class EditProfile extends Activity {
      * use the code from bass jump
      * list the files and the system wallpapers/ringtones...
      */
-
-    private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+    public static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>(15);
     private static final ArrayList<String> availableTriggers = new ArrayList<String>(10);
     private static final ArrayList<String> availableProhibitions = new ArrayList<String>(10);
@@ -69,7 +64,7 @@ public class EditProfile extends Activity {
     private static final ArrayList<TriggerOrCommand> restrictionTriggers = new ArrayList<TriggerOrCommand>(10);
     private static final ArrayList<TriggerOrCommand> prohibitionTriggers = new ArrayList<TriggerOrCommand>(10);
     private static final ArrayList<TriggerOrCommand> normalTriggers = new ArrayList<TriggerOrCommand>(10);
-    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList, deviceList;
+    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList;
     private static Dialog dialog;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -131,54 +126,7 @@ public class EditProfile extends Activity {
     private boolean edit = false;
     private EditText profile_name;
     private String currentScan, profile_name_text;
-    private final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            //Todo convert to listView
-            currentScan = "BLUETOOTH";
-            if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
-                final BluetoothDevice bTDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                deviceList.removeAllViews();
 
-                try {
-                    if (deviceList != null) {
-                        final Device device = new Device(bTDevice.getName(), bTDevice.getAddress());
-                        final View view = View.inflate(context, R.layout.two_line_list, null);
-                        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        view.setTag(device);
-                        view.setOnClickListener(tagClickListener);
-                        ((TextView) view.findViewById(R.id.primary)).setText(device.getSsid());
-                        ((TextView) view.findViewById(R.id.secondary)).setText(device.getBssid());
-                        deviceList.addView(view);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
-
-    private final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            //Todo convert to listView
-            currentScan = "WIFI";
-            final List<ScanResult> scanResults = wifiManager.getScanResults();
-            deviceList.removeAllViews();
-
-            if (deviceList != null) {
-                for (ScanResult bTDevice : scanResults) {
-                    final Device device = new Device(bTDevice.SSID, bTDevice.BSSID);
-                    final View view = View.inflate(context, R.layout.two_line_list, null);
-                    view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    view.setTag(device);
-                    view.setOnClickListener(tagClickListener);
-                    ((TextView) view.findViewById(R.id.primary)).setText(device.getSsid());
-                    ((TextView) view.findViewById(R.id.secondary)).setText(device.getBssid());
-                    deviceList.addView(view);
-                }
-            }
-
-        }
-    };
     private boolean trigger_device_picked = false;
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
@@ -262,8 +210,6 @@ public class EditProfile extends Activity {
                 setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
             }
         });
-
-
         showDialog(view);
     }
 
@@ -494,6 +440,10 @@ public class EditProfile extends Activity {
         });
 
         showDialog(view);
+    }
+
+    private Dialog getDialog() {
+        return new Dialog(this, R.style.CustomDialog);
     }
 
     private void showBatteryDialog() {
@@ -753,7 +703,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         showDialog(view);
     }
 
@@ -801,47 +750,57 @@ public class EditProfile extends Activity {
     }
 
     private void showBluetoothDevicePickerDialog() {
-        try {
-            if (!adapter.isEnabled())
-                adapter.enable();
-
-            unregisterReceiver(wifiReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        final View view = View.inflate(EditProfile.this, R.layout.trigger_chooser_dialog, null);
+        final Dialog dialog = getDialog();
+        final View view = View.inflate(EditProfile.this, R.layout.custom_device_picker_list_view, null);
         ((TextView) view.findViewById(R.id.title)).setText("Bluetooth Trigger");
-        deviceList = (LinearLayout) view.findViewById(R.id.content);
+        final BluetoothListAdapter listAdapter = new BluetoothListAdapter(this, new CustomListView(view));
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listAdapter.cancelScan();
+                //Todo use this view.setOnClickListener(tagClickListener);
+                Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
 
-        registerReceiver(bluetoothReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listAdapter.cancelScan();
+                dialog.dismiss();
+            }
+        });
 
-        if (adapter != null) {
-            adapter.startDiscovery();
-        }
-
-        showDialog(view);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void showWifiDevicePickerDialog() {
-        try {
-            if (!wifiManager.isWifiEnabled())
-                wifiManager.setWifiEnabled(true);
-
-            unregisterReceiver(bluetoothReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        final View view = View.inflate(EditProfile.this, R.layout.trigger_chooser_dialog, null);
+        final Dialog dialog = getDialog();
+        final View view = View.inflate(EditProfile.this, R.layout.custom_device_picker_list_view, null);
         ((TextView) view.findViewById(R.id.title)).setText("Wifi Trigger");
+        final WifiListAdapter listAdapter = new WifiListAdapter(this, new CustomListView(view));
+        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listAdapter.cancelScan();
+                //Todo use this use this view.setOnClickListener(tagClickListener);
+                Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+            }
+        });
 
-        deviceList = (LinearLayout) view.findViewById(R.id.content);
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifiManager.startScan();
+        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listAdapter.cancelScan();
+                dialog.dismiss();
+            }
+        });
 
-        showDialog(view);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void showSilentModeDialog() {
@@ -1115,6 +1074,8 @@ public class EditProfile extends Activity {
     }
 
     private void showDialog(View contentView) {
+        if (dialog == null)
+            dialog = getDialog();
         dialog.setContentView(contentView);
         dialog.show();
     }
@@ -1234,30 +1195,14 @@ public class EditProfile extends Activity {
         close();
     }
 
-    private void unregisterReceivers() {
-        try {
-            unregisterReceiver(bluetoothReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            unregisterReceiver(wifiReceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceivers();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceivers();
         // setOldValues();
         close();
     }
@@ -1444,7 +1389,7 @@ public class EditProfile extends Activity {
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                trigger_device_picked = true;
 //               // trigger_type = Utility.TRIGGER_WIFI;
-//                bssid = ((WirelessDevice) wifiListAdapter.getItem(position)).getBssid();
+//                bssid = ((WirelessDevice) wifiListAdapter.getItem(position)).getAddress();
 //                wifiListAdapter.setSelectedItem(position);
 //            }
 //        });
@@ -1465,7 +1410,7 @@ public class EditProfile extends Activity {
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                trigger_device_picked = true;
 //                //trigger_type = Utility.TRIGGER_BLUETOOTH;
-//                bssid = ((WirelessDevice) bluetoothListAdapter.getItem(position)).getBssid();
+//                bssid = ((WirelessDevice) bluetoothListAdapter.getItem(position)).getAddress();
 //                bluetoothListAdapter.setSelectedItem(position);
 //            }
 //        });

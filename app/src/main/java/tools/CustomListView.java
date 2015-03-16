@@ -13,9 +13,10 @@ import com.micnubinub.mrautomatic.R;
 public class CustomListView {
     private View view, textView;
     private ListView listView;
+    private BaseAdapter adapter;
 
     public CustomListView(Context context) {
-        view = View.inflate(context, R.layout.custom_list_view, null);
+        view = View.inflate(context, R.layout.custom_device_picker_list_view, null);
         textView = view.findViewById(R.id.message);
         listView = (ListView) view.findViewById(R.id.list);
     }
@@ -26,17 +27,34 @@ public class CustomListView {
         listView = (ListView) view.findViewById(R.id.list);
     }
 
+    public BaseAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(BaseAdapter adapter) {
+        if (listView != null)
+            listView.setAdapter(adapter);
+        this.adapter = adapter;
+        refresh();
+    }
+
     public View getView() {
         return view;
     }
 
+    public void setOnItemClickListener(ListView.OnItemClickListener onItemClickListener) {
+        if (listView != null)
+            listView.setOnItemClickListener(onItemClickListener);
+    }
 
-    public void setAdapter(BaseAdapter adapter) {
+    public void refresh() {
         if (adapter != null && adapter.getCount() > 0) {
             if (textView != null)
                 textView.setVisibility(View.GONE);
-            if (listView != null)
-                listView.setAdapter(adapter);
+
+        } else {
+            if (textView != null)
+                textView.setVisibility(View.VISIBLE);
         }
     }
 }

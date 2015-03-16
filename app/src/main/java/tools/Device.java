@@ -12,7 +12,7 @@ public class Device {
         this.ssid = ssid;
     }
 
-    public String getBssid() {
+    public String getAddress() {
         return bssid;
     }
 
@@ -20,8 +20,14 @@ public class Device {
         this.bssid = bssid;
     }
 
-    public String getSsid() {
+    public String getName() {
         return ssid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        final Device device = (Device) o;
+        return device.toString().equals(toString());
     }
 
     @Override
