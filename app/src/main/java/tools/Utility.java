@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.ProfileDBHelper;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -75,7 +77,8 @@ public class Utility {
     public static final String EDIT_PROFILE = "EDIT_PROFILE";
     public static final String PROFILE_ID = "PROFILE_ID";
     //Todo setting for a toast when a profile is set
-    public static final String TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
+    public static final String PREF_TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
+    public static final String PREF_PLAY_PREVIEW = "PREF_PLAY_PREVIEW";
     /*
      public static final String a = " ";
      public static final String a = " ";
@@ -367,46 +370,59 @@ public class Utility {
 
     public static void setWallpaper(Context context, String value) {
         try {
-            Uri uri = Uri.parse(value);
+            final Uri uri = Uri.parse(value);
 
-            WallpaperManager wpm = WallpaperManager.getInstance(context);
-            BitmapFactory.Options options = new BitmapFactory.Options();
+            final WallpaperManager wpm = WallpaperManager.getInstance(context);
+            final BitmapFactory.Options options = new BitmapFactory.Options();
             // set to false to prepare image for decoding
             //
             options.inJustDecodeBounds = false;
-            wpm.setBitmap(BitmapFactory.decodeStream(new FileInputStream(uri.getPath()), null, options));
-            //Todo check this, make sure it doesn't run out of memory
-            /** From git
-             private Bitmap decodeFile(File f){
-             Bitmap b = null;
+            wpm.setBitmap(decodeFile(new File(uri.getPath())));
 
-             //Decode image size
-             BitmapFactory.Options o = new BitmapFactory.Options();
-             o.inJustDecodeBounds = true;
 
-             FileInputStream fis = new FileInputStream(f);
-             BitmapFactory.decodeStream(fis, null, o);
-             fis.close();
-
-             int scale = 1;
-             if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
-             scale = (int)Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
-             (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-             }
-
-             //Decode with inSampleSize
-             BitmapFactory.Options o2 = new BitmapFactory.Options();
-             o2.inSampleSize = scale;
-             fis = new FileInputStream(f);
-             b = BitmapFactory.decodeStream(fis, null, o2);
-             fis.close();
-
-             return b;
-             }
-             */
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static Bitmap decodeFile(File f) {
+        //Todo check this, make sure it doesn't run out of memory
+        Bitmap b = null;
+
+        //Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (fis == null)
+            return null;
+
+        BitmapFactory.decodeStream(fis, null, o);
+        try {
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//      int scale = 1;
+//        if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+//            scale = (int) Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
+//                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+//        }
+//
+//        //Decode with inSampleSize
+//        BitmapFactory.Options o2 = new BitmapFactory.Options();
+//        o2.inSampleSize = scale;
+//        fis = new FileInputStream(f);
+//        b = BitmapFactory.decodeStream(fis, null, o2);
+//        fis.close();
+
+        return b;
     }
 
     public static void setSilentMode(Context context, int value) {

@@ -20,7 +20,7 @@ public class LinearLayoutList extends LinearLayout {
             //Todo impl
         }
     };
-    //Todo use this in the app
+    public TriggerOrCommand.Type type;
     private ArrayList<TriggerOrCommand> items = new ArrayList<>();
 
     public LinearLayoutList(Context context) {
@@ -41,8 +41,19 @@ public class LinearLayoutList extends LinearLayout {
         this.items = items;
     }
 
+    public TriggerOrCommand.Type getType() {
+        return type;
+    }
+
+    public void setType(TriggerOrCommand.Type type) {
+        this.type = type;
+    }
+
     public void add(TriggerOrCommand triggerOrCommand) {
-        if (items != null && !(items.contains(triggerOrCommand))) {
+        if (items == null)
+            items = new ArrayList<>();
+
+        if (!(items.contains(triggerOrCommand))) {
             items.add(triggerOrCommand);
             getViews();
         }
@@ -81,6 +92,7 @@ public class LinearLayoutList extends LinearLayout {
         for (int i = 0; i < items.size(); i++) {
             final TriggerOrCommand triggerOrCommand = items.get(i);
             final TextView v = (TextView) View.inflate(getContext(), R.layout.command_item, null);
+            v.setText(Utility.getTriggerName(triggerOrCommand.getCategory()));
             v.setTag(i);
             v.setOnClickListener(listener);
             addView(v);

@@ -372,7 +372,7 @@ public class ProfileService extends Service {
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        toastWhenProfileSet = prefs.getBoolean(Utility.TOAST_WHEN_PROFILE_SET, true);
+        toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
         switch (Integer.parseInt(prefs.getString(Utility.SCAN_INTERVAL, "0"))) {
             case 0:
                 scan_interval = 30000;
