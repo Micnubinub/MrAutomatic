@@ -148,13 +148,13 @@ public class EditProfile extends Activity {
 
             if (action.equals("add")) {
                 if (type.contains("restri")) {
-                    addRestrictionList(Utility.getTriggerName(actor), actor);
+                    addRestrictionList(Utility.getTriggerOrCommandName(actor), actor);
                 } else if (type.contains("prohib")) {
-                    addProhibitionList(Utility.getTriggerName(actor), actor);
+                    addProhibitionList(Utility.getTriggerOrCommandName(actor), actor);
                 } else if (type.contains("trig")) {
-                    addTriggerList(Utility.getTriggerName(actor), actor);
+                    addTriggerList(Utility.getTriggerOrCommandName(actor), actor);
                 } else {
-                    addCommandList(Utility.getCommandName(actor), actor);
+                    addCommandList(Utility.getTriggerOrCommandName(actor), actor);
                 }
                 //Todo  showEditorDialog(actor);
 
@@ -179,16 +179,16 @@ public class EditProfile extends Activity {
 
     private void showAlarmVolumeDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Alarm");
-        ((TextView) view.findViewById(R.id.text)).setText("Alarm volume");
+        dialog.setContentView(R.layout.seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Alarm");
+        ((TextView) dialog.findViewById(R.id.text)).setText("Alarm volume");
 
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d", progress));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d", progress));
             }
         });
 
@@ -197,14 +197,14 @@ public class EditProfile extends Activity {
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
             materialSeekBar.setProgress(5);
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
@@ -215,16 +215,16 @@ public class EditProfile extends Activity {
 
     private void showMediaVolumeDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Media");
-        ((TextView) view.findViewById(R.id.text)).setText("Media volume");
+        dialog.setContentView(R.layout.seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Media");
+        ((TextView) dialog.findViewById(R.id.text)).setText("Media volume");
 
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Media volume will be set to: %d", progress));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Media volume will be set to: %d", progress));
             }
         });
 
@@ -235,14 +235,14 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
@@ -253,16 +253,16 @@ public class EditProfile extends Activity {
 
     private void showNotificationVolumeDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Notifications");
-        ((TextView) view.findViewById(R.id.text)).setText("Notification volume");
+        dialog.setContentView(R.layout.seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Notifications");
+        ((TextView) dialog.findViewById(R.id.text)).setText("Notification volume");
 
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Notification volume will be set to: %d", progress));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Notification volume will be set to: %d", progress));
             }
         });
 
@@ -272,14 +272,14 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
@@ -295,16 +295,16 @@ public class EditProfile extends Activity {
 
     private void showRingtoneVolumeDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Ringtones");
-        ((TextView) view.findViewById(R.id.text)).setText("Ringtone volume");
+        dialog.setContentView(R.layout.seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Ringtones");
+        ((TextView) dialog.findViewById(R.id.text)).setText("Ringtone volume");
 
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_RING));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Ringtone volume will be set to: %d", progress));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Ringtone volume will be set to: %d", progress));
             }
         });
 
@@ -314,14 +314,14 @@ public class EditProfile extends Activity {
         else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
@@ -376,26 +376,26 @@ public class EditProfile extends Activity {
 
     private void showBrightnessDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        dialog.setContentView(R.layout.seekbar);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Brightness");
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Brightness");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(255);
         materialSeekBar.setProgress(50);
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Brightness will be set to : %d%s", Math.round((progress / (float) max) * 100), "%"));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Brightness will be set to : %d%s", Math.round((progress / (float) max) * 100), "%"));
             }
         });
-        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setVisibility(View.VISIBLE);
         materialCheckBox.setText("Auto-Brightness");
         materialCheckBox.setOnCheckedChangeListener(new MaterialCheckBox.OnCheckedChangedListener() {
             @Override
             public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
                 materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-                view.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
+                dialog.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -408,14 +408,14 @@ public class EditProfile extends Activity {
         } else
             materialSeekBar.setProgress(5);
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
@@ -431,28 +431,28 @@ public class EditProfile extends Activity {
 
     private void showBatteryDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        dialog.setContentView(R.layout.seekbar);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Battery");
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Battery");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(100);
         materialSeekBar.setProgress(50);
 
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Triggered when less than : %d%s", progress, "%"));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Triggered when less than : %d%s", progress, "%"));
             }
         });
 
-        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setVisibility(View.VISIBLE);
         materialCheckBox.setText("Charging");
         materialCheckBox.setOnCheckedChangeListener(new MaterialCheckBox.OnCheckedChangedListener() {
             @Override
             public void onCheckedChange(MaterialCheckBox materialCheckBox, boolean isChecked) {
                 materialSeekBar.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-                view.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
+                dialog.findViewById(R.id.text).setVisibility(isChecked ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -465,14 +465,14 @@ public class EditProfile extends Activity {
         } else
             materialSeekBar.setProgress(50);
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
@@ -485,16 +485,16 @@ public class EditProfile extends Activity {
 
     private void showBatteryTemperatureDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.seekbar, null);
+        dialog.setContentView(R.layout.seekbar);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Battery temperate");
-        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) view.findViewById(R.id.material_seekbar);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Battery temperate");
+        final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(60);
 
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) view.findViewById(R.id.text)).setText(String.format("Triggered when the temp greater than : %d %s", progress, "degCelsius"));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Triggered when the temp greater than : %d %s", progress, "degCelsius"));
             }
         });
 
@@ -506,14 +506,14 @@ public class EditProfile extends Activity {
             materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
 
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()));
@@ -526,10 +526,10 @@ public class EditProfile extends Activity {
 
     private void showDataDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+        dialog.setContentView(R.layout.radio_group);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Data");
-        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Data");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
@@ -554,7 +554,7 @@ public class EditProfile extends Activity {
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
@@ -571,10 +571,10 @@ public class EditProfile extends Activity {
 
     private void showSleepTimeoutDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+        dialog.setContentView(R.layout.radio_group);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Data");
-        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Data");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         //Todo get the values from this and add them to the profile service
@@ -616,7 +616,7 @@ public class EditProfile extends Activity {
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
@@ -629,10 +629,10 @@ public class EditProfile extends Activity {
 
     private void showMusicPlayerDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.radio_group, null);
+        dialog.setContentView(R.layout.radio_group);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Media Control");
-        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) view.findViewById(R.id.material_radio_group);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Media Control");
+        final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         //Todo get the values from this and add them to the profile service
@@ -659,7 +659,7 @@ public class EditProfile extends Activity {
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.MEDIA_CONTROL_SETTING, String.valueOf(materialRadioGroup.getSelection()));
@@ -672,16 +672,16 @@ public class EditProfile extends Activity {
 
     private void showAutoRotationDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Auto-rotation");
-        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Auto-rotation");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Auto-rotation");
 
         final TriggerOrCommand command = getCommandFromArray(Utility.AUTO_ROTATION_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
@@ -694,16 +694,16 @@ public class EditProfile extends Activity {
 
     private void showBluetoothDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Bluetooth");
-        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Bluetooth");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Bluetooth");
 
         final TriggerOrCommand command = getCommandFromArray(Utility.BLUETOOTH_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0");
@@ -716,16 +716,16 @@ public class EditProfile extends Activity {
 
     private void showWifiDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Wifi");
-        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Wifi");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Wifi");
 
         final TriggerOrCommand command = getCommandFromArray(Utility.WIFI_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0");
@@ -738,10 +738,12 @@ public class EditProfile extends Activity {
 
     private void showBluetoothDevicePickerDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.custom_device_picker_list_view, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Bluetooth Trigger");
+        final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
+        dialog.setContentView(view);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Bluetooth Trigger");
+
         final BluetoothListAdapter listAdapter = new BluetoothListAdapter(this, new CustomListView(view));
-        view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listAdapter.cancelScan();
@@ -765,7 +767,7 @@ public class EditProfile extends Activity {
 
     private void showWifiDevicePickerDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.custom_device_picker_list_view, null);
+        final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
         ((TextView) view.findViewById(R.id.title)).setText("Wifi Trigger");
         final WifiListAdapter listAdapter = new WifiListAdapter(this, new CustomListView(view));
         view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
@@ -792,16 +794,16 @@ public class EditProfile extends Activity {
 
     private void showSilentModeDialog() {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.switch_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Silent Mode");
-        final MaterialSwitch materialSwitch = (MaterialSwitch) view.findViewById(R.id.material_switch);
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Silent Mode");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Silent Mode");
 
         final TriggerOrCommand command = getCommandFromArray(Utility.SILENT_MODE_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0");
@@ -815,9 +817,9 @@ public class EditProfile extends Activity {
     private void showRingtoneDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.ringtone_chooser, null);
+        dialog.setContentView(R.layout.ringtone_chooser);
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue("Type", "value");
@@ -831,8 +833,8 @@ public class EditProfile extends Activity {
     private void showWallPaperDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.wallpaper_choose, null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.wallpaper_choose);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue("Type", "value");
@@ -845,8 +847,8 @@ public class EditProfile extends Activity {
     private void showAppLauncherDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.app_launch, null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.app_launch_dialog);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setCommandValue("Type", "value");
@@ -861,8 +863,8 @@ public class EditProfile extends Activity {
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.app_launch, null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.app_launch_dialog);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(Type.TRIGGER, "Type", "value");
@@ -878,8 +880,8 @@ public class EditProfile extends Activity {
         //Todo make dialog
 
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.nfc_dialog, null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.nfc_dialog);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(Type.TRIGGER, "Type", "value");
@@ -894,8 +896,8 @@ public class EditProfile extends Activity {
     private void showLocationDialog(final Type triggerType) {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.map_dialog, null);
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.map_dialog);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, "Type", "value");
@@ -909,12 +911,12 @@ public class EditProfile extends Activity {
 
     private void showDockDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.checkbox_item, null);
+        dialog.setContentView(R.layout.checkbox_item);
 
-        ((TextView) view.findViewById(R.id.title)).setText("Dock");
-        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Dock");
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setText("Device docked");
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "1" : "0");
@@ -927,9 +929,9 @@ public class EditProfile extends Activity {
 
     private void showHeadPhoneJackDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.checkbox_item, null);
-        ((TextView) view.findViewById(R.id.title)).setText("Headphone Jack");
-        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        dialog.setContentView(R.layout.checkbox_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Headphone Jack");
+        final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setText("Jack connect");
 
         //Todo use type instead
@@ -937,7 +939,7 @@ public class EditProfile extends Activity {
         if (trigger != null)
             materialCheckBox.setChecked(trigger.getValue().equals("1"));
 
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_EARPHONE_JACK, materialCheckBox.isChecked() ? "1" : "0");
@@ -953,8 +955,7 @@ public class EditProfile extends Activity {
         //Todo consider adding weekdays above the tome (with just one letter like the clock app >> s m t w ... s and a check box to check all, the weekdays or the weekends
         final Dialog dialog = getDialog();
 
-        final View view = View.inflate(EditProfile.this, R.layout.time_picker, null);
-        dialog.setContentView(view);
+        dialog.setContentView(R.layout.time_picker);
         final AbstractWheel hours = (AbstractWheel) dialog.findViewById(R.id.hours);
         final AbstractWheel minutes = (AbstractWheel) dialog.findViewById(R.id.minutes);
 

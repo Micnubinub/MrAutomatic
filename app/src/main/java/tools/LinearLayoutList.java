@@ -115,9 +115,9 @@ public class LinearLayoutList extends LinearLayout {
             final Object triggerOrCommandOrAvailable = items.get(i);
             final TextView v = (TextView) View.inflate(getContext(), R.layout.command_item, null);
             if (triggerOrCommandOrAvailable instanceof TriggerOrCommand)
-                v.setText(Utility.getTriggerName(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory()));
+                v.setText(Utility.getTriggerOrCommandName(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory()));
             else if (triggerOrCommandOrAvailable instanceof String)
-                v.setText(Utility.getTriggerName((String) triggerOrCommandOrAvailable));
+                v.setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));
             v.setTag(i);
             v.setOnClickListener(listener);
             addView(v);

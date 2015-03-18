@@ -497,7 +497,7 @@ public class Utility {
         return triggerList;
     }
 
-    public static String getTriggerName(String item) {
+    public static String getTriggerOrCommandName(String item) {
         //Todo check this
         if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
             item = "App launch";

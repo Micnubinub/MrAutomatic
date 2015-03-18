@@ -24,7 +24,7 @@
                 android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:padding="8dp"
-                android:text=""
+                android:text="Secondary"
                 android:textColor="@color/dark_grey_text"
                 android:textSize="18sp" />
 
@@ -45,5 +45,4 @@
                 android:textSize="18sp" />
         </RelativeLayout>
     </ScrollView>
-
 </RelativeLayout>

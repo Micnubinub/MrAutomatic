@@ -57,7 +57,7 @@
                 android:minWidth="120dp"
                 android:padding="8dp"
                 android:text="Dismiss"
-                android:textColor="@color/dark_grey_text"
+                android:textColor="@color/material_blue"
                 android:textSize="18sp" />
         </RelativeLayout>
     </ScrollView>
