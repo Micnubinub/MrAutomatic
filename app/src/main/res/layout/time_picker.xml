@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/round_rect"
+    android:background="@drawable/dialog_background_inset"
     android:orientation="vertical">
 
     <TextView
@@ -89,6 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/container1" />
+        android:layout_below="@+id/container1"
+        android:layout_margin="8dp" />
 
 </RelativeLayout>

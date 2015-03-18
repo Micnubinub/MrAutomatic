@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <inset android:drawable="@drawable/round_rect" android:insetBottom="8dp" android:insetLeft="8dp" android:insetRight="8dp" android:insetTop="8dp"></inset>
+    </item>
+</selector>

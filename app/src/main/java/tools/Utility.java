@@ -476,8 +476,50 @@ public class Utility {
         }
     }
 
-    public static String getCommandName(String item) {
-        if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
+
+    public static ArrayList<TriggerOrCommand> getCommands(String commands) {
+        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
+        for (String s : commands.split(",")) {
+            final String[] array = s.split(":", 2);
+            //Todo fix this
+            commandList.add(new TriggerOrCommand(Type.COMMAND, array[0], array[1]));
+        }
+        return commandList;
+    }
+
+    public static ArrayList<TriggerOrCommand> getTriggers(String triggers) {
+        final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
+        for (String s : triggers.split(",")) {
+            final String[] array = s.split(":", 2);
+            //Todo fix this
+            triggerList.add(new TriggerOrCommand(Type.TRIGGER, array[0], array[1]));
+        }
+        return triggerList;
+    }
+
+    public static String getTriggerName(String item) {
+        //Todo check this
+        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            item = "App launch";
+        } else if (item.equals(Utility.TRIGGER_BATTERY)) {
+            item = "Battery";
+        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            item = "Battery temperature";
+        } else if (item.equals(Utility.TRIGGER_BLUETOOTH)) {
+            item = "Bluetooth device";
+        } else if (item.equals(Utility.TRIGGER_NFC)) {
+            item = "NFC";
+        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
+            item = "Location";
+        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            item = "Headphone jack";
+        } else if (item.equals(Utility.TRIGGER_DOCK)) {
+            item = "Dock";
+        } else if (item.equals(Utility.TRIGGER_TIME)) {
+            item = "Time";
+        } else if (item.equals(Utility.TRIGGER_WIFI)) {
+            item = "Wifi evice";
+        } else if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
             item = "Alarm Volume";
         } else if (item.equals(Utility.AUTO_ROTATION_SETTING)) {
             item = "Auto rotation";
@@ -508,51 +550,7 @@ public class Utility {
         } else if (item.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
             item = "Screen timeout";
         }
-        return item;
-    }
 
-    public static ArrayList<TriggerOrCommand> getCommands(String commands) {
-        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
-        for (String s : commands.split(",")) {
-            final String[] array = s.split(":", 2);
-            //Todo fix this
-            commandList.add(new TriggerOrCommand(Type.COMMAND, array[0], array[1]));
-        }
-        return commandList;
-    }
-
-    public static ArrayList<TriggerOrCommand> getTriggers(String triggers) {
-        final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
-        for (String s : triggers.split(",")) {
-            final String[] array = s.split(":", 2);
-            //Todo fix this
-            triggerList.add(new TriggerOrCommand(Type.TRIGGER, array[0], array[1]));
-        }
-        return triggerList;
-    }
-
-    public static String getTriggerName(String item) {
-        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            item = "App launch";
-        } else if (item.equals(Utility.TRIGGER_BATTERY)) {
-            item = "Battery";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            item = "Battery temperature";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH)) {
-            item = "Bluetooth device";
-        } else if (item.equals(Utility.TRIGGER_NFC)) {
-            item = "NFC";
-        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
-            item = "Location";
-        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            item = "Headphone jack";
-        } else if (item.equals(Utility.TRIGGER_DOCK)) {
-            item = "Dock";
-        } else if (item.equals(Utility.TRIGGER_TIME)) {
-            item = "Time";
-        } else if (item.equals(Utility.TRIGGER_WIFI)) {
-            item = "Wifi evice";
-        }
         return item;
     }
 

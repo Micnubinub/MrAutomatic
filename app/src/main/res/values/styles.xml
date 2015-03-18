@@ -2,6 +2,7 @@
 
     <style name="CustomDialog" parent="@android:style/Theme.Translucent.NoTitleBar">
         <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/alpha</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>

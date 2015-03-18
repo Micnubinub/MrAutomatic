@@ -815,7 +815,7 @@ public class EditProfile extends Activity {
     private void showRingtoneDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.ringtone_chooser, null);
 
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -831,7 +831,7 @@ public class EditProfile extends Activity {
     private void showWallPaperDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.wallpaper_choose, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -845,7 +845,7 @@ public class EditProfile extends Activity {
     private void showAppLauncherDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.app_launch, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -861,7 +861,7 @@ public class EditProfile extends Activity {
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.app_launch, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -878,7 +878,7 @@ public class EditProfile extends Activity {
         //Todo make dialog
 
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.nfc_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -894,7 +894,7 @@ public class EditProfile extends Activity {
     private void showLocationDialog(final Type triggerType) {
         //Todo make dialog
         final Dialog dialog = getDialog();
-        final View view = View.inflate(EditProfile.this, R.layout.restrictions_dialog, null);
+        final View view = View.inflate(EditProfile.this, R.layout.map_dialog, null);
         view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -988,58 +988,62 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showEditorDialog(final Type triggerType, String command) {
-        if (command.equals(Utility.ALARM_VOLUME_SETTING)) {
+    private void showEditorDialog(final Type triggerType, String commandOrTrigger) {
+        if (commandOrTrigger == null)
+            return;
+        Log.e("showEditor : ", commandOrTrigger + " , " + triggerType);
+        //Todo make sure it works for both commands and triggers
+        if (commandOrTrigger.equals(Utility.ALARM_VOLUME_SETTING)) {
             showAlarmVolumeDialog();
-        } else if (command.equals(Utility.AUTO_ROTATION_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.AUTO_ROTATION_SETTING)) {
             showAutoRotationDialog();
-        } else if (command.equals(Utility.BLUETOOTH_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.BLUETOOTH_SETTING)) {
             showBluetoothDialog();
-        } else if (command.equals(Utility.WALLPAPER_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.WALLPAPER_SETTING)) {
             showWallPaperDialog();
-        } else if (command.equals(Utility.WIFI_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.WIFI_SETTING)) {
             showWifiDialog();
-        } else if (command.equals(Utility.BRIGHTNESS_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
             showBrightnessDialog();
-        } else if (command.equals(Utility.MEDIA_VOLUME_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.MEDIA_VOLUME_SETTING)) {
             showMediaVolumeDialog();
-        } else if (command.equals(Utility.LAUNCH_APP_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.LAUNCH_APP_SETTING)) {
             showAppLauncherDialog();
-        } else if (command.equals(Utility.DATA_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.DATA_SETTING)) {
             showDataDialog();
-        } else if (command.equals(Utility.BRIGHTNESS_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
             showBrightnessDialog();
-        } else if (command.equals(Utility.RINGER_VOLUME_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.RINGER_VOLUME_SETTING)) {
             showRingtoneVolumeDialog();
-        } else if (command.equals(Utility.MEDIA_CONTROL_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.MEDIA_CONTROL_SETTING)) {
             showMusicPlayerDialog();
-        } else if (command.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
             showNotificationVolumeDialog();
-        } else if (command.equals(Utility.RINGTONE_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.RINGTONE_SETTING)) {
             showRingtoneDialog();
-        } else if (command.equals(Utility.SILENT_MODE_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.SILENT_MODE_SETTING)) {
             showSilentModeDialog();
-        } else if (command.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+        } else if (commandOrTrigger.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
             showSleepTimeoutDialog();
-        } else if (command.equals(Utility.TRIGGER_APP_LAUNCH)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_APP_LAUNCH)) {
             showAppLaunchListenerDialog();
-        } else if (command.equals(Utility.TRIGGER_BATTERY)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY)) {
             showBatteryDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             showBatteryTemperatureDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_BLUETOOTH)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_BLUETOOTH)) {
             showBluetoothDevicePickerDialog();
-        } else if (command.equals(Utility.TRIGGER_NFC)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_NFC)) {
             showNFCDialog();
-        } else if (command.equals(Utility.TRIGGER_LOCATION)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_LOCATION)) {
             showLocationDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_EARPHONE_JACK)) {
             showHeadPhoneJackDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_DOCK)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_DOCK)) {
             showDockDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_TIME)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_TIME)) {
             showTimeDialog(triggerType);
-        } else if (command.equals(Utility.TRIGGER_WIFI)) {
+        } else if (commandOrTrigger.equals(Utility.TRIGGER_WIFI)) {
             showWifiDevicePickerDialog(triggerType);
         }
     }
@@ -1117,7 +1121,7 @@ public class EditProfile extends Activity {
 
         commandList = (LinearLayout) findViewById(R.id.commands).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.commands).findViewById(R.id.title))).setText("Commands");
-        ((Button) (findViewById(R.id.commands).findViewById(R.id.add_item))).setText("Add TriggerOrCommand");
+        ((Button) (findViewById(R.id.commands).findViewById(R.id.add_item))).setText("Add Command");
         findViewById(R.id.commands).findViewById(R.id.add_item).setOnClickListener(l);
         findViewById(R.id.commands).findViewById(R.id.add_item).setTag(Type.COMMAND);
 
@@ -1381,7 +1385,6 @@ public class EditProfile extends Activity {
 //        return dialog;
 //    }
 
-
     private void showTriggerProhibOrRestricCommandDialog(final Type type) {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.trigger_chooser_dialog);
@@ -1403,6 +1406,13 @@ public class EditProfile extends Activity {
                 break;
         }
         lll.setType(type);
+        lll.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                showEditorDialog(type, lll.getCommandOrTrigger(view));
+            }
+        });
         populateLinearLayoutList(lll);
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1433,11 +1443,7 @@ public class EditProfile extends Activity {
                 break;
         }
 
-        for (int i = 0; i < strings.size(); i++) {
-            final String item = strings.get(i);
-
-
-        }
+        lll.setItems(strings);
         lll.invalidate();
     }
 

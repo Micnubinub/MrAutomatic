@@ -14,14 +14,9 @@ import java.util.ArrayList;
  * Created by Michael on 3/11/2015.
  */
 public class LinearLayoutList extends LinearLayout {
-    private final OnClickListener listener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //Todo impl
-        }
-    };
     public TriggerOrCommand.Type type;
-    private ArrayList<TriggerOrCommand> items = new ArrayList<>();
+    private OnClickListener listener;
+    private ArrayList<Object> items = new ArrayList<>();
 
     public LinearLayoutList(Context context) {
         super(context);
@@ -31,14 +26,27 @@ public class LinearLayoutList extends LinearLayout {
         super(context, attrs);
     }
 
-    public void editItem(int pos) {
-        if (pos < 0 || items == null || pos >= items.size())
-            return;
-        final TriggerOrCommand triggerOrCommand = items.get(pos);
+//    public void editItem(int pos) {
+//        if (pos < 0 || items == null || pos >= items.size())
+//            return;
+//        final TriggerOrCommand triggerOrCommand = items.get(pos);
+//    }
+
+
+    public void setOnItemClickListener(OnClickListener l) {
+        //Todo implement in all instances
+        listener = l;
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).setOnClickListener(l);
+        }
     }
 
-    public void setItems(ArrayList<TriggerOrCommand> items) {
-        this.items = items;
+    public void setItems(ArrayList<String> items) {
+        this.items = new ArrayList<>();
+        for (String item : items) {
+            this.items.add(item);
+        }
+        getViews();
     }
 
     public TriggerOrCommand.Type getType() {
@@ -60,15 +68,15 @@ public class LinearLayoutList extends LinearLayout {
     }
 
     public void remove(String category) {
-        if (items != null) {
-            for (int i = 0; i < items.size(); i++) {
-                final TriggerOrCommand triggerOrCommand = items.get(i);
-                if (triggerOrCommand.getCategory().equals(category)) {
-                    items.remove(triggerOrCommand);
-                    getViews();
-                }
-            }
+        if (items == null || items.size() < 1 || !(items.get(0) instanceof TriggerOrCommand))
+            return;
 
+        for (int i = 0; i < items.size(); i++) {
+            final TriggerOrCommand triggerOrCommand = (TriggerOrCommand) items.get(i);
+            if (triggerOrCommand.getCategory().equals(category)) {
+                items.remove(i);
+                getViews();
+            }
         }
     }
 
@@ -79,20 +87,37 @@ public class LinearLayoutList extends LinearLayout {
         }
     }
 
-    public void remove(int triggerOrCommand) {
-        if (items != null && (items.size() > triggerOrCommand)) {
-            items.remove(triggerOrCommand);
+    public void remove(int triggerOrCommandOrAvailable) {
+        if (items != null && (items.size() > triggerOrCommandOrAvailable)) {
+            items.remove(triggerOrCommandOrAvailable);
             getViews();
         }
+    }
+
+    public String getCommandOrTrigger(View view) {
+        final int index = indexOfChild(view);
+        if (items == null || index < 0 || index >= items.size())
+            return null;
+
+        final Object o = items.get(index);
+        if (o instanceof TriggerOrCommand)
+            return ((TriggerOrCommand) o).getCategory();
+        else if (o instanceof String)
+            return (String) o;
+
+        return null;
     }
 
     private void getViews() {
         //Todo
         removeAllViews();
         for (int i = 0; i < items.size(); i++) {
-            final TriggerOrCommand triggerOrCommand = items.get(i);
+            final Object triggerOrCommandOrAvailable = items.get(i);
             final TextView v = (TextView) View.inflate(getContext(), R.layout.command_item, null);
-            v.setText(Utility.getTriggerName(triggerOrCommand.getCategory()));
+            if (triggerOrCommandOrAvailable instanceof TriggerOrCommand)
+                v.setText(Utility.getTriggerName(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory()));
+            else if (triggerOrCommandOrAvailable instanceof String)
+                v.setText(Utility.getTriggerName((String) triggerOrCommandOrAvailable));
             v.setTag(i);
             v.setOnClickListener(listener);
             addView(v);
