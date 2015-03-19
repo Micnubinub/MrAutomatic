@@ -41,11 +41,17 @@
         card_view:cardCornerRadius="3dp">
 
         <LinearLayout
-            android:id="@+id/content"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
+
+            <tools.LinearLayoutList
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical" />
 
             <Button
                 android:id="@+id/add_item"

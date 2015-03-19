@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.ProfileDBHelper;
+import com.micnubinub.mrautomatic.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -499,59 +500,97 @@ public class Utility {
 
     public static String getTriggerOrCommandName(String item) {
         //Todo check this
-        if (item.equals(Utility.TRIGGER_APP_LAUNCH)) {
+        if (item.equals(TRIGGER_APP_LAUNCH)) {
             item = "App launch";
-        } else if (item.equals(Utility.TRIGGER_BATTERY)) {
+        } else if (item.equals(TRIGGER_BATTERY)) {
             item = "Battery";
-        } else if (item.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+        } else if (item.equals(TRIGGER_BATTERY_TEMPERATURE)) {
             item = "Battery temperature";
-        } else if (item.equals(Utility.TRIGGER_BLUETOOTH)) {
+        } else if (item.equals(TRIGGER_BLUETOOTH)) {
             item = "Bluetooth device";
-        } else if (item.equals(Utility.TRIGGER_NFC)) {
+        } else if (item.equals(TRIGGER_NFC)) {
             item = "NFC";
-        } else if (item.equals(Utility.TRIGGER_LOCATION)) {
+        } else if (item.equals(TRIGGER_LOCATION)) {
             item = "Location";
-        } else if (item.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+        } else if (item.equals(TRIGGER_EARPHONE_JACK)) {
             item = "Headphone jack";
-        } else if (item.equals(Utility.TRIGGER_DOCK)) {
+        } else if (item.equals(TRIGGER_DOCK)) {
             item = "Dock";
-        } else if (item.equals(Utility.TRIGGER_TIME)) {
+        } else if (item.equals(TRIGGER_TIME)) {
             item = "Time";
-        } else if (item.equals(Utility.TRIGGER_WIFI)) {
+        } else if (item.equals(TRIGGER_WIFI)) {
             item = "Wifi evice";
-        } else if (item.equals(Utility.ALARM_VOLUME_SETTING)) {
+        } else if (item.equals(ALARM_VOLUME_SETTING)) {
             item = "Alarm Volume";
-        } else if (item.equals(Utility.AUTO_ROTATION_SETTING)) {
+        } else if (item.equals(AUTO_ROTATION_SETTING)) {
             item = "Auto rotation";
-        } else if (item.equals(Utility.BLUETOOTH_SETTING)) {
+        } else if (item.equals(BLUETOOTH_SETTING)) {
             item = "Bluetooth";
-        } else if (item.equals(Utility.WALLPAPER_SETTING)) {
+        } else if (item.equals(WALLPAPER_SETTING)) {
             item = "Wallpaper";
-        } else if (item.equals(Utility.WIFI_SETTING)) {
+        } else if (item.equals(WIFI_SETTING)) {
             item = "Wifi";
-        } else if (item.equals(Utility.MEDIA_VOLUME_SETTING)) {
+        } else if (item.equals(MEDIA_VOLUME_SETTING)) {
             item = "Media volume";
-        } else if (item.equals(Utility.LAUNCH_APP_SETTING)) {
+        } else if (item.equals(LAUNCH_APP_SETTING)) {
             item = "Launch app";
-        } else if (item.equals(Utility.DATA_SETTING)) {
+        } else if (item.equals(DATA_SETTING)) {
             item = "Data";
-        } else if (item.equals(Utility.BRIGHTNESS_SETTING)) {
+        } else if (item.equals(BRIGHTNESS_SETTING)) {
             item = "Brightness";
-        } else if (item.equals(Utility.RINGER_VOLUME_SETTING)) {
+        } else if (item.equals(RINGER_VOLUME_SETTING)) {
             item = "Ringtone volume";
-        } else if (item.equals(Utility.MEDIA_CONTROL_SETTING)) {
+        } else if (item.equals(MEDIA_CONTROL_SETTING)) {
             item = "Music control";
-        } else if (item.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+        } else if (item.equals(NOTIFICATION_VOLUME_SETTING)) {
             item = "Notification volume";
-        } else if (item.equals(Utility.RINGTONE_SETTING)) {
+        } else if (item.equals(RINGTONE_SETTING)) {
             item = "Ringtone";
-        } else if (item.equals(Utility.SILENT_MODE_SETTING)) {
+        } else if (item.equals(SILENT_MODE_SETTING)) {
             item = "Silent mode";
-        } else if (item.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+        } else if (item.equals(SLEEP_TIMEOUT_SETTING)) {
             item = "Screen timeout";
         }
-
         return item;
+    }
+
+    public static int getIcon(String type) {
+        int icon = R.drawable.info;
+
+        if (type.equals(TRIGGER_BATTERY)) {
+            icon = R.drawable.battery_percentage;
+        } else if (type.equals(TRIGGER_APP_LAUNCH)) {
+            icon = R.drawable.app_launch;
+        } else if (type.equals(TRIGGER_BATTERY_TEMPERATURE)) {
+            icon = R.drawable.battery_temperature;
+        } else if (type.equals(TRIGGER_LOCATION)) {
+            icon = R.drawable.location;
+        } else if (type.equals(TRIGGER_WIFI)) {
+            icon = R.drawable.wifi;
+        } else if (type.equals(TRIGGER_BLUETOOTH)) {
+            icon = R.drawable.bluetooth;
+        } else if (type.equals(TRIGGER_NFC)) {
+            icon = R.drawable.nfc;
+        } else if (type.equals(TRIGGER_DOCK)) {
+            icon = R.drawable.dock;
+        } else if (type.equals(TRIGGER_TIME)) {
+            icon = R.drawable.time_trigger;
+        } else if (type.equals(TRIGGER_EARPHONE_JACK)) {
+            icon = R.drawable.headphone_jack;
+        }
+//        else if (type.equals(MEDIA_CONTROL_SETTING)) {
+//            icon = R.drawable.info;
+//        } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
+//            icon = R.drawable.info;
+//        } else if (type.equals(RINGTONE_SETTING)) {
+//            icon = R.drawable.info;
+//        } else if (type.equals(SILENT_MODE_SETTING)) {
+//            icon = R.drawable.info;
+//        } else if (type.equals(SLEEP_TIMEOUT_SETTING)) {
+//            icon = R.drawable.info;
+//        }
+
+        return icon;
     }
 
     public static class EarphoneJackReceiver extends BroadcastReceiver {

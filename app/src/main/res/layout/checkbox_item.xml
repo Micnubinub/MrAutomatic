@@ -3,8 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background_inset"
-    android:paddingBottom="8dp">
+    android:background="@drawable/dialog_background_inset">
 
     <TextView
         android:id="@+id/title"
@@ -22,7 +21,6 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-
     <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/material_checkbox"
         android:layout_width="fill_parent"
@@ -37,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/material_checkbox"
+        android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="4dp"
         android:background="@drawable/white_button_selector"

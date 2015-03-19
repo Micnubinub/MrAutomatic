@@ -113,15 +113,22 @@ public class LinearLayoutList extends LinearLayout {
         removeAllViews();
         for (int i = 0; i < items.size(); i++) {
             final Object triggerOrCommandOrAvailable = items.get(i);
-            final TextView v = (TextView) View.inflate(getContext(), R.layout.command_item, null);
-            if (triggerOrCommandOrAvailable instanceof TriggerOrCommand)
-                v.setText(Utility.getTriggerOrCommandName(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory()));
-            else if (triggerOrCommandOrAvailable instanceof String)
-                v.setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));
+            View v = null;
+            if (triggerOrCommandOrAvailable instanceof TriggerOrCommand) {
+                Utility.getIcon(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory());
+                v = View.inflate(getContext(), R.layout.command_item, null);
+            } else if (triggerOrCommandOrAvailable instanceof String) {
+                v = View.inflate(getContext(), R.layout.command_item, null);
+                ((TextView) v).setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));
+            }
+
+            if (v == null)
+                return;
             v.setTag(i);
             v.setOnClickListener(listener);
             addView(v);
         }
     }
+
 
 }

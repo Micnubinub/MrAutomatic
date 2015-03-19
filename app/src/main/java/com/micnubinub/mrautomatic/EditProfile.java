@@ -68,7 +68,7 @@ public class EditProfile extends Activity {
     private static final ArrayList<TriggerOrCommand> restrictionTriggers = new ArrayList<TriggerOrCommand>(10);
     private static final ArrayList<TriggerOrCommand> prohibitionTriggers = new ArrayList<TriggerOrCommand>(10);
     private static final ArrayList<TriggerOrCommand> normalTriggers = new ArrayList<TriggerOrCommand>(10);
-    private static LinearLayout prohibitionList, triggerList, restrictionList, commandList;
+    private static LinearLayoutList prohibitionList, triggerList, restrictionList, commandList;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -96,7 +96,13 @@ public class EditProfile extends Activity {
             }
         }
     };
-
+    private final View.OnClickListener useSSIDListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            showInfoHelpDialog("Use device name?", "When checked, it checks the other device's name instead of the device's ID. Therefor a completely different device can be a trigger if i has the same name." +
+                    "For instance when at a school/university, there are multiple routers with the same name, but different IDs, so if you want it to trigger in a specific class room leave unchecked, but if you want it to trigger anywhere in the uni, make sure its checked");
+        }
+    };
     int brightness_auto_old_value, ringer_old_value, alarm_old_value;
     int wifi_old_value, bluetooth_old_value, brightness_old_value, media_volume, old_media_volume_value, notification_volume, old_notification_value, old_incoming_call_volume;
     private String profileId;
@@ -336,22 +342,23 @@ public class EditProfile extends Activity {
         TriggerOrCommand trigger = getTriggerFromArray(triggerType);
         if (trigger == null) {
             trigger = new TriggerOrCommand(triggerType, type, value);
-            switch (triggerType) {
-                case RESTRICTIONS:
-                    restrictionTriggers.add(trigger);
-                    availableRestrictions.remove(type);
-                    break;
-                case TRIGGER:
-                    normalTriggers.add(trigger);
-                    availableTriggers.remove(type);
-                    break;
-                case PROHIBITION:
-                    prohibitionTriggers.add(trigger);
-                    availableProhibitions.remove(type);
-                    break;
-            }
         } else {
             trigger.setValue(value);
+        }
+
+        switch (triggerType) {
+            case RESTRICTIONS:
+                restrictionTriggers.add(trigger);
+                availableRestrictions.remove(type);
+                break;
+            case TRIGGER:
+                normalTriggers.add(trigger);
+                availableTriggers.remove(type);
+                break;
+            case PROHIBITION:
+                prohibitionTriggers.add(trigger);
+                availableProhibitions.remove(type);
+                break;
         }
 
     }
@@ -481,7 +488,6 @@ public class EditProfile extends Activity {
 
         dialog.show();
     }
-
 
     private void showBatteryTemperatureDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
@@ -736,11 +742,14 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showBluetoothDevicePickerDialog() {
+    private void showBluetoothDevicePickerDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
         final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
         dialog.setContentView(view);
         ((TextView) dialog.findViewById(R.id.title)).setText("Bluetooth Trigger");
+
+        final MaterialCheckBox useSSID = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        view.findViewById(R.id.info).setOnClickListener(useSSIDListener);
 
         final BluetoothListAdapter listAdapter = new BluetoothListAdapter(this, new CustomListView(view));
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
@@ -749,6 +758,7 @@ public class EditProfile extends Activity {
                 listAdapter.cancelScan();
                 //Todo use this view.setOnClickListener(tagClickListener);
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
+                setValue(triggerType, Utility.TRIGGER_BLUETOOTH, useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress());
                 dialog.dismiss();
             }
         });
@@ -769,13 +779,17 @@ public class EditProfile extends Activity {
         final Dialog dialog = getDialog();
         final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
         ((TextView) view.findViewById(R.id.title)).setText("Wifi Trigger");
+
+        final MaterialCheckBox useSSID = (MaterialCheckBox) view.findViewById(R.id.material_checkbox);
+        view.findViewById(R.id.info).setOnClickListener(useSSIDListener);
+
         final WifiListAdapter listAdapter = new WifiListAdapter(this, new CustomListView(view));
         view.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listAdapter.cancelScan();
-                //Todo use this use this view.setOnClickListener(tagClickListener);
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
+                setValue(triggerType, Utility.TRIGGER_WIFI, useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress());
                 dialog.dismiss();
             }
         });
@@ -1033,7 +1047,7 @@ public class EditProfile extends Activity {
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
             showBatteryTemperatureDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BLUETOOTH)) {
-            showBluetoothDevicePickerDialog();
+            showBluetoothDevicePickerDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_NFC)) {
             showNFCDialog();
         } else if (commandOrTrigger.equals(Utility.TRIGGER_LOCATION)) {
@@ -1051,13 +1065,13 @@ public class EditProfile extends Activity {
 
     private void showInfo(String infoType) {
         if (infoType.contains("restric")) {
-            showHelpDialog("Restriction Help", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Restriction Help", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
         } else if (infoType.contains("prohib")) {
-            showHelpDialog("Prohibition Help", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
+            showInfoHelpDialog("Prohibition Help", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
         } else if (infoType.contains("trig")) {
-            showHelpDialog("Trigger Help", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Trigger Help", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
         } else {
-            showHelpDialog("TriggerOrCommand Help", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
+            showInfoHelpDialog("TriggerOrCommand Help", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
         }
     }
 
@@ -1102,30 +1116,29 @@ public class EditProfile extends Activity {
             }
         };
 
-        prohibitionList = (LinearLayout) findViewById(R.id.prohibitions).findViewById(R.id.content);
+        prohibitionList = (LinearLayoutList) findViewById(R.id.prohibitions).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.prohibitions).findViewById(R.id.title))).setText("Prohibitions");
         ((Button) (findViewById(R.id.prohibitions).findViewById(R.id.add_item))).setText("Add Prohibition");
         findViewById(R.id.prohibitions).findViewById(R.id.add_item).setOnClickListener(l);
         findViewById(R.id.prohibitions).findViewById(R.id.add_item).setTag(Type.PROHIBITION);
 
-        triggerList = (LinearLayout) findViewById(R.id.triggers).findViewById(R.id.content);
+        triggerList = (LinearLayoutList) findViewById(R.id.triggers).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.triggers).findViewById(R.id.title))).setText("Triggers");
         ((Button) (findViewById(R.id.triggers).findViewById(R.id.add_item))).setText("Add Trigger");
         findViewById(R.id.triggers).findViewById(R.id.add_item).setOnClickListener(l);
         findViewById(R.id.triggers).findViewById(R.id.add_item).setTag(Type.TRIGGER);
 
-        restrictionList = (LinearLayout) findViewById(R.id.restrictions).findViewById(R.id.content);
+        restrictionList = (LinearLayoutList) findViewById(R.id.restrictions).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.restrictions).findViewById(R.id.title))).setText("Restrictions");
         ((Button) (findViewById(R.id.restrictions).findViewById(R.id.add_item))).setText("Add Restriction");
         findViewById(R.id.restrictions).findViewById(R.id.add_item).setOnClickListener(l);
         findViewById(R.id.restrictions).findViewById(R.id.add_item).setTag(Type.RESTRICTIONS);
 
-        commandList = (LinearLayout) findViewById(R.id.commands).findViewById(R.id.content);
+        commandList = (LinearLayoutList) findViewById(R.id.commands).findViewById(R.id.content);
         ((TextView) (findViewById(R.id.commands).findViewById(R.id.title))).setText("Commands");
         ((Button) (findViewById(R.id.commands).findViewById(R.id.add_item))).setText("Add Command");
         findViewById(R.id.commands).findViewById(R.id.add_item).setOnClickListener(l);
         findViewById(R.id.commands).findViewById(R.id.add_item).setTag(Type.COMMAND);
-
     }
 
     private void setInfoOnClickListeners() {
@@ -1249,9 +1262,7 @@ public class EditProfile extends Activity {
     }
 
     public void getOldValues() {
-
         bluetooth_old_value = adapter.isEnabled() ? 1 : 0;
-
         wifi_old_value = wifiManager.isWifiEnabled() ? 1 : 0;
 
 
@@ -1464,7 +1475,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showHelpDialog(String titleText, String help) {
+    private void showInfoHelpDialog(String titleText, String help) {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.help_dialog);
         final TextView title = (TextView) dialog.findViewById(R.id.title);
@@ -1573,10 +1584,10 @@ public class EditProfile extends Activity {
             try {
                 if ((cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)).equals(profileId))) {
                     profile_name.setText(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)));
-                    fillInAddedCommands(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)));
-                    fillInRestrictionTriggers(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)));
-                    fillInProhibitionTriggers(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)));
-                    fillInNormalTriggers(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)));
+                    fillInAddedCommandsFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)));
+                    fillInRestrictionTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)));
+                    fillInProhibitionTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)));
+                    fillInNormalTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)));
                     break loop;
                 }
             } catch (Exception e) {
@@ -1591,7 +1602,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    private void fillInAddedCommands(String commands) {
+    private void fillInAddedCommandsFromDb(String commands) {
         final ArrayList<TriggerOrCommand> setCommands = Utility.getCommands(commands);
         for (int i = 0; i < setCommands.size(); i++) {
             final TriggerOrCommand command = setCommands.get(i);
@@ -1599,7 +1610,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    private void fillInRestrictionTriggers(String restrictions) {
+    private void fillInRestrictionTriggersFromDb(String restrictions) {
         final ArrayList<TriggerOrCommand> setRestrictions = Utility.getTriggers(restrictions);
         for (int i = 0; i < setRestrictions.size(); i++) {
             final TriggerOrCommand trigger = setRestrictions.get(i);
@@ -1607,7 +1618,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    private void fillInProhibitionTriggers(String prohibitions) {
+    private void fillInProhibitionTriggersFromDb(String prohibitions) {
         final ArrayList<TriggerOrCommand> setProhibitions = Utility.getTriggers(prohibitions);
         for (int i = 0; i < setProhibitions.size(); i++) {
             final TriggerOrCommand trigger = setProhibitions.get(i);
@@ -1615,7 +1626,7 @@ public class EditProfile extends Activity {
         }
     }
 
-    private void fillInNormalTriggers(String triggers) {
+    private void fillInNormalTriggersFromDb(String triggers) {
         final ArrayList<TriggerOrCommand> setTriggers = Utility.getTriggers(triggers);
         for (int i = 0; i < setTriggers.size(); i++) {
             final TriggerOrCommand trigger = setTriggers.get(i);
