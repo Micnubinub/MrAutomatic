@@ -2,7 +2,9 @@ package tools;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +33,6 @@ public class LinearLayoutList extends LinearLayout {
 //            return;
 //        final TriggerOrCommand triggerOrCommand = items.get(pos);
 //    }
-
 
     public void setOnItemClickListener(OnClickListener l) {
         //Todo implement in all instances
@@ -104,19 +105,26 @@ public class LinearLayoutList extends LinearLayout {
             return ((TriggerOrCommand) o).getCategory();
         else if (o instanceof String)
             return (String) o;
-
         return null;
     }
 
     private void getViews() {
-        //Todo
+        //Todo fill in
         removeAllViews();
         for (int i = 0; i < items.size(); i++) {
             final Object triggerOrCommandOrAvailable = items.get(i);
+            Log.e("obJ", triggerOrCommandOrAvailable.toString());
             View v = null;
             if (triggerOrCommandOrAvailable instanceof TriggerOrCommand) {
                 Utility.getIcon(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory());
-                v = View.inflate(getContext(), R.layout.command_item, null);
+                v = View.inflate(getContext(), R.layout.command_list_item, null);
+                v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+//                v.findViewById(R.id.text).setTag("open_" + type + viewCommand);
+//                v.findViewById(R.id.text).setOnClickListener(tagClickListener);
+//
+//                v.findViewById(R.id.remove).setTag("remove_" + type + viewCommand);
+//                v.findViewById(R.id.remove).setOnClickListener(tagClickListener);
             } else if (triggerOrCommandOrAvailable instanceof String) {
                 v = View.inflate(getContext(), R.layout.command_item, null);
                 ((TextView) v).setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));

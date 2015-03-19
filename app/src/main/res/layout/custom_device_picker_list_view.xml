@@ -23,9 +23,10 @@
         android:id="@+id/ll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title">
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="4dp">
 
-        <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
+    <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/material_checkbox"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
@@ -51,7 +52,7 @@
         android:layout_above="@+id/save_cancel"
         android:layout_below="@+id/ll">
 
-    <ListView
+        <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

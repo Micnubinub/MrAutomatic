@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +50,7 @@ public class EditProfile extends Activity {
     //Todo preference to play preview and add to all the seek bars
     //TODO ---- IMPORTANT check if all the strings are correct
     //Todo make google maps view
+    //Todo fix > can add countless items of the same type
     /**
      * TODO IMPORTANT and time consuming :
      * make a view pager that has tabs for file chooser like the wallpaper, ringtone, notification,
@@ -58,6 +58,8 @@ public class EditProfile extends Activity {
      * list the files and the system wallpapers/ringtones...
      */
     //Todo don't add item to the list of addedProhibTrigComm... if not properly setup
+    //Todo set save as disabled when the user hasn't set anything yet
+    //Todo NFC dismiss method adds items to the LLL
 
     public static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final ArrayList<String> availableCommands = new ArrayList<String>(15);
@@ -145,6 +147,26 @@ public class EditProfile extends Activity {
         return null;
     }
 
+    public static void removeCommandOrTrigger(TriggerOrCommand triggerOrCommand) {
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+                restrictionList.remove(triggerOrCommand);
+                break;
+            case PROHIBITION:
+                prohibitionList.remove(triggerOrCommand);
+                break;
+            case TRIGGER:
+                triggerList.remove(triggerOrCommand);
+                break;
+            case COMMAND:
+                commandList.remove(triggerOrCommand);
+                break;
+        }
+
+        availableCommands.add(triggerOrCommand.getCategory());
+
+    }
+
     private void checkLongString(String string) {
         try {
             final String[] split = string.split("_", 3);
@@ -152,32 +174,33 @@ public class EditProfile extends Activity {
             final String type = split[1];
             final String actor = split[2];
 
-            if (action.equals("add")) {
-                if (type.contains("restri")) {
-                    addRestrictionList(Utility.getTriggerOrCommandName(actor), actor);
-                } else if (type.contains("prohib")) {
-                    addProhibitionList(Utility.getTriggerOrCommandName(actor), actor);
-                } else if (type.contains("trig")) {
-                    addTriggerList(Utility.getTriggerOrCommandName(actor), actor);
-                } else {
-                    addCommandList(Utility.getTriggerOrCommandName(actor), actor);
-                }
-                //Todo  showEditorDialog(actor);
+            /**Todo remove
+             if (action.equals("add")) {
+             if (type.contains("restri")) {
+             addRestrictionList(Utility.getTriggerOrCommandName(actor), actor);
+             } else if (type.contains("prohib")) {
+             addProhibitionList(Utility.getTriggerOrCommandName(actor), actor);
+             } else if (type.contains("trig")) {
+             addTriggerList(Utility.getTriggerOrCommandName(actor), actor);
+             } else {
+             addCommandList(Utility.getTriggerOrCommandName(actor), actor);
+             }
+             //Todo  showEditorDialog(actor);
 
-            } else if (action.equals("open")) {
-                //Todo showEditorDialog(actor);
-            } else {
-                if (type.contains("restri")) {
-                    removeRestriction(actor);
-                } else if (type.contains("prohib")) {
-                    removeProhibition(actor);
-                } else if (type.contains("trig")) {
-                    removeTrigger(actor);
-                } else {
-                    removeCommand(actor);
-                }
-            }
-
+             } else if (action.equals("open")) {
+             //Todo showEditorDialog(actor);
+             } else {
+             if (type.contains("restri")) {
+             removeRestriction(actor);
+             } else if (type.contains("prohib")) {
+             removeProhibition(actor);
+             } else if (type.contains("trig")) {
+             removeTrigger(actor);
+             } else {
+             removeCommand(actor);
+             }
+             }
+             */
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,6 +237,7 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -252,6 +276,7 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -289,6 +314,7 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
 
@@ -331,9 +357,9 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
-
 
         dialog.show();
     }
@@ -346,30 +372,11 @@ public class EditProfile extends Activity {
             trigger.setValue(value);
         }
 
-        switch (triggerType) {
-            case RESTRICTIONS:
-                restrictionTriggers.add(trigger);
-                availableRestrictions.remove(type);
-                break;
-            case TRIGGER:
-                normalTriggers.add(trigger);
-                availableTriggers.remove(type);
-                break;
-            case PROHIBITION:
-                prohibitionTriggers.add(trigger);
-                availableProhibitions.remove(type);
-                break;
-        }
-
+        addCommandOrTrigger(trigger);
     }
 
     private void setCommandValue(String type, String value) {
-        final TriggerOrCommand command = getCommandFromArray(type);
-        if (command == null)
-            addedCommands.add(new TriggerOrCommand(Type.TRIGGER, type, value));
-        else
-            command.setValue(value);
-        availableCommands.remove(type);
+        setValue(Type.COMMAND, type, value);
     }
 
     private TriggerOrCommand getCommandFromArray(String name) {
@@ -426,6 +433,7 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
 
@@ -483,6 +491,7 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
 
@@ -523,12 +532,12 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()));
+                dialog.dismiss();
             }
         });
 
         dialog.show();
     }
-
 
     private void showDataDialog() {
         final Dialog dialog = getDialog();
@@ -631,7 +640,6 @@ public class EditProfile extends Activity {
         });
         dialog.show();
     }
-
 
     private void showMusicPlayerDialog() {
         final Dialog dialog = getDialog();
@@ -873,7 +881,6 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-
     private void showAppLaunchListenerDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
@@ -888,7 +895,6 @@ public class EditProfile extends Activity {
 
         dialog.show();
     }
-
 
     private void showNFCDialog() {
         //Todo make dialog
@@ -906,7 +912,6 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-
     private void showLocationDialog(final Type triggerType) {
         //Todo make dialog
         final Dialog dialog = getDialog();
@@ -921,7 +926,6 @@ public class EditProfile extends Activity {
 
         dialog.show();
     }
-
 
     private void showDockDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
@@ -1097,16 +1101,14 @@ public class EditProfile extends Activity {
         profile_name = (EditText) findViewById(R.id.profile_name);
         findViewById(R.id.cancel).setOnClickListener(listener);
         findViewById(R.id.save).setOnClickListener(listener);
-        init();
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         getLayouts();
         setInfoOnClickListeners();
 
         fillInArrayLists();
-//        init();
         getOldValues();
 
     }
-
 
     private void getLayouts() {
         final View.OnClickListener l = new View.OnClickListener() {
@@ -1154,7 +1156,6 @@ public class EditProfile extends Activity {
         findViewById(R.id.commands).findViewById(R.id.info).setOnClickListener(tagClickListener);
         findViewById(R.id.commands).findViewById(R.id.info).setTag("info_commands");
     }
-
 
     private void editProfile(String id) {
 
@@ -1303,7 +1304,6 @@ public class EditProfile extends Activity {
         }
     }
 
-
     public void setOldValues() {
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, old_media_volume_value);
         Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, old_notification_value);
@@ -1327,10 +1327,6 @@ public class EditProfile extends Activity {
 
     }
 
-    private void init() {
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-    }
-
     public void getProfileValues(String ID) {
         profiledb = profileDBHelper.getReadableDatabase();
         cursor.moveToPosition(Integer.parseInt(ID));
@@ -1339,18 +1335,6 @@ public class EditProfile extends Activity {
         profile_name_text = cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME));
         close();
 
-    }
-
-    private void close() {
-        try {
-            cursor.close();
-        } catch (Exception e) {
-        }
-
-        try {
-            profiledb.close();
-        } catch (Exception e) {
-        }
     }
 
 //    private Dialog wifiDevicePicker() {
@@ -1396,6 +1380,18 @@ public class EditProfile extends Activity {
 //        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(save_cancel);
 //        return dialog;
 //    }
+
+    private void close() {
+        try {
+            cursor.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            profiledb.close();
+        } catch (Exception e) {
+        }
+    }
 
     private void showTriggerProhibOrRestricCommandDialog(final Type type) {
         final Dialog dialog = getDialog();
@@ -1493,72 +1489,22 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private View getView(String viewName, String type, String viewCommand) {
-        final View view = View.inflate(EditProfile.this, R.layout.command_list_item, null);
-        view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        view.findViewById(R.id.text).setTag("open_" + type + viewCommand);
-        view.findViewById(R.id.text).setOnClickListener(tagClickListener);
-
-        view.findViewById(R.id.remove).setTag("remove_" + type + viewCommand);
-        view.findViewById(R.id.remove).setOnClickListener(tagClickListener);
-        view.setTag(viewCommand);
-
-        ((TextView) view.findViewById(R.id.text)).setText(viewName);
-
-        return view;
-    }
-
-    private void removeView(LinearLayout layout, String name) {
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            final View view = layout.getChildAt(i);
-            if (view.getTag().toString().contains(name)) {
-                layout.removeView(view);
-                layout.invalidate();
-                return;
-            }
+    private void addCommandOrTrigger(TriggerOrCommand triggerOrCommand) {
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+                restrictionList.add(triggerOrCommand);
+                break;
+            case PROHIBITION:
+                prohibitionList.add(triggerOrCommand);
+                break;
+            case TRIGGER:
+                triggerList.add(triggerOrCommand);
+                break;
+            case COMMAND:
+                commandList.add(triggerOrCommand);
+                break;
         }
-    }
-
-    private void addProhibitionList(String name, String command) {
-        prohibitionList.addView(getView(name, "prohibition_", command), 0);
-        availableProhibitions.remove(command);
-    }
-
-    private void addTriggerList(String name, String command) {
-        triggerList.addView(getView(name, "trigger_", command), 0);
-        availableTriggers.remove(command);
-
-    }
-
-    private void addRestrictionList(String name, String command) {
-        restrictionList.addView(getView(name, "restriction_", command), 0);
-        availableRestrictions.remove(command);
-    }
-
-    private void addCommandList(String name, String command) {
-        commandList.addView(getView(name, "command_", command), 0);
-        availableCommands.remove(command);
-    }
-
-    private void removeProhibition(String name) {
-        removeView(prohibitionList, name);
-        availableProhibitions.add(name);
-    }
-
-    private void removeTrigger(String name) {
-        removeView(triggerList, name);
-        availableTriggers.add(name);
-    }
-
-    private void removeRestriction(String name) {
-        removeView(restrictionList, name);
-        availableRestrictions.add(name);
-    }
-
-    private void removeCommand(String name) {
-        removeView(commandList, name);
-        availableCommands.add(name);
+        availableCommands.remove(triggerOrCommand.getCategory());
     }
 
     private void fillInArrayLists() {
