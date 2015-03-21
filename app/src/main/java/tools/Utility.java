@@ -519,7 +519,7 @@ public class Utility {
         } else if (item.equals(TRIGGER_TIME)) {
             item = "Time";
         } else if (item.equals(TRIGGER_WIFI)) {
-            item = "Wifi evice";
+            item = "Wifi device";
         } else if (item.equals(ALARM_VOLUME_SETTING)) {
             item = "Alarm Volume";
         } else if (item.equals(AUTO_ROTATION_SETTING)) {
@@ -565,30 +565,32 @@ public class Utility {
             icon = R.drawable.battery_temperature;
         } else if (type.equals(TRIGGER_LOCATION)) {
             icon = R.drawable.location;
-        } else if (type.equals(TRIGGER_WIFI)) {
+        } else if (type.equals(TRIGGER_WIFI) || type.equals(WIFI_SETTING)) {
             icon = R.drawable.wifi;
-        } else if (type.equals(TRIGGER_BLUETOOTH)) {
+        } else if (type.equals(TRIGGER_BLUETOOTH) || type.equals(BLUETOOTH_SETTING)) {
             icon = R.drawable.bluetooth;
         } else if (type.equals(TRIGGER_NFC)) {
             icon = R.drawable.nfc;
         } else if (type.equals(TRIGGER_DOCK)) {
             icon = R.drawable.dock;
-        } else if (type.equals(TRIGGER_TIME)) {
+        } else if (type.equals(TRIGGER_TIME) || type.equals(ALARM_VOLUME_SETTING)) {
             icon = R.drawable.time_trigger;
-        } else if (type.equals(TRIGGER_EARPHONE_JACK)) {
+        } else if (type.equals(TRIGGER_EARPHONE_JACK) || type.equals(MEDIA_CONTROL_SETTING)) {
             icon = R.drawable.headphone_jack;
+        } else if (type.equals(MEDIA_CONTROL_SETTING)) {
+            icon = R.drawable.headphone_jack;
+        } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
+            icon = R.drawable.info;
+        } else if (type.equals(RINGTONE_SETTING)) {
+            icon = R.drawable.info;
+        } else if (type.equals(SILENT_MODE_SETTING)) {
+            icon = R.drawable.info;
+        } else if (type.equals(SLEEP_TIMEOUT_SETTING)) {
+            icon = R.drawable.info;
+        } else if (type.equals(AUTO_ROTATION_SETTING)) {
+            icon = R.drawable.info;
         }
-//        else if (type.equals(MEDIA_CONTROL_SETTING)) {
-//            icon = R.drawable.info;
-//        } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
-//            icon = R.drawable.info;
-//        } else if (type.equals(RINGTONE_SETTING)) {
-//            icon = R.drawable.info;
-//        } else if (type.equals(SILENT_MODE_SETTING)) {
-//            icon = R.drawable.info;
-//        } else if (type.equals(SLEEP_TIMEOUT_SETTING)) {
-//            icon = R.drawable.info;
-//        }
+        //Todo get data icon, sound icon, sleep timeout, silent mode, rotation, wallapaper/gallery
 
         return icon;
     }

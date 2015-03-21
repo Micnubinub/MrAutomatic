@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_button_selector">
 
     <ImageView
         android:id="@+id/icon"
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/icon"
-        android:background="@drawable/white_button_selector"
+
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="4dp"
@@ -33,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/primary"
         android:layout_toRightOf="@+id/icon"
-        android:background="@drawable/white_button_selector"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="8dp"

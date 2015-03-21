@@ -137,14 +137,12 @@ public class ProfileService extends Service {
 
     public static void scheduleNext(Context context) {
         try {
-
             final Intent intent = new Intent(context, AlarmReceiver.class);
             alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + scan_interval, alarmIntent);
             } else
                 alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + scan_interval, alarmIntent);
-
 
         } catch (Exception e) {
             e.printStackTrace();

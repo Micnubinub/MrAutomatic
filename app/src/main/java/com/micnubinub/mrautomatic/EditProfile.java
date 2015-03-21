@@ -44,6 +44,9 @@ import view_classes.MaterialSwitch;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
+    //Todo maybe get rid of the parallax
+    //Todo add save button to NFC, head phone jack, dock, location and applaunch
+    //Todo make sure it doesn't attempt to save when a value hasn't been set yet
     //Todo copy from>> dialog with 4 ticks : triggers, restrictions, prohibitions and commands
     //Todo preference to play preview and add to all the seek bars
     //TODO ---- IMPORTANT check if all the strings are correct
@@ -57,11 +60,13 @@ public class EditProfile extends Activity {
      */
     //Todo NFC dismiss method adds items to the LLL
 
+
     public static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final String[] commands = new String[]{"WIFI_SETTING", "BLUETOOTH_SETTING", "DATA_SETTING", "BRIGHTNESS_SETTING", "SILENT_MODE_SETTING",
             "NOTIFICATION_VOLUME_SETTING", "ALARM_VOLUME_SETTING", "MEDIA_CONTROL_SETTING", "LAUNCH_APP_SETTING", "WALLPAPER_SETTING",
             "RINGTONE_SETTING", "MEDIA_VOLUME_SETTING", "RINGER_VOLUME_SETTING", "AUTO_ROTATION_SETTING", "SLEEP_TIMEOUT_SETTING"};
     private static final String[] triggers = new String[]{"BLUETOOTH", "WIFI", "BATTERY_TEMPERATURE", "BATTERY_CHARGING", "NFC", "EARPHONE_JACK", "DOCK", "TIME", "LOCATION", "APP_LAUNCH"};
+    public static EditProfile editProfile;
     private static LinearLayoutList prohibitionList, triggerList, restrictionList, commandList;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -123,22 +128,20 @@ public class EditProfile extends Activity {
                 commandList.remove(triggerOrCommand);
                 break;
         }
-        commands.add(triggerOrCommand.getCategory());
     }
 
 
     private void showAlarmVolumeDialog() {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
-        ((TextView) dialog.findViewById(R.id.title)).setText("Alarm");
-        ((TextView) dialog.findViewById(R.id.text)).setText("Alarm volume");
+        ((TextView) dialog.findViewById(R.id.title)).setText("Alarm volume");
 
         final MaterialSeekBar materialSeekBar = (MaterialSeekBar) dialog.findViewById(R.id.material_seekbar);
         materialSeekBar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM));
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d", progress));
+                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d%", Math.round((progress / (float) max) * 100)));
             }
         });
 
@@ -161,7 +164,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -201,7 +204,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -242,7 +245,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -268,6 +271,7 @@ public class EditProfile extends Activity {
                 ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Ringtone volume will be set to: %d", progress));
             }
         });
+
         try {
             final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.RINGER_VOLUME_SETTING);
             if (command != null)
@@ -277,6 +281,7 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,7 +292,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -357,7 +362,7 @@ public class EditProfile extends Activity {
                 else
                     materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
             } else
-                materialSeekBar.setProgress(5);
+                materialSeekBar.setProgress(35);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -371,7 +376,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
+                setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -432,7 +437,8 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(triggerType, Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()));
+                setValue(triggerType, Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()),
+                        materialCheckBox.isChecked() ? "When charging" : String.format("Trigger at : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
                 dialog.dismiss();
             }
         });
@@ -474,7 +480,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setValue(triggerType, Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()));
+                setValue(triggerType, Utility.TRIGGER_BATTERY_TEMPERATURE, String.valueOf(materialSeekBar.getProgress()), String.format("Trigger at : %d degrees C", materialSeekBar.getProgress()));
                 dialog.dismiss();
             }
         });
@@ -518,7 +524,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn data on * change");
                 dialog.dismiss();
             }
         });
@@ -539,7 +545,7 @@ public class EditProfile extends Activity {
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
         //Todo get the values from this and add them to the profile service
-
+        //Todo make a method getScreenTimeOutTextByInt(that returns the secs/mins then use this in data and the music player
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setLayoutParams(params);
         button1.setText("10 secs");
@@ -583,7 +589,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn off in : x *change");
                 dialog.dismiss();
             }
         });
@@ -628,7 +634,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.MEDIA_CONTROL_SETTING, String.valueOf(materialRadioGroup.getSelection()));
+                setCommandValue(Utility.MEDIA_CONTROL_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Next");
                 dialog.dismiss();
             }
         });
@@ -652,7 +658,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0", materialSwitch.isChecked() ? "Allow auto-rotation" : "lock orientation");
                 dialog.dismiss();
             }
         });
@@ -677,7 +683,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0", "Turn " + (materialSwitch.isChecked() ? "on" : "off"));
                 dialog.dismiss();
             }
         });
@@ -702,7 +708,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0", "Turn " + (materialSwitch.isChecked() ? "on" : "off"));
                 dialog.dismiss();
             }
         });
@@ -726,7 +732,8 @@ public class EditProfile extends Activity {
                 listAdapter.cancelScan();
                 //Todo use this view.setOnClickListener(tagClickListener);
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
-                setValue(triggerType, Utility.TRIGGER_BLUETOOTH, useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress());
+                final String val = useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress();
+                setValue(triggerType, Utility.TRIGGER_BLUETOOTH, val, useSSID.isChecked() ? val : listAdapter.getSelectedDevice().getName() + "(" + val + ")");
                 dialog.dismiss();
             }
         });
@@ -757,7 +764,8 @@ public class EditProfile extends Activity {
             public void onClick(View view) {
                 listAdapter.cancelScan();
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
-                setValue(triggerType, Utility.TRIGGER_WIFI, useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress());
+                final String val = useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress();
+                setValue(triggerType, Utility.TRIGGER_WIFI, val, useSSID.isChecked() ? val : listAdapter.getSelectedDevice().getName() + "(" + val + ")");
                 dialog.dismiss();
             }
         });
@@ -791,7 +799,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                setCommandValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0", String.format("Put into %s mode", materialSwitch.isChecked() ? "Silent" : "Normal"));
                 dialog.dismiss();
             }
         });
@@ -966,7 +974,7 @@ public class EditProfile extends Activity {
                 //Todo implement this
                 final int h = hours.getCurrentItem();
                 final int m = minutes.getCurrentItem();
-                setValue(Type.TRIGGER, "Type", "value");
+                setValue(Type.TRIGGER, "Type", "value", "Make time string");
                 dialog.dismiss();
             }
         });
@@ -981,7 +989,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showEditorDialog(final Type triggerType, String commandOrTrigger) {
+    public void showEditorDialog(final Type triggerType, String commandOrTrigger) {
         if (commandOrTrigger == null)
             return;
         Log.e("showEditor : ", commandOrTrigger + " , " + triggerType);
@@ -1043,13 +1051,13 @@ public class EditProfile extends Activity {
 
     private void showInfo(String infoType) {
         if (infoType.contains("restric")) {
-            showInfoHelpDialog("Restriction Help", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Restriction", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
         } else if (infoType.contains("prohib")) {
-            showInfoHelpDialog("Prohibition Help", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
+            showInfoHelpDialog("Prohibition", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
         } else if (infoType.contains("trig")) {
-            showInfoHelpDialog("Trigger Help", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Trigger", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
         } else {
-            showInfoHelpDialog("TriggerOrCommand Help", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
+            showInfoHelpDialog("Command", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
         }
     }
 
@@ -1081,6 +1089,7 @@ public class EditProfile extends Activity {
 
         fillInArrayLists();
         getOldValues();
+        editProfile = this;
 
     }
 
@@ -1372,25 +1381,41 @@ public class EditProfile extends Activity {
         switch (lll.type) {
             case TRIGGER:
                 ref = triggerList;
+                for (String trigger : triggers) {
+                    if (!(ref.containsCategory(trigger)))
+                        strings.add(trigger);
+                }
                 break;
             case RESTRICTIONS:
                 ref = restrictionList;
+                for (String trigger : triggers) {
+                    if (!(ref.containsCategory(trigger)))
+                        strings.add(trigger);
+                }
                 break;
             case COMMAND:
                 ref = commandList;
+                for (String trigger : commands) {
+                    if (!(ref.containsCategory(trigger)))
+                        strings.add(trigger);
+                }
                 break;
             case PROHIBITION:
                 ref = prohibitionList;
+                for (String trigger : triggers) {
+                    if (!(ref.containsCategory(trigger)))
+                        strings.add(trigger);
+                }
                 break;
-
             default:
                 ref = triggerList;
+                for (String trigger : triggers) {
+                    if (!(ref.containsCategory(trigger)))
+                        strings.add(trigger);
+                }
         }
 
-        for (String trigger : triggers) {
-            if (!(ref.containsCategory(trigger)))
-                strings.add(trigger);
-        }
+
         lll.setItems(strings);
         lll.invalidate();
     }

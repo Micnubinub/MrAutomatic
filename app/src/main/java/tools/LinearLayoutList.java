@@ -2,12 +2,13 @@ package tools;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.micnubinub.mrautomatic.EditProfile;
 import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
@@ -16,8 +17,24 @@ import java.util.ArrayList;
  * Created by Michael on 3/11/2015.
  */
 public class LinearLayoutList extends LinearLayout {
+    private final OnClickListener scrollViewListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.delete:
+                    remove((String) view.getTag());
+                    break;
+                case R.id.open:
+                    final TriggerOrCommand t = getItemUsingCategory((String) view.getTag());
+                    final EditProfile ed = EditProfile.editProfile;
+                    if (ed != null)
+                        ed.showEditorDialog(t.getType(), t.getCategory());
+                    break;
+            }
+        }
+    };
     public TriggerOrCommand.Type type;
-    private OnClickListener listener;
+    private OnClickListener stringListener;
     private ArrayList<Object> items = new ArrayList<>();
 
     public LinearLayoutList(Context context) {
@@ -28,6 +45,7 @@ public class LinearLayoutList extends LinearLayout {
         super(context, attrs);
     }
 
+
 //    public void editItem(int pos) {
 //        if (pos < 0 || items == null || pos >= items.size())
 //            return;
@@ -36,7 +54,8 @@ public class LinearLayoutList extends LinearLayout {
 
     public void setOnItemClickListener(OnClickListener l) {
         //Todo implement in all instances
-        listener = l;
+        this.stringListener = l;
+        stringListener = l;
         for (int i = 0; i < getChildCount(); i++) {
             getChildAt(i).setOnClickListener(l);
         }
@@ -113,26 +132,37 @@ public class LinearLayoutList extends LinearLayout {
         removeAllViews();
         for (int i = 0; i < items.size(); i++) {
             final Object triggerOrCommandOrAvailable = items.get(i);
-            Log.e("obJ", triggerOrCommandOrAvailable.toString());
+
             View v = null;
             if (triggerOrCommandOrAvailable instanceof TriggerOrCommand) {
+                final TriggerOrCommand t = (TriggerOrCommand) triggerOrCommandOrAvailable;
                 Utility.getIcon(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory());
                 v = View.inflate(getContext(), R.layout.command_list_item, null);
                 v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 final View delete = v.findViewById(R.id.delete);
                 final View open = v.findViewById(R.id.open);
-                final TextView primary = (TextView) open.findViewById(R.id.primary);
-                final TextView secondary = (TextView) open.findViewById(R.id.secondary);
+
+                ((ImageView) open.findViewById(R.id.icon)).setImageResource(Utility.getIcon(t.getCategory()));
+                ((TextView) open.findViewById(R.id.primary)).setText(Utility.getTriggerOrCommandName(t.getCategory()));
+                ((TextView) open.findViewById(R.id.secondary)).setText(t.getDisplayString());
+
+                delete.setTag(t.getCategory());
+                open.setTag(t.getCategory());
+
+                delete.setOnClickListener(scrollViewListener);
+                open.setOnClickListener(scrollViewListener);
 
             } else if (triggerOrCommandOrAvailable instanceof String) {
                 v = View.inflate(getContext(), R.layout.command_item, null);
                 ((TextView) v).setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));
+                if (stringListener != null)
+                    v.setOnClickListener(stringListener);
             }
 
             if (v == null)
                 return;
             v.setTag(i);
-            v.setOnClickListener(listener);
+
             addView(v);
         }
     }
