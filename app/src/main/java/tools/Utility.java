@@ -77,7 +77,6 @@ public class Utility {
     //Profile editor
     public static final String EDIT_PROFILE = "EDIT_PROFILE";
     public static final String PROFILE_ID = "PROFILE_ID";
-    //Todo setting for a toast when a profile is set
     public static final String PREF_TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
     public static final String PREF_PLAY_PREVIEW = "PREF_PLAY_PREVIEW";
     /*
@@ -340,17 +339,19 @@ public class Utility {
         }
     }
 
-    public static void setAirplaneMode(Context context, int value) {
-        try {
-            //Todo airplane ** only up to 16
-            Settings.System.putInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, (value > 0) ? 0 : 1);
-            Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-            intent.putExtra("state", !(value > 0));
-            context.sendBroadcast(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    /**
+     * public static void setAirplaneMode(Context context, int value) {
+     * try {
+     * //Todo airplane ** only up to 16
+     * Settings.System.putInt(context.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, (value > 0) ? 0 : 1);
+     * Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+     * intent.putExtra("state", !(value > 0));
+     * context.sendBroadcast(intent);
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * }
+     * }
+     */
 
     public static void playMusic(Context context) {
         try {
@@ -482,7 +483,7 @@ public class Utility {
         final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
         for (String s : commands.split(",")) {
             final String[] array = s.split(":", 2);
-            //Todo fix this
+            //Todo check
             commandList.add(new TriggerOrCommand(Type.COMMAND, array[0], array[1]));
         }
         return commandList;
@@ -492,14 +493,13 @@ public class Utility {
         final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
         for (String s : triggers.split(",")) {
             final String[] array = s.split(":", 2);
-            //Todo fix this
+            //Todo check
             triggerList.add(new TriggerOrCommand(Type.TRIGGER, array[0], array[1]));
         }
         return triggerList;
     }
 
     public static String getTriggerOrCommandName(String item) {
-        //Todo check this
         if (item.equals(TRIGGER_APP_LAUNCH)) {
             item = "App launch";
         } else if (item.equals(TRIGGER_BATTERY)) {

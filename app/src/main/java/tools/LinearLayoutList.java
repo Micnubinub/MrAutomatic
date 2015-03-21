@@ -138,8 +138,12 @@ public class LinearLayoutList extends LinearLayout {
     }
 
     public boolean containsCategory(TriggerOrCommand triggerOrCommand) {
+        return containsCategory(triggerOrCommand.getCategory());
+    }
+
+    public boolean containsCategory(String category) {
         for (int i = 0; i < items.size(); i++) {
-            if (((TriggerOrCommand) items.get(i)).getCategory().equals(triggerOrCommand.getCategory()))
+            if (((TriggerOrCommand) items.get(i)).getCategory().equals(category))
                 return true;
         }
         return false;
