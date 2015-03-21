@@ -42,14 +42,6 @@ public class LinearLayoutList extends LinearLayout {
         }
     }
 
-    public void setItems(ArrayList<String> items) {
-        this.items = new ArrayList<>();
-        for (String item : items) {
-            this.items.add(item);
-        }
-        getViews();
-    }
-
     public TriggerOrCommand.Type getType() {
         return type;
     }
@@ -59,13 +51,21 @@ public class LinearLayoutList extends LinearLayout {
     }
 
     public void add(TriggerOrCommand triggerOrCommand) {
+        if (triggerOrCommand == null)
+            return;
         if (items == null)
             items = new ArrayList<>();
 
-        if (!(items.contains(triggerOrCommand))) {
+        if (!containsCategory(triggerOrCommand)) {
             items.add(triggerOrCommand);
-            getViews();
+
+        } else {
+            final TriggerOrCommand item = getItemUsingCategory(triggerOrCommand);
+            item.setValue(triggerOrCommand.getValue());
+            item.setDisplayString(triggerOrCommand.getDisplayString());
         }
+
+        getViews();
     }
 
     public void remove(String category) {
@@ -137,5 +137,44 @@ public class LinearLayoutList extends LinearLayout {
         }
     }
 
+    public boolean containsCategory(TriggerOrCommand triggerOrCommand) {
+        for (int i = 0; i < items.size(); i++) {
+            if (((TriggerOrCommand) items.get(i)).getCategory().equals(triggerOrCommand.getCategory()))
+                return true;
+        }
+        return false;
+    }
 
+    public TriggerOrCommand getItemUsingCategory(TriggerOrCommand triggerOrCommand) {
+        return getItemUsingCategory(triggerOrCommand.getCategory());
+    }
+
+    public TriggerOrCommand getItemUsingCategory(String category) {
+        for (int i = 0; i < items.size(); i++) {
+            final TriggerOrCommand item = ((TriggerOrCommand) items.get(i));
+            if (item.getCategory().equals(category))
+                return item;
+        }
+        return null;
+    }
+
+    public int getCount() {
+        return items == null ? 0 : items.size();
+    }
+
+    public ArrayList<TriggerOrCommand> getItems() {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>(items.size());
+        for (int i = 0; i < items.size(); i++) {
+            triggerOrCommands.add((TriggerOrCommand) items.get(i));
+        }
+        return triggerOrCommands;
+    }
+
+    public void setItems(ArrayList<String> items) {
+        this.items = new ArrayList<>();
+        for (String item : items) {
+            this.items.add(item);
+        }
+        getViews();
+    }
 }

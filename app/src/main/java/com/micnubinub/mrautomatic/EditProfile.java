@@ -30,7 +30,6 @@ import adapters.WifiListAdapter;
 import time_picker.AbstractWheel;
 import time_picker.NumericWheelAdapter;
 import tools.CustomListView;
-import tools.Device;
 import tools.LinearLayoutList;
 import tools.TriggerOrCommand;
 import tools.TriggerOrCommand.Type;
@@ -58,7 +57,6 @@ public class EditProfile extends Activity {
      * list the files and the system wallpapers/ringtones...
      */
     //Todo don't add item to the list of addedProhibTrigComm... if not properly setup
-    //Todo set save as disabled when the user hasn't set anything yet
     //Todo NFC dismiss method adds items to the LLL
 
     public static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -66,10 +64,6 @@ public class EditProfile extends Activity {
     private static final ArrayList<String> availableTriggers = new ArrayList<String>(10);
     private static final ArrayList<String> availableProhibitions = new ArrayList<String>(10);
     private static final ArrayList<String> availableRestrictions = new ArrayList<String>(10);
-    private static final ArrayList<TriggerOrCommand> addedCommands = new ArrayList<TriggerOrCommand>(15);
-    private static final ArrayList<TriggerOrCommand> restrictionTriggers = new ArrayList<TriggerOrCommand>(10);
-    private static final ArrayList<TriggerOrCommand> prohibitionTriggers = new ArrayList<TriggerOrCommand>(10);
-    private static final ArrayList<TriggerOrCommand> normalTriggers = new ArrayList<TriggerOrCommand>(10);
     private static LinearLayoutList prohibitionList, triggerList, restrictionList, commandList;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
@@ -91,10 +85,6 @@ public class EditProfile extends Activity {
             final String view = v.getTag().toString();
             if (view.startsWith("info")) {
                 showInfo(view);
-            } else if (v.getTag() instanceof Device) {
-                toast(view);
-            } else {
-                checkLongString(view);
             }
         }
     };
@@ -119,33 +109,6 @@ public class EditProfile extends Activity {
     private Uri notification;
     private Cursor cursor;
     private SQLiteDatabase profiledb;
-    //Todo items should be Wifi(asnd[ac:as:2s:as...])
-
-    private static TriggerOrCommand getTriggerFromArray(Type type) {
-        ArrayList<TriggerOrCommand> triggers = null;
-
-        switch (type) {
-            case RESTRICTIONS:
-                triggers = restrictionTriggers;
-                break;
-            case TRIGGER:
-                triggers = normalTriggers;
-                break;
-            case PROHIBITION:
-                triggers = prohibitionTriggers;
-                break;
-            case COMMAND:
-                triggers = addedCommands;
-                break;
-        }
-
-        for (int i = 0; i < triggers.size(); i++) {
-            final TriggerOrCommand trigger = triggers.get(i);
-            if (trigger.getCategory().equals(type))
-                return trigger;
-        }
-        return null;
-    }
 
     public static void removeCommandOrTrigger(TriggerOrCommand triggerOrCommand) {
         switch (triggerOrCommand.getType()) {
@@ -167,47 +130,8 @@ public class EditProfile extends Activity {
 
     }
 
-    private void checkLongString(String string) {
-        try {
-            final String[] split = string.split("_", 3);
-            final String action = split[0].toLowerCase();
-            final String type = split[1];
-            final String actor = split[2];
 
-            /**Todo remove
-             if (action.equals("add")) {
-             if (type.contains("restri")) {
-             addRestrictionList(Utility.getTriggerOrCommandName(actor), actor);
-             } else if (type.contains("prohib")) {
-             addProhibitionList(Utility.getTriggerOrCommandName(actor), actor);
-             } else if (type.contains("trig")) {
-             addTriggerList(Utility.getTriggerOrCommandName(actor), actor);
-             } else {
-             addCommandList(Utility.getTriggerOrCommandName(actor), actor);
-             }
-             //Todo  showEditorDialog(actor);
-
-             } else if (action.equals("open")) {
-             //Todo showEditorDialog(actor);
-             } else {
-             if (type.contains("restri")) {
-             removeRestriction(actor);
-             } else if (type.contains("prohib")) {
-             removeProhibition(actor);
-             } else if (type.contains("trig")) {
-             removeTrigger(actor);
-             } else {
-             removeCommand(actor);
-             }
-             }
-             */
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showAlarmVolumeDialog(final TriggerOrCommand triggerOrCommand) {
-        //Todo if (triggerOrCommand!=null) set(x);
+    private void showAlarmVolumeDialog() {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
         ((TextView) dialog.findViewById(R.id.title)).setText("Alarm");
@@ -222,11 +146,15 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.ALARM_VOLUME_SETTING);
-        if (command != null)
-            materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
-        else
-            materialSeekBar.setProgress(5);
+        try {
+            final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.ALARM_VOLUME_SETTING);
+            if (command != null)
+                materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
+            else
+                materialSeekBar.setProgress(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,7 +172,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showMediaVolumeDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showMediaVolumeDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -260,7 +188,7 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.MEDIA_VOLUME_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.MEDIA_VOLUME_SETTING);
 
         if (command != null)
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
@@ -284,7 +212,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showNotificationVolumeDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showNotificationVolumeDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -300,7 +228,7 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.NOTIFICATION_VOLUME_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.NOTIFICATION_VOLUME_SETTING);
         if (command != null)
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
@@ -328,7 +256,7 @@ public class EditProfile extends Activity {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
-    private void showRingtoneVolumeDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showRingtoneVolumeDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -344,7 +272,7 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.RINGER_VOLUME_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.RINGER_VOLUME_SETTING);
         if (command != null)
             materialSeekBar.setProgress(Integer.parseInt(command.getValue()));
         else
@@ -369,7 +297,7 @@ public class EditProfile extends Activity {
     }
 
     private void setValue(Type triggerType, String type, String value) {
-        TriggerOrCommand trigger = getTriggerFromArray(triggerType);
+        TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, type);
         if (trigger == null) {
             trigger = new TriggerOrCommand(triggerType, type, value);
         } else {
@@ -383,16 +311,21 @@ public class EditProfile extends Activity {
         setValue(Type.COMMAND, type, value);
     }
 
-    private TriggerOrCommand getCommandFromArray(String name) {
-        for (int i = 0; i < addedCommands.size(); i++) {
-            final TriggerOrCommand command = addedCommands.get(i);
-            if (command.getType().equals(name))
-                return command;
+    private TriggerOrCommand getTriggerOrCommandFromArray(Type type, String category) {
+        switch (type) {
+            case RESTRICTIONS:
+                return restrictionList.getItemUsingCategory(category);
+            case TRIGGER:
+                return triggerList.getItemUsingCategory(category);
+            case PROHIBITION:
+                return prohibitionList.getItemUsingCategory(category);
+            case COMMAND:
+                return commandList.getItemUsingCategory(category);
         }
         return null;
     }
 
-    private void showBrightnessDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showBrightnessDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -418,7 +351,7 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.BRIGHTNESS_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.BRIGHTNESS_SETTING);
         if (command != null) {
             if (command.getValue().equals("-1"))
                 materialCheckBox.setChecked(true);
@@ -449,7 +382,7 @@ public class EditProfile extends Activity {
         return new Dialog(this, R.style.CustomDialog);
     }
 
-    private void showBatteryDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showBatteryDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -477,7 +410,7 @@ public class EditProfile extends Activity {
             }
         });
 
-        final TriggerOrCommand trigger = getTriggerFromArray(triggerType);
+        final TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, Utility.TRIGGER_BATTERY);
         if (trigger != null) {
             if (trigger.getValue().equals("-1"))
                 materialCheckBox.setChecked(true);
@@ -504,7 +437,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showBatteryTemperatureDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showBatteryTemperatureDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -522,7 +455,7 @@ public class EditProfile extends Activity {
 
         materialSeekBar.setProgress(20);
 
-        final TriggerOrCommand trigger = getTriggerFromArray(triggerType);
+        final TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, Utility.TRIGGER_BATTERY_TEMPERATURE);
 
         if (trigger != null)
             materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
@@ -546,7 +479,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showDataDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showDataDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.radio_group);
@@ -573,7 +506,7 @@ public class EditProfile extends Activity {
         materialRadioGroup.addView(button3);
         materialRadioGroup.addView(button4);
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.DATA_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.DATA_SETTING);
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
@@ -592,7 +525,7 @@ public class EditProfile extends Activity {
         //Todo add all available triggers, if multiple triggers available allow them to remove some e.g multiple wifi devices
     }
 
-    private void showSleepTimeoutDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showSleepTimeoutDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.radio_group);
@@ -636,7 +569,7 @@ public class EditProfile extends Activity {
         materialRadioGroup.addView(button7);
         materialRadioGroup.addView(button8);
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.SLEEP_TIMEOUT_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.SLEEP_TIMEOUT_SETTING);
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
@@ -650,7 +583,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showMusicPlayerDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showMusicPlayerDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.radio_group);
@@ -679,7 +612,7 @@ public class EditProfile extends Activity {
         materialRadioGroup.addView(button3);
         materialRadioGroup.addView(button4);
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.MEDIA_CONTROL_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.MEDIA_CONTROL_SETTING);
         if (command != null)
             materialRadioGroup.setSelected(Integer.parseInt(command.getValue()));
 
@@ -694,7 +627,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showAutoRotationDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showAutoRotationDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.switch_item);
@@ -702,7 +635,7 @@ public class EditProfile extends Activity {
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Auto-rotation");
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.AUTO_ROTATION_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.AUTO_ROTATION_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
@@ -717,7 +650,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showBluetoothDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showBluetoothDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.switch_item);
@@ -725,7 +658,7 @@ public class EditProfile extends Activity {
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Bluetooth");
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.BLUETOOTH_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.BLUETOOTH_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
@@ -740,7 +673,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showWifiDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showWifiDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.switch_item);
@@ -748,7 +681,7 @@ public class EditProfile extends Activity {
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Wifi");
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.WIFI_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.WIFI_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
@@ -763,7 +696,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showBluetoothDevicePickerDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showBluetoothDevicePickerDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
@@ -797,7 +730,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showWifiDevicePickerDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showWifiDevicePickerDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         final View view = View.inflate(this, R.layout.custom_device_picker_list_view, null);
@@ -829,7 +762,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showSilentModeDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showSilentModeDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.switch_item);
@@ -837,7 +770,7 @@ public class EditProfile extends Activity {
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
         materialSwitch.setText("Silent Mode");
 
-        final TriggerOrCommand command = getCommandFromArray(Utility.SILENT_MODE_SETTING);
+        final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.SILENT_MODE_SETTING);
         if (command != null)
             materialSwitch.setChecked(command.getValue().equals("1"));
 
@@ -852,7 +785,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showRingtoneDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showRingtoneDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         //Todo make dialog
         final Dialog dialog = getDialog();
@@ -869,7 +802,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showWallPaperDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showWallPaperDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         //Todo make dialog
         final Dialog dialog = getDialog();
@@ -884,7 +817,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showAppLauncherDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showAppLauncherDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         //Todo make dialog
         final Dialog dialog = getDialog();
@@ -900,8 +833,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showAppLaunchListenerDialog(final TriggerOrCommand triggerOrCommand) {
-        //Todo if (triggerOrCommand!=null) set(x);
+    private void showAppLaunchListenerDialog() {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.app_launch_dialog);
@@ -916,7 +848,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showNFCDialog(final TriggerOrCommand triggerOrCommand) {
+    private void showNFCDialog() {
         //Todo if (triggerOrCommand!=null) set(x);
         //Todo make dialog
 
@@ -948,7 +880,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showDockDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showDockDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.checkbox_item);
@@ -956,6 +888,11 @@ public class EditProfile extends Activity {
         ((TextView) dialog.findViewById(R.id.title)).setText("Dock");
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setText("Device docked");
+
+        final TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, Utility.TRIGGER_DOCK);
+        if (trigger != null)
+            materialCheckBox.setChecked(trigger.getValue().equals("1"));
+
         dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -967,16 +904,14 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showHeadPhoneJackDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
-        //Todo if (triggerOrCommand!=null) set(x);
+    private void showHeadPhoneJackDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.checkbox_item);
         ((TextView) dialog.findViewById(R.id.title)).setText("Headphone Jack");
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
         materialCheckBox.setText("Jack connect");
 
-        //Todo use type instead
-        final TriggerOrCommand trigger = getTriggerFromArray(triggerType);
+        final TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, Utility.TRIGGER_EARPHONE_JACK);
         if (trigger != null)
             materialCheckBox.setChecked(trigger.getValue().equals("1"));
 
@@ -991,7 +926,7 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void showTimeDialog(final TriggerOrCommand triggerOrCommand, final Type triggerType) {
+    private void showTimeDialog(final Type triggerType) {
         //Todo if (triggerOrCommand!=null) set(x);
         //Todo check dialog
         //Todo consider adding weekdays above the tome (with just one letter like the clock app >> s m t w ... s and a check box to check all, the weekdays or the weekends
@@ -1037,57 +972,57 @@ public class EditProfile extends Activity {
         Log.e("showEditor : ", commandOrTrigger + " , " + triggerType);
         //Todo make sure it works for both commands and triggers
         if (commandOrTrigger.equals(Utility.ALARM_VOLUME_SETTING)) {
-            showAlarmVolumeDialog(null);
+            showAlarmVolumeDialog();
         } else if (commandOrTrigger.equals(Utility.AUTO_ROTATION_SETTING)) {
-            showAutoRotationDialog(null);
+            showAutoRotationDialog();
         } else if (commandOrTrigger.equals(Utility.BLUETOOTH_SETTING)) {
-            showBluetoothDialog(null);
+            showBluetoothDialog();
         } else if (commandOrTrigger.equals(Utility.WALLPAPER_SETTING)) {
-            showWallPaperDialog(null);
+            showWallPaperDialog();
         } else if (commandOrTrigger.equals(Utility.WIFI_SETTING)) {
-            showWifiDialog(null);
+            showWifiDialog();
         } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
-            showBrightnessDialog(null);
+            showBrightnessDialog();
         } else if (commandOrTrigger.equals(Utility.MEDIA_VOLUME_SETTING)) {
-            showMediaVolumeDialog(null);
+            showMediaVolumeDialog();
         } else if (commandOrTrigger.equals(Utility.LAUNCH_APP_SETTING)) {
-            showAppLauncherDialog(null);
+            showAppLauncherDialog();
         } else if (commandOrTrigger.equals(Utility.DATA_SETTING)) {
-            showDataDialog(null);
+            showDataDialog();
         } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
-            showBrightnessDialog(null);
+            showBrightnessDialog();
         } else if (commandOrTrigger.equals(Utility.RINGER_VOLUME_SETTING)) {
-            showRingtoneVolumeDialog(null);
+            showRingtoneVolumeDialog();
         } else if (commandOrTrigger.equals(Utility.MEDIA_CONTROL_SETTING)) {
-            showMusicPlayerDialog(null);
+            showMusicPlayerDialog();
         } else if (commandOrTrigger.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
-            showNotificationVolumeDialog(null);
+            showNotificationVolumeDialog();
         } else if (commandOrTrigger.equals(Utility.RINGTONE_SETTING)) {
-            showRingtoneDialog(null);
+            showRingtoneDialog();
         } else if (commandOrTrigger.equals(Utility.SILENT_MODE_SETTING)) {
-            showSilentModeDialog(null);
+            showSilentModeDialog();
         } else if (commandOrTrigger.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
-            showSleepTimeoutDialog(null);
+            showSleepTimeoutDialog();
         } else if (commandOrTrigger.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            showAppLaunchListenerDialog(null);
+            showAppLaunchListenerDialog();
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY)) {
-            showBatteryDialog(null, triggerType);
+            showBatteryDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            showBatteryTemperatureDialog(null, triggerType);
+            showBatteryTemperatureDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BLUETOOTH)) {
-            showBluetoothDevicePickerDialog(null, triggerType);
+            showBluetoothDevicePickerDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_NFC)) {
-            showNFCDialog(null);
+            showNFCDialog();
         } else if (commandOrTrigger.equals(Utility.TRIGGER_LOCATION)) {
             showLocationDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            showHeadPhoneJackDialog(null, triggerType);
+            showHeadPhoneJackDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_DOCK)) {
-            showDockDialog(null, triggerType);
+            showDockDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_TIME)) {
-            showTimeDialog(null, triggerType);
+            showTimeDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_WIFI)) {
-            showWifiDevicePickerDialog(null, triggerType);
+            showWifiDevicePickerDialog(triggerType);
         }
     }
 
@@ -1248,10 +1183,9 @@ public class EditProfile extends Activity {
         // setOldValues();
 
         profiledb = profileDBHelper.getWritableDatabase();
-        if (normalTriggers.size() < 1) {
+        if (triggerList.getCount() < 1) {
             toast("You need a trigger device");
         } else {
-
             String profile_name_string = profile_name.getText().toString();
 
             if (profile_name_string == null || profile_name_string.length() < 1)
@@ -1260,10 +1194,10 @@ public class EditProfile extends Activity {
             content_values = new ContentValues();
 
             content_values.put(ProfileDBHelper.PROFILE_NAME, profile_name_string);
-            content_values.put(ProfileDBHelper.TRIGGERS, getStringOfTriggers(normalTriggers));
-            content_values.put(ProfileDBHelper.PROHIBITIONS, getStringOfTriggers(prohibitionTriggers));
-            content_values.put(ProfileDBHelper.RESTRICTIONS, getStringOfTriggers(restrictionTriggers));
-            content_values.put(ProfileDBHelper.COMMANDS, getStringOfCommands(addedCommands));
+            content_values.put(ProfileDBHelper.TRIGGERS, getStringOfTriggers(triggerList.getItems()));
+            content_values.put(ProfileDBHelper.PROHIBITIONS, getStringOfTriggers(prohibitionList.getItems()));
+            content_values.put(ProfileDBHelper.RESTRICTIONS, getStringOfTriggers(restrictionList.getItems()));
+            content_values.put(ProfileDBHelper.COMMANDS, getStringOfCommands(commandList.getItems()));
 
             Log.e("Content values", content_values.toString());
             if (edit) {
