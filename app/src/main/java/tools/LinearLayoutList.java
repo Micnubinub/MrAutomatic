@@ -119,12 +119,11 @@ public class LinearLayoutList extends LinearLayout {
                 Utility.getIcon(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory());
                 v = View.inflate(getContext(), R.layout.command_list_item, null);
                 v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                final View delete = v.findViewById(R.id.delete);
+                final View open = v.findViewById(R.id.open);
+                final TextView primary = (TextView) open.findViewById(R.id.primary);
+                final TextView secondary = (TextView) open.findViewById(R.id.secondary);
 
-//                v.findViewById(R.id.text).setTag("open_" + type + viewCommand);
-//                v.findViewById(R.id.text).setOnClickListener(tagClickListener);
-//
-//                v.findViewById(R.id.remove).setTag("remove_" + type + viewCommand);
-//                v.findViewById(R.id.remove).setOnClickListener(tagClickListener);
             } else if (triggerOrCommandOrAvailable instanceof String) {
                 v = View.inflate(getContext(), R.layout.command_item, null);
                 ((TextView) v).setText(Utility.getTriggerOrCommandName((String) triggerOrCommandOrAvailable));

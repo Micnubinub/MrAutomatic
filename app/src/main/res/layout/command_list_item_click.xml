@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/info_button_selector"
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/wifi" />
+
+    <TextView
+        android:id="@+id/primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/icon"
+        android:background="@drawable/white_button_selector"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:paddingTop="8dp"
+        android:text="Text"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/primary"
+        android:layout_toRightOf="@+id/icon"
+        android:background="@drawable/white_button_selector"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="8dp"
+        android:paddingTop="4dp"
+        android:text="Text"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="16sp" />
+</RelativeLayout>

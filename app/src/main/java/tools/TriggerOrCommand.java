@@ -8,7 +8,13 @@ public class TriggerOrCommand {
     private final String category;
     private String value, profileID;
 
-
+    /**
+     * Todo private String displayString;
+     * <p/>
+     * public void setDisplayString(String displayString) {
+     * this.displayString = displayString;
+     * }
+     */
     public TriggerOrCommand(Type type, String category, String value) {
         this.type = type;
         this.category = category;
