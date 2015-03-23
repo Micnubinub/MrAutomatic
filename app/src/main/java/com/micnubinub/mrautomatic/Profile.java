@@ -24,9 +24,9 @@ public class Profile {
         this.name = name;
 
         this.commands = Utility.getCommands(commands);
-        this.restrictions = Utility.getTriggers(restrictions);
-        this.prohibitions = Utility.getTriggers(prohibitions);
-        this.triggers = Utility.getTriggers(triggers);
+        this.restrictions = Utility.getTriggersAndCommands(restrictions);
+        this.prohibitions = Utility.getTriggersAndCommands(prohibitions);
+        this.triggers = Utility.getTriggersAndCommands(triggers);
 
         for (int i = 0; i < this.restrictions.size(); i++) {
             this.restrictions.get(i).setProfileID(iD);

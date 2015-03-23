@@ -14,11 +14,8 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
     public static final String PROFILE_TABLE = "Profiletable";
     public static final String PROFILE_NAME = "Profilename";
     public static final String ID = "_id";
-    public static final String TRIGGERS = "TRIGGERS";
-    public static final String COMMANDS = "COMMANDS";
+    public static final String TRIGGERS_AND_COMMANDS = "TRIGGERS_AND_COMMANDS";
     public static final String PRIORITY = "PRIORITY";
-    public static final String PROHIBITIONS = "PROHIBITIONS";
-    public static final String RESTRICTIONS = "RESTRICTIONS";
 
 
     public ProfileDBHelper(Context context) {
@@ -30,11 +27,8 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
         String sqlStatement = "create table " + PROFILE_TABLE
                 + " (" + ID + " integer primary key autoincrement not null,"
                 + PROFILE_NAME + " string not null,"
-                + COMMANDS + " string not null,"
                 + PRIORITY + " string not null,"
-                + TRIGGERS + " string not null,"
-                + PROHIBITIONS + " string not null,"
-                + RESTRICTIONS + " string not null"
+                + TRIGGERS_AND_COMMANDS + " string not null,"
                 + ");";
         profiledb.execSQL(sqlStatement);
     }

@@ -44,11 +44,11 @@ public class ProfileService extends Service {
     /**
      * Profile :
      * ArrayList <TOC> triggerAndCommands
-     * getTriggers() returns an aRRAYlIST IF TRIGGERS
+     * getTriggers() returns an aRRAYlIST IF TRIGGERS_AND_COMMANDS
      * getCommands(), getProhibitions(), getRestrictions()
      * <p/>
      * Profile service
-     * Call getTriggers() >> if triggered add to viable tAC
+     * Call getTriggersAndCommands() >> if triggered add to viable tAC
      * Call geRestrictions() >> if not triggered remove from viable tAC
      * call getProhibitions() >> if not triggered remove from viable tAC
      * <p/>

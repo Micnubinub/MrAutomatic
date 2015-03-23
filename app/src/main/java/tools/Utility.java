@@ -169,7 +169,7 @@ public class Utility {
         final ArrayList<Profile> profiles = new ArrayList<Profile>();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
-        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PROHIBITIONS, ProfileDBHelper.RESTRICTIONS, ProfileDBHelper.PRIORITY};
+        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PROHIBITIONS, ProfileDBHelper.RESTRICTIONS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         try {
             cursor.moveToPosition(0);
@@ -187,7 +187,7 @@ public class Utility {
                         new Profile(
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS)),
+                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS_AND_COMMANDS)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)),
@@ -480,24 +480,27 @@ public class Utility {
     }
 
 
-    public static ArrayList<TriggerOrCommand> getCommands(String commands) {
-        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
-        for (String s : commands.split(",")) {
-            final String[] array = s.split(":", 2);
-            //Todo check
-            commandList.add(new TriggerOrCommand(Type.COMMAND, array[0], array[1]));
-        }
-        return commandList;
-    }
-
-    public static ArrayList<TriggerOrCommand> getTriggers(String triggers) {
+    public static ArrayList<TriggerOrCommand> getTriggersAndCommands(String triggers) {
         final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
         for (String s : triggers.split(",")) {
-            final String[] array = s.split(":", 2);
+            final String[] array = s.split(":", 3);
             //Todo check
-            triggerList.add(new TriggerOrCommand(Type.TRIGGER, array[0], array[1]));
+            triggerList.add(new TriggerOrCommand(getTypeFromString(array[0]), array[1], array[2]));
         }
         return triggerList;
+    }
+
+    public static Type getTypeFromString(String typeString) {
+        Type type = Type.TRIGGER;
+
+        if (typeString.equals(Type.COMMAND.toString()))
+            type = Type.COMMAND;
+        else if (typeString.equals(Type.PROHIBITION.toString()))
+            type = Type.PROHIBITION;
+        else if (typeString.equals(Type.RESTRICTIONS.toString()))
+            type = Type.RESTRICTIONS;
+
+        return type;
     }
 
     public static String getTriggerOrCommandName(String item) {
@@ -580,16 +583,18 @@ public class Utility {
             icon = R.drawable.headphone_jack;
         } else if (type.equals(BRIGHTNESS_SETTING)) {
             icon = R.drawable.brightness;
+        } else if (type.equals(DATA_SETTING)) {
+            icon = R.drawable.data_temp;
         } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
-            icon = R.drawable.info;
+            icon = R.drawable.notification_temp;
         } else if (type.equals(RINGTONE_SETTING)) {
-            icon = R.drawable.info;
+            icon = R.drawable.ringer;
         } else if (type.equals(SILENT_MODE_SETTING)) {
-            icon = R.drawable.info;
+            icon = R.drawable.silent;
         } else if (type.equals(SLEEP_TIMEOUT_SETTING)) {
-            icon = R.drawable.info;
+            icon = R.drawable.time_trigger;
         } else if (type.equals(AUTO_ROTATION_SETTING)) {
-            icon = R.drawable.info;
+            icon = R.drawable.rotation;
         }
         //Todo get data icon, sound icon, sleep timeout, silent mode, rotation, wallapaper/gallery
 

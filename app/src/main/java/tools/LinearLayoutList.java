@@ -197,6 +197,8 @@ public class LinearLayoutList extends LinearLayout {
     }
 
     public ArrayList<TriggerOrCommand> getItems() {
+        if (items == null)
+            items = new ArrayList<>();
         final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>(items.size());
         for (int i = 0; i < items.size(); i++) {
             triggerOrCommands.add((TriggerOrCommand) items.get(i));
