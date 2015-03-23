@@ -603,7 +603,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn off in : x *change");
+                setCommandValue(Utility.SLEEP_TIMEOUT_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn off in : x *change");
                 dialog.dismiss();
             }
         });

@@ -41,6 +41,25 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
+    /**
+     * Profile :
+     * ArrayList <TOC> triggerAndCommands
+     * getTriggers() returns an aRRAYlIST IF TRIGGERS
+     * getCommands(), getProhibitions(), getRestrictions()
+     * <p/>
+     * Profile service
+     * Call getTriggers() >> if triggered add to viable tAC
+     * Call geRestrictions() >> if not triggered remove from viable tAC
+     * call getProhibitions() >> if not triggered remove from viable tAC
+     * <p/>
+     * sort the remainder by priority
+     * sort the sorted remainder by trigger radius
+     * Location
+     * Wifi
+     * Bluetooth
+     * Battery
+     * NFC
+     */
     //Todo make a list of all the use full broadcast receivers and triggers and make a class full of enums to be used to proceessss>>continue adding some
     //Todo extract all the scanning code in wifiListAdapter and bTListAdapter
     //Todo then when done sort the fully triggered profiles by priority and set the first

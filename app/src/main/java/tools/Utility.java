@@ -576,9 +576,9 @@ public class Utility {
             icon = R.drawable.dock;
         } else if (type.equals(TRIGGER_TIME) || type.equals(ALARM_VOLUME_SETTING)) {
             icon = R.drawable.time_trigger;
-        } else if (type.equals(TRIGGER_EARPHONE_JACK) || type.equals(MEDIA_CONTROL_SETTING)) {
+        } else if (type.equals(TRIGGER_EARPHONE_JACK) || type.equals(MEDIA_CONTROL_SETTING) || type.equals(MEDIA_VOLUME_SETTING)) {
             icon = R.drawable.headphone_jack;
-        } else if (type.equals(BLUETOOTH_SETTING)) {
+        } else if (type.equals(BRIGHTNESS_SETTING)) {
             icon = R.drawable.brightness;
         } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
             icon = R.drawable.info;
