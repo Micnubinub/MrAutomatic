@@ -104,7 +104,7 @@ public class ProfileService extends Service {
         public void onScanComplete(ArrayList<Device> devices) {
             final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
             for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<TriggerOrCommand> triggers1 = profiles.get(i).getTriggers();
+                final ArrayList<TriggerOrCommand> triggers1 = Utility.getTriggers(profiles.get(i).getTriggersOrCommands());
                 for (int j = 0; j < triggers1.size(); j++) {
                     triggers.add(triggers1.get(j));
                 }
@@ -130,7 +130,7 @@ public class ProfileService extends Service {
         public void onScanComplete(ArrayList<Device> devices) {
             final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
             for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<TriggerOrCommand> triggers1 = profiles.get(i).getTriggers();
+                final ArrayList<TriggerOrCommand> triggers1 = Utility.getTriggers(profiles.get(i).getTriggersOrCommands());
                 for (int j = 0; j < triggers1.size(); j++) {
                     triggers.add(triggers1.get(j));
                 }
@@ -199,17 +199,17 @@ public class ProfileService extends Service {
         for (int i = 0; i < viableProfiles.size(); i++) {
             final Profile profile = viableProfiles.get(i);
 
-            for (int j = 0; i < profile.getProhibitions().size(); j++) {
-                final TriggerOrCommand prohib = profile.getProhibitions().get(j);
-                if (isTriggerTriggered(prohib))
-                    removeProfileFromViableList(prohib.getProfileID());
-            }
-
-            for (int j = 0; i < profile.getRestrictions().size(); j++) {
-                final TriggerOrCommand restriction = profile.getRestrictions().get(j);
-                if (!isTriggerTriggered(restriction))
-                    removeProfileFromViableList(restriction.getProfileID());
-            }
+//            for (int j = 0; i < profile.getProhibitions().size(); j++) {
+//                final TriggerOrCommand prohib = profile.getProhibitions().get(j);
+//                if (isTriggerTriggered(prohib))
+//                    removeProfileFromViableList(prohib.getProfileID());
+//            }
+//
+//            for (int j = 0; i < profile.getRestrictions().size(); j++) {
+//                final TriggerOrCommand restriction = profile.getRestrictions().get(j);
+//                if (!isTriggerTriggered(restriction))
+//                    removeProfileFromViableList(restriction.getProfileID());
+//            }
         }
 
         //Todo setProfile
@@ -274,14 +274,14 @@ public class ProfileService extends Service {
             return;
         for (int i = 0; i < profiles.size(); i++) {
             final Profile profile = profiles.get(i);
-            for (int j = 0; j < profile.getTriggers().size(); i++) {
-                final TriggerOrCommand trigger = profile.getTriggers().get(j);
-                final String type = trigger.getCategory();
-                //Todo ---- might be more
-                if (type.equals(Utility.TRIGGER_BLUETOOTH) || type.equals(Utility.TRIGGER_BATTERY) || type.equals(Utility.TRIGGER_WIFI) || type.equals(Utility.TRIGGER_LOCATION)) {
-                    return;
-                }
-            }
+//            for (int j = 0; j < profile.getTriggers().size(); i++) {
+//                final TriggerOrCommand trigger = profile.getTriggers().get(j);
+//                final String type = trigger.getCategory();
+//                //Todo ---- might be more
+//                if (type.equals(Utility.TRIGGER_BLUETOOTH) || type.equals(Utility.TRIGGER_BATTERY) || type.equals(Utility.TRIGGER_WIFI) || type.equals(Utility.TRIGGER_LOCATION)) {
+//                    return;
+//                }
+//            }
         }
         context.stopService(new Intent(context, ProfileService.class));
     }
@@ -298,8 +298,8 @@ public class ProfileService extends Service {
             completeScan();
             return;
         } else {
-            for (int i = 0; i < profile.getCommands().size(); i++) {
-                final TriggerOrCommand command = profile.getCommands().get(i);
+            for (int i = 0; i < profile.getTriggersOrCommands().size(); i++) {
+                final TriggerOrCommand command = profile.getTriggersOrCommands().get(i);
                 //Todo set commands
             }
             completeScan();

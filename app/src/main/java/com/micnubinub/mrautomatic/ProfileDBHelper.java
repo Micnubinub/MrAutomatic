@@ -28,7 +28,7 @@ public class ProfileDBHelper extends SQLiteOpenHelper {
                 + " (" + ID + " integer primary key autoincrement not null,"
                 + PROFILE_NAME + " string not null,"
                 + PRIORITY + " string not null,"
-                + TRIGGERS_AND_COMMANDS + " string not null,"
+                + TRIGGERS_AND_COMMANDS + " string not null"
                 + ");";
         profiledb.execSQL(sqlStatement);
     }

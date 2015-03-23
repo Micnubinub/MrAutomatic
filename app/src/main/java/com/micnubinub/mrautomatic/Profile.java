@@ -13,31 +13,17 @@ public class Profile {
     private final String iD;
     private final String name;
     private final ArrayList<TriggerOrCommand> commands;
-    private final ArrayList<TriggerOrCommand> triggers;
-    private final ArrayList<TriggerOrCommand> restrictions;
-    private final ArrayList<TriggerOrCommand> prohibitions;
     private final int priority;
 
-    public Profile(String iD, String name, String triggers, String restrictions, String prohibitions, String commands, int priority) {
+    public Profile(String iD, String name, String triggers, int priority) {
         this.iD = iD;
         this.priority = priority;
         this.name = name;
 
-        this.commands = Utility.getCommands(commands);
-        this.restrictions = Utility.getTriggersAndCommands(restrictions);
-        this.prohibitions = Utility.getTriggersAndCommands(prohibitions);
-        this.triggers = Utility.getTriggersAndCommands(triggers);
+        this.commands = Utility.getTriggersAndCommands(triggers);
 
-        for (int i = 0; i < this.restrictions.size(); i++) {
-            this.restrictions.get(i).setProfileID(iD);
-        }
-
-        for (int i = 0; i < this.triggers.size(); i++) {
-            this.triggers.get(i).setProfileID(iD);
-        }
-
-        for (int i = 0; i < this.prohibitions.size(); i++) {
-            this.prohibitions.get(i).setProfileID(iD);
+        for (int i = 0; i < this.commands.size(); i++) {
+            this.commands.get(i).setProfileID(iD);
         }
 
     }
@@ -50,20 +36,8 @@ public class Profile {
         return iD;
     }
 
-    public ArrayList<TriggerOrCommand> getCommands() {
+    public ArrayList<TriggerOrCommand> getTriggersOrCommands() {
         return commands;
-    }
-
-    public ArrayList<TriggerOrCommand> getTriggers() {
-        return triggers;
-    }
-
-    public ArrayList<TriggerOrCommand> getRestrictions() {
-        return restrictions;
-    }
-
-    public ArrayList<TriggerOrCommand> getProhibitions() {
-        return prohibitions;
     }
 
     public int getPriority() {
@@ -76,6 +50,6 @@ public class Profile {
 
     @Override
     public String toString() {
-        return String.format("%s. %s | %s | %s | %s | %s \n", iD, name, triggers.toString(), prohibitions.toString(), restrictions.toString(), commands.toString());
+        return String.format("%s. %s | %s | %s | %s | %s \n", iD, name, commands.toString());
     }
 }

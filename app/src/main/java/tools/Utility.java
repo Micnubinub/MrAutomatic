@@ -164,12 +164,63 @@ public class Utility {
         });
     }
 
+    public static String getAppName(String address) {
+        if (apps == null)
+            return "Unknown";
+        else
+            for (App app : apps) {
+                if (app.getAddress().equals(address))
+                    return app.getName();
+            }
+        return "Unknown";
+    }
+
+    public static ArrayList<TriggerOrCommand> getTriggers(ArrayList<TriggerOrCommand> list) {
+        final ArrayList<TriggerOrCommand> trigs = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            final TriggerOrCommand command = list.get(i);
+            if (command.getType().equals(Type.TRIGGER))
+                trigs.add(command);
+        }
+        return trigs;
+    }
+
+    public static ArrayList<TriggerOrCommand> getRestrictions(ArrayList<TriggerOrCommand> list) {
+        final ArrayList<TriggerOrCommand> trigs = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            final TriggerOrCommand command = list.get(i);
+            if (command.getType().equals(Type.RESTRICTIONS))
+                trigs.add(command);
+        }
+        return trigs;
+    }
+
+    public static ArrayList<TriggerOrCommand> getCommands(ArrayList<TriggerOrCommand> list) {
+        final ArrayList<TriggerOrCommand> trigs = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            final TriggerOrCommand command = list.get(i);
+            if (command.getType().equals(Type.COMMAND))
+                trigs.add(command);
+        }
+        return trigs;
+    }
+
+    public static ArrayList<TriggerOrCommand> getProhibitions(ArrayList<TriggerOrCommand> list) {
+        final ArrayList<TriggerOrCommand> trigs = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            final TriggerOrCommand command = list.get(i);
+            if (command.getType().equals(Type.PROHIBITION))
+                trigs.add(command);
+        }
+        return trigs;
+    }
+
 
     public static ArrayList<Profile> getProfiles(Context context) {
         final ArrayList<Profile> profiles = new ArrayList<Profile>();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
-        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PROHIBITIONS, ProfileDBHelper.RESTRICTIONS, ProfileDBHelper.PRIORITY};
+        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         try {
             cursor.moveToPosition(0);
@@ -188,9 +239,6 @@ public class Utility {
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)),
                                 cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS_AND_COMMANDS)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)),
-                                cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)),
                                 priority
                         )
                 );
@@ -592,9 +640,11 @@ public class Utility {
         } else if (type.equals(SILENT_MODE_SETTING)) {
             icon = R.drawable.silent;
         } else if (type.equals(SLEEP_TIMEOUT_SETTING)) {
-            icon = R.drawable.time_trigger;
+            icon = R.drawable.time_out;
         } else if (type.equals(AUTO_ROTATION_SETTING)) {
             icon = R.drawable.rotation;
+        } else if (type.equals(RINGER_VOLUME_SETTING)) {
+            icon = R.drawable.ringer;
         }
         //Todo get data icon, sound icon, sleep timeout, silent mode, rotation, wallapaper/gallery
 
