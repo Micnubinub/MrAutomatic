@@ -526,10 +526,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn data on * change");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -591,13 +599,22 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.DATA_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Turn off in : x *change");
                 dialog.dismiss();
             }
         });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
 
@@ -636,10 +653,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.MEDIA_CONTROL_SETTING, String.valueOf(materialRadioGroup.getSelection()), "Next");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -660,10 +685,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0", materialSwitch.isChecked() ? "Allow auto-rotation" : "lock orientation");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -685,10 +718,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.BLUETOOTH_SETTING, materialSwitch.isChecked() ? "1" : "0", "Turn " + (materialSwitch.isChecked() ? "on" : "off"));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -710,10 +751,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.WIFI_SETTING, materialSwitch.isChecked() ? "1" : "0", "Turn " + (materialSwitch.isChecked() ? "on" : "off"));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -801,10 +850,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 setCommandValue(Utility.SILENT_MODE_SETTING, materialSwitch.isChecked() ? "1" : "0", String.format("Put into %s mode", materialSwitch.isChecked() ? "Silent" : "Normal"));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -817,14 +874,21 @@ public class EditProfile extends Activity {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.ringtone_chooser);
 
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setCommandValue("Type", "value");
+            public void onClick(View view) {
+                String uri = "";
+                setCommandValue(Utility.RINGTONE_SETTING, uri, "Name");
                 dialog.dismiss();
             }
         });
 
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
@@ -833,10 +897,18 @@ public class EditProfile extends Activity {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.wallpaper_choose);
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setCommandValue("Type", "value");
+            public void onClick(View view) {
+                String uri = "";
+                setCommandValue(Utility.WALLPAPER_SETTING, uri, "Name");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });

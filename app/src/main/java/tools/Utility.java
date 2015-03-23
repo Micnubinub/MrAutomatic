@@ -560,7 +560,7 @@ public class Utility {
 
         if (type.equals(TRIGGER_BATTERY)) {
             icon = R.drawable.battery_percentage;
-        } else if (type.equals(TRIGGER_APP_LAUNCH)) {
+        } else if (type.equals(TRIGGER_APP_LAUNCH) || type.equals(LAUNCH_APP_SETTING)) {
             icon = R.drawable.app_launch;
         } else if (type.equals(TRIGGER_BATTERY_TEMPERATURE)) {
             icon = R.drawable.battery_temperature;
@@ -578,8 +578,8 @@ public class Utility {
             icon = R.drawable.time_trigger;
         } else if (type.equals(TRIGGER_EARPHONE_JACK) || type.equals(MEDIA_CONTROL_SETTING)) {
             icon = R.drawable.headphone_jack;
-        } else if (type.equals(MEDIA_CONTROL_SETTING)) {
-            icon = R.drawable.headphone_jack;
+        } else if (type.equals(BLUETOOTH_SETTING)) {
+            icon = R.drawable.brightness;
         } else if (type.equals(NOTIFICATION_VOLUME_SETTING)) {
             icon = R.drawable.info;
         } else if (type.equals(RINGTONE_SETTING)) {
