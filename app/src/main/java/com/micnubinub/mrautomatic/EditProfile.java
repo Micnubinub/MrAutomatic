@@ -302,7 +302,8 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-    private void setValue(Type triggerType, String type, String value, String displayString) {
+    private void setValue(Type triggerType, String type, String value) {
+        final String displayString = getDisplayString(type, value);
         TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, type);
         if (trigger == null) {
             trigger = new TriggerOrCommand(triggerType, type, value);
@@ -314,14 +315,14 @@ public class EditProfile extends Activity {
         addCommandOrTrigger(trigger);
     }
 
-    private void setCommandValue(String type, String value, String displayString) {
-        setValue(Type.COMMAND, type, value, displayString);
+    private void setCommandValue(String type, String value) {
+        setValue(Type.COMMAND, type, value);
     }
 
     private TriggerOrCommand getTriggerOrCommandFromArray(Type type, String category) {
         switch (type) {
             case RESTRICTIONS:
-                return restrictionList.getItemUsingCategory(category);
+                return restrictionList.getItemUsingcategory(category);
             case TRIGGER:
                 return triggerList.getItemUsingCategory(category);
             case PROHIBITION:
@@ -1124,7 +1125,9 @@ public class EditProfile extends Activity {
                 //Todo implement this
                 final int h = hours.getCurrentItem();
                 final int m = minutes.getCurrentItem();
-                setValue(Type.TRIGGER, "Type", "value", "Make time string");
+                String val = "value";
+
+                setValue(Type.TRIGGER, Utility.TRIGGER_TIME, val);
                 dialog.dismiss();
             }
         });
@@ -1138,6 +1141,7 @@ public class EditProfile extends Activity {
 
         dialog.show();
     }
+
 
     public void showEditorDialog(final Type triggerType, String commandOrTrigger) {
         if (commandOrTrigger == null)
@@ -1650,7 +1654,7 @@ public class EditProfile extends Activity {
 
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
-        final String[] need = new String[]{ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.ID, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.COMMANDS, ProfileDBHelper.PROHIBITIONS, ProfileDBHelper.RESTRICTIONS, ProfileDBHelper.PRIORITY};
+        final String[] need = new String[]{ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.ID, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
         try {
             cursor.moveToPosition(0);
@@ -1662,10 +1666,7 @@ public class EditProfile extends Activity {
             try {
                 if ((cursor.getString(cursor.getColumnIndex(ProfileDBHelper.ID)).equals(profileId))) {
                     profile_name.setText(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROFILE_NAME)));
-                    fillInAddedCommandsFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.COMMANDS)));
-                    fillInRestrictionTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.RESTRICTIONS)));
-                    fillInProhibitionTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.PROHIBITIONS)));
-                    fillInNormalTriggersFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS_AND_COMMANDS)));
+                    fillInAddedCommandsFromDb(cursor.getString(cursor.getColumnIndex(ProfileDBHelper.TRIGGERS_AND_COMMANDS)));
                     break loop;
                 }
             } catch (Exception e) {
@@ -1681,99 +1682,87 @@ public class EditProfile extends Activity {
     }
 
     private void fillInAddedCommandsFromDb(String commands) {
-        final ArrayList<TriggerOrCommand> setCommands = Utility.getCommands(commands);
+        final ArrayList<TriggerOrCommand> setCommands = Utility.getTriggersAndCommands(commands);
         for (int i = 0; i < setCommands.size(); i++) {
             final TriggerOrCommand command = setCommands.get(i);
-            //Todo fix this setCommandValue(command.getType(), command.getValue());
-            commandList.add(command);
-        }
-    }
+            command.setDisplayString(getDisplayString(command.getCategory(), command.getValue()));
+            switch (command.getType()) {
+                case COMMAND:
+                    commandList.add(command);
+                    break;
+                case RESTRICTIONS:
+                    restrictionList.add(command);
+                    break;
+                case PROHIBITION:
+                    prohibitionList.add(command);
+                    break;
+                case TRIGGER:
+                    triggerList.add(command);
+                    break;
 
-    private void fillInRestrictionTriggersFromDb(String restrictions) {
-        final ArrayList<TriggerOrCommand> setRestrictions = Utility.getTriggersAndCommands(restrictions);
-        for (int i = 0; i < setRestrictions.size(); i++) {
-            final TriggerOrCommand trigger = setRestrictions.get(i);
-            //Todo  setValue(trigger.getCategory(), trigger.getValue());
-            restrictionList.add(trigger);
+            }
         }
-    }
-
-    private void fillInProhibitionTriggersFromDb(String prohibitions) {
-        final ArrayList<TriggerOrCommand> setProhibitions = Utility.getTriggersAndCommands(prohibitions);
-        for (int i = 0; i < setProhibitions.size(); i++) {
-            final TriggerOrCommand trigger = setProhibitions.get(i);
-            prohibitionList.add(trigger);
-            //Todo setValue(trigger.getCategory(), trigger.getValue());
-        }
-    }
-
-    private void fillInNormalTriggersFromDb(String triggers) {
-        final ArrayList<TriggerOrCommand> setTriggers = Utility.getTriggersAndCommands(triggers);
-        for (int i = 0; i < setTriggers.size(); i++) {
-            final TriggerOrCommand trigger = setTriggers.get(i);
-            triggerList.add(trigger);
-            //Todo setValue(trigger.getCategory(), trigger.getValue());
-        }
-    }
-
-    private String getDisplayString(String category, String value) {
-        String displayString = "name";
-        if (item.equals(TRIGGER_APP_LAUNCH)) {
-            item = "App launch";
-        } else if (item.equals(TRIGGER_BATTERY)) {
-            item = "Battery";
-        } else if (item.equals(TRIGGER_BATTERY_TEMPERATURE)) {
-            item = "Battery temperature";
-        } else if (item.equals(TRIGGER_BLUETOOTH)) {
-            item = "Bluetooth device";
-        } else if (item.equals(TRIGGER_NFC)) {
-            item = "NFC";
-        } else if (item.equals(TRIGGER_LOCATION)) {
-            item = "Location";
-        } else if (item.equals(TRIGGER_EARPHONE_JACK)) {
-            item = "Headphone jack";
-        } else if (item.equals(TRIGGER_DOCK)) {
-            item = "Dock";
-        } else if (item.equals(TRIGGER_TIME)) {
-            item = "Time";
-        } else if (item.equals(TRIGGER_WIFI)) {
-            item = "Wifi device";
-        } else if (item.equals(ALARM_VOLUME_SETTING)) {
-            item = "Alarm Volume";
-        } else if (item.equals(AUTO_ROTATION_SETTING)) {
-            item = "Auto rotation";
-        } else if (item.equals(BLUETOOTH_SETTING)) {
-            item = "Bluetooth";
-        } else if (item.equals(WALLPAPER_SETTING)) {
-            item = "Wallpaper";
-        } else if (item.equals(WIFI_SETTING)) {
-            item = "Wifi";
-        } else if (item.equals(MEDIA_VOLUME_SETTING)) {
-            item = "Media volume";
-        } else if (item.equals(LAUNCH_APP_SETTING)) {
-            item = "Launch app";
-        } else if (item.equals(DATA_SETTING)) {
-            item = "Data";
-        } else if (item.equals(BRIGHTNESS_SETTING)) {
-            item = "Brightness";
-        } else if (item.equals(RINGER_VOLUME_SETTING)) {
-            item = "Ringtone volume";
-        } else if (item.equals(MEDIA_CONTROL_SETTING)) {
-            item = "Music control";
-        } else if (item.equals(NOTIFICATION_VOLUME_SETTING)) {
-            item = "Notification volume";
-        } else if (item.equals(RINGTONE_SETTING)) {
-            item = "Ringtone";
-        } else if (item.equals(SILENT_MODE_SETTING)) {
-            item = "Silent mode";
-        } else if (item.equals(SLEEP_TIMEOUT_SETTING)) {
-            item = "Screen timeout";
-        }
-
-        return displayString;
     }
 
     private void toast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private String getDisplayString(String category, String value) {
+        String displayString = "name";
+        if (category.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            displayString = "App launch";
+        } else if (category.equals(Utility.TRIGGER_BATTERY)) {
+            displayString = "Battery";
+        } else if (category.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            displayString = "Battery temperature";
+        } else if (category.equals(Utility.TRIGGER_BLUETOOTH)) {
+            displayString = "Bluetooth device";
+        } else if (category.equals(Utility.TRIGGER_NFC)) {
+            displayString = "NFC";
+        } else if (category.equals(Utility.TRIGGER_LOCATION)) {
+            displayString = "Location";
+        } else if (category.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            displayString = "Headphone jack";
+        } else if (category.equals(Utility.TRIGGER_DOCK)) {
+            displayString = "Dock";
+        } else if (category.equals(Utility.TRIGGER_TIME)) {
+            displayString = "Time";
+        } else if (category.equals(Utility.TRIGGER_WIFI)) {
+            displayString = "Wifi device";
+        } else if (category.equals(Utility.ALARM_VOLUME_SETTING)) {
+            displayString = "Alarm Volume";
+        } else if (category.equals(Utility.AUTO_ROTATION_SETTING)) {
+            displayString = "Auto rotation";
+        } else if (category.equals(Utility.BLUETOOTH_SETTING)) {
+            displayString = "Bluetooth";
+        } else if (category.equals(Utility.WALLPAPER_SETTING)) {
+            displayString = "Wallpaper";
+        } else if (category.equals(Utility.WIFI_SETTING)) {
+            displayString = "Wifi";
+        } else if (category.equals(Utility.MEDIA_VOLUME_SETTING)) {
+            displayString = "Media volume";
+        } else if (category.equals(Utility.LAUNCH_APP_SETTING)) {
+            displayString = "Launch app";
+        } else if (category.equals(Utility.DATA_SETTING)) {
+            displayString = "Data";
+        } else if (category.equals(Utility.BRIGHTNESS_SETTING)) {
+            displayString = "Brightness";
+        } else if (category.equals(Utility.RINGER_VOLUME_SETTING)) {
+            displayString = "Ringtone volume";
+        } else if (category.equals(Utility.MEDIA_CONTROL_SETTING)) {
+            displayString = "Music control";
+        } else if (category.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+            displayString = "Notification volume";
+        } else if (category.equals(Utility.RINGTONE_SETTING)) {
+            displayString = "Ringtone";
+        } else if (category.equals(Utility.SILENT_MODE_SETTING)) {
+            displayString = "Silent mode";
+        } else if (category.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+            displayString = "Screen timeout";
+        }
+
+        return displayString;
     }
 }

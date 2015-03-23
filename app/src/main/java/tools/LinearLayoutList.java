@@ -46,12 +46,6 @@ public class LinearLayoutList extends LinearLayout {
     }
 
 
-//    public void editItem(int pos) {
-//        if (pos < 0 || items == null || pos >= items.size())
-//            return;
-//        final TriggerOrCommand triggerOrCommand = items.get(pos);
-//    }
-
     public void setOnItemClickListener(OnClickListener l) {
         //Todo implement in all instances
         this.stringListener = l;
