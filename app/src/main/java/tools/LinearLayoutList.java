@@ -2,6 +2,7 @@ package tools;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -71,11 +72,12 @@ public class LinearLayoutList extends LinearLayout {
 
         if (!containsCategory(triggerOrCommand)) {
             items.add(triggerOrCommand);
-
         } else {
             final TriggerOrCommand item = getItemUsingCategory(triggerOrCommand);
-            item.setValue(triggerOrCommand.getValue());
-            item.setDisplayString(triggerOrCommand.getDisplayString());
+            final int i = items.indexOf(item);
+            items.remove(item);
+            items.add(i, triggerOrCommand);
+//            Log.e("adding ", triggerOrCommand.getCategory() + " > " + triggerOrCommand.getDisplayString());
         }
 
         getViews();
@@ -124,9 +126,10 @@ public class LinearLayoutList extends LinearLayout {
     private void getViews() {
         //Todo fill in
         removeAllViews();
+        Log.e("numChildren", String.valueOf(getChildCount()));
+        Log.e("items", items.toString());
         for (int i = 0; i < items.size(); i++) {
             final Object triggerOrCommandOrAvailable = items.get(i);
-
             View v = null;
             if (triggerOrCommandOrAvailable instanceof TriggerOrCommand) {
                 final TriggerOrCommand t = (TriggerOrCommand) triggerOrCommandOrAvailable;
@@ -138,11 +141,10 @@ public class LinearLayoutList extends LinearLayout {
 
                 ((ImageView) open.findViewById(R.id.icon)).setImageResource(Utility.getIcon(t.getCategory()));
                 ((TextView) open.findViewById(R.id.primary)).setText(Utility.getTriggerOrCommandName(t.getCategory()));
-                ((TextView) open.findViewById(R.id.secondary)).setText(t.getDisplayString());
+                ((TextView) open.findViewById(R.id.secondary)).setText(EditProfile.getDisplayString(t.getCategory(), t.getValue()));
                 open.findViewById(R.id.secondary).setSelected(true);
                 delete.setTag(t.getCategory());
                 open.setTag(t.getCategory());
-
                 delete.setOnClickListener(scrollViewListener);
                 open.setOnClickListener(scrollViewListener);
 
@@ -155,10 +157,10 @@ public class LinearLayoutList extends LinearLayout {
 
             if (v == null)
                 return;
-            v.setTag(i);
 
             addView(v);
         }
+
     }
 
     public boolean containsCategory(TriggerOrCommand triggerOrCommand) {

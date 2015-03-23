@@ -6,20 +6,12 @@ package tools;
 public class TriggerOrCommand {
     private final Type type;
     private final String category;
-    private String value, profileID, displayString;
+    private String value, profileID;
 
     public TriggerOrCommand(Type type, String category, String value) {
         this.type = type;
         this.category = category;
         this.value = value;
-    }
-
-    public String getDisplayString() {
-        return displayString;
-    }
-
-    public void setDisplayString(String displayString) {
-        this.displayString = displayString;
     }
 
     public Type getType() {
@@ -48,7 +40,7 @@ public class TriggerOrCommand {
 
     @Override
     public String toString() {
-        return category + ":" + value;
+        return category + " : " + value;
     }
 
     public enum Type {

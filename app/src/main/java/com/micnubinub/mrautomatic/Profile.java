@@ -50,6 +50,6 @@ public class Profile {
 
     @Override
     public String toString() {
-        return String.format("%s. %s | %s | %s | %s | %s \n", iD, name, commands.toString());
+        return String.format("%s. %s | %s\n", iD, name, commands.toString());
     }
 }

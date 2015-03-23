@@ -46,14 +46,11 @@ import view_classes.MaterialSwitch;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
-    //Todo maybe get rid of the parallax
-    //Todo add save button to NFC, head phone jack, dock, location and applaunch
-    //Todo make sure it doesn't attempt to save when a value hasn't been set yet
-    //Todo copy from>> dialog with 4 ticks : triggers, restrictions, prohibitions and commands
+    //Todo fix > can't edit
     //Todo preference to play preview and add to all the seek bars
     //TODO ---- IMPORTANT check if all the strings are correct
     //Todo make google maps view
-    //Todo fix > can add countless items of the same type
+
     /**
      * TODO IMPORTANT and time consuming :
      * make a view pager that has tabs for file chooser like the wallpaper, ringtone, notification,
@@ -71,6 +68,7 @@ public class EditProfile extends Activity {
     public static EditProfile editProfile;
     private static LinearLayoutList prohibitionList, triggerList, restrictionList, commandList;
     private static String priority = "3";
+    private static AudioManager audioManager;
     private final ProfileDBHelper profileDBHelper = new ProfileDBHelper(this);
     private final View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -111,7 +109,6 @@ public class EditProfile extends Activity {
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
     private ContentValues content_values;
-    private AudioManager audioManager;
     private Uri notification;
     private Cursor cursor;
     private SQLiteDatabase profiledb;
@@ -131,6 +128,64 @@ public class EditProfile extends Activity {
                 commandList.remove(triggerOrCommand);
                 break;
         }
+    }
+
+    public static String getDisplayString(String category, String value) {
+        //Todo fix all of the missing ones>> name
+        String displayString = "name";
+        if (category.equals(Utility.TRIGGER_APP_LAUNCH)) {
+            displayString = Utility.getAppName(value);
+        } else if (category.equals(Utility.TRIGGER_BATTERY)) {
+            displayString = value.equals("-1") ? "When charging" : "Trigger at : " + value + "%";
+        } else if (category.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
+            displayString = String.format("Trigger at : %s degrees C", value);
+        } else if (category.equals(Utility.TRIGGER_BLUETOOTH)) {
+            displayString = value;
+        } else if (category.equals(Utility.TRIGGER_NFC)) {
+            displayString = value;
+        } else if (category.equals(Utility.TRIGGER_LOCATION)) {
+            displayString = "name";
+        } else if (category.equals(Utility.TRIGGER_EARPHONE_JACK)) {
+            displayString = value.equals("1") ? "Triggered when head phones are connected" : "Triggered when head phones are NOT connected";
+        } else if (category.equals(Utility.TRIGGER_DOCK)) {
+            displayString = value.equals("1") ? "Triggered when docked" : "Triggered when NOT docked";
+        } else if (category.equals(Utility.TRIGGER_TIME)) {
+            displayString = "name";
+        } else if (category.equals(Utility.TRIGGER_WIFI)) {
+            displayString = value;
+        } else if (category.equals(Utility.ALARM_VOLUME_SETTING)) {
+            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) (audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM))) * 100)) + "%";
+        } else if (category.equals(Utility.AUTO_ROTATION_SETTING)) {
+            displayString = value.equals("1") ? "Allow auto-rotation" : "lock orientation";
+        } else if (category.equals(Utility.BLUETOOTH_SETTING)) {
+            displayString = "Turn " + (value.equals("1") ? "on" : "off");
+        } else if (category.equals(Utility.WALLPAPER_SETTING)) {
+            displayString = "Name";
+        } else if (category.equals(Utility.WIFI_SETTING)) {
+            displayString = "Turn " + (value.equals("1") ? "on" : "off");
+        } else if (category.equals(Utility.MEDIA_VOLUME_SETTING)) {
+            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) * 100)) + "%";
+        } else if (category.equals(Utility.LAUNCH_APP_SETTING)) {
+            displayString = Utility.getAppName(value);
+        } else if (category.equals(Utility.DATA_SETTING)) {
+            displayString = "Turn data on * change";
+        } else if (category.equals(Utility.BRIGHTNESS_SETTING)) {
+            displayString = value.equals("-1") ? "Set brightness to Auto" : "Set to : " + (Math.round((Integer.parseInt(value) / 255f) * 100)) + "%";
+        } else if (category.equals(Utility.RINGER_VOLUME_SETTING)) {
+            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)) * 100)) + "%";
+        } else if (category.equals(Utility.MEDIA_CONTROL_SETTING)) {
+            displayString = "Next";//Todo i think only need play pause and stop, no next nad previous
+        } else if (category.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
+            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)) * 100)) + "%";
+        } else if (category.equals(Utility.RINGTONE_SETTING)) {
+            displayString = "Name";
+        } else if (category.equals(Utility.SILENT_MODE_SETTING)) {
+            displayString = String.format("Put into %s mode", value.equals("1") ? "Silent" : "Normal");
+        } else if (category.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
+            displayString = "Turn off in : x *change";
+        }
+
+        return displayString;
     }
 
     private void showAlarmVolumeDialog() {
@@ -303,11 +358,9 @@ public class EditProfile extends Activity {
     }
 
     private void setValue(Type triggerType, String type, String value) {
-        final String displayString = getDisplayString(type, value);
         TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, type);
         if (trigger == null) {
             trigger = new TriggerOrCommand(triggerType, type, value);
-            trigger.setDisplayString(displayString);
         } else {
             trigger.setValue(value);
         }
@@ -1141,11 +1194,9 @@ public class EditProfile extends Activity {
         dialog.show();
     }
 
-
     public void showEditorDialog(final Type triggerType, String commandOrTrigger) {
         if (commandOrTrigger == null)
             return;
-        Log.e("showEditor : ", commandOrTrigger + " , " + triggerType);
         //Todo make sure it works for both commands and triggers
         if (commandOrTrigger.equals(Utility.ALARM_VOLUME_SETTING)) {
             showAlarmVolumeDialog();
@@ -1247,6 +1298,13 @@ public class EditProfile extends Activity {
     }
 
     private void getLayouts() {
+        //Todo copy from>> dialog with 4 ticks : triggers, restrictions, prohibitions and commands
+        findViewById(R.id.copy_from).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfile.this, "Coming soon", Toast.LENGTH_LONG).show();
+            }
+        });
         final View.OnClickListener l = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1686,7 +1744,6 @@ public class EditProfile extends Activity {
         final ArrayList<TriggerOrCommand> setCommands = Utility.getTriggersAndCommands(commands);
         for (int i = 0; i < setCommands.size(); i++) {
             final TriggerOrCommand command = setCommands.get(i);
-            command.setDisplayString(getDisplayString(command.getCategory(), command.getValue()));
             switch (command.getType()) {
                 case COMMAND:
                     commandList.add(command);
@@ -1707,64 +1764,5 @@ public class EditProfile extends Activity {
 
     private void toast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
-
-
-    private String getDisplayString(String category, String value) {
-        //Todo fix all of the missing ones>> name
-        String displayString = "name";
-        if (category.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            displayString = Utility.getAppName(value);
-        } else if (category.equals(Utility.TRIGGER_BATTERY)) {
-            displayString = value.equals("-1") ? "When charging" : "Trigger at : %s" + value + "%";
-        } else if (category.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            displayString = String.format("Trigger at : %s degrees C", value);
-        } else if (category.equals(Utility.TRIGGER_BLUETOOTH)) {
-            displayString = value;
-        } else if (category.equals(Utility.TRIGGER_NFC)) {
-            displayString = value;
-        } else if (category.equals(Utility.TRIGGER_LOCATION)) {
-            displayString = "name";
-        } else if (category.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            displayString = value.equals("1") ? "Triggered when head phones are connected" : "Triggered when head phones are NOT connected";
-        } else if (category.equals(Utility.TRIGGER_DOCK)) {
-            displayString = value.equals("1") ? "Triggered when docked" : "Triggered when NOT docked";
-        } else if (category.equals(Utility.TRIGGER_TIME)) {
-            displayString = "name";
-        } else if (category.equals(Utility.TRIGGER_WIFI)) {
-            displayString = value;
-        } else if (category.equals(Utility.ALARM_VOLUME_SETTING)) {
-            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) (audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM))) * 100)) + "%";
-        } else if (category.equals(Utility.AUTO_ROTATION_SETTING)) {
-            displayString = value.equals("1") ? "Allow auto-rotation" : "lock orientation";
-        } else if (category.equals(Utility.BLUETOOTH_SETTING)) {
-            displayString = "Turn " + (value.equals("1") ? "on" : "off");
-        } else if (category.equals(Utility.WALLPAPER_SETTING)) {
-            displayString = "Name";
-        } else if (category.equals(Utility.WIFI_SETTING)) {
-            displayString = "Turn " + (value.equals("1") ? "on" : "off");
-        } else if (category.equals(Utility.MEDIA_VOLUME_SETTING)) {
-            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)) * 100)) + "%";
-        } else if (category.equals(Utility.LAUNCH_APP_SETTING)) {
-            displayString = Utility.getAppName(value);
-        } else if (category.equals(Utility.DATA_SETTING)) {
-            displayString = "Turn data on * change";
-        } else if (category.equals(Utility.BRIGHTNESS_SETTING)) {
-            displayString = value.equals("-1") ? "Set brightness to Auto" : "Set to : " + (Math.round((Integer.parseInt(value) / 255f) * 100)) + "%";
-        } else if (category.equals(Utility.RINGER_VOLUME_SETTING)) {
-            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_RING)) * 100)) + "%";
-        } else if (category.equals(Utility.MEDIA_CONTROL_SETTING)) {
-            displayString = "Next";//Todo i think only need play pause and stop, no next nad previous
-        } else if (category.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
-            displayString = "Set to : " + (Math.round((Integer.parseInt(value) / (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)) * 100)) + "%";
-        } else if (category.equals(Utility.RINGTONE_SETTING)) {
-            displayString = "Name";
-        } else if (category.equals(Utility.SILENT_MODE_SETTING)) {
-            displayString = String.format("Put into %s mode", value.equals("1") ? "Silent" : "Normal");
-        } else if (category.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
-            displayString = "Turn off in : x *change";
-        }
-
-        return displayString;
     }
 }
