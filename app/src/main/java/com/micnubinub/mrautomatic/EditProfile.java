@@ -20,11 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import adapters.AppAdapter;
 import adapters.BluetoothListAdapter;
 import adapters.WifiListAdapter;
 import time_picker.AbstractWheel;
@@ -843,42 +845,86 @@ public class EditProfile extends Activity {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.app_launch_dialog);
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.setContentView(R.layout.app_launch_dialog);
+        final ListView listView = (ListView) dialog.findViewById(R.id.list);
+        final AppAdapter appAdapter = new AppAdapter(listView, getApplicationContext());
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setCommandValue("Type", "value");
-                dialog.dismiss();
+            public void onClick(View view) {
+                final String appAddress = appAdapter.getSelectedApp().getAddress();
+                if (appAddress == null || appAddress.length() < 1) {
+                    Toast.makeText(getApplicationContext(), "Please select an app or dismiss", Toast.LENGTH_LONG).show();
+                } else {
+                    setValue(Type.COMMAND, Utility.LAUNCH_APP_SETTING, appAddress, appAddress);
+                    dialog.dismiss();
+                }
             }
         });
 
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
     private void showAppLaunchListenerDialog() {
-        //Todo make dialog
+        //Todo make sure this isn't in other trigger types >>prohibs, restr.
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.app_launch_dialog);
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        final ListView listView = (ListView) dialog.findViewById(R.id.list);
+        final AppAdapter appAdapter = new AppAdapter(listView, getApplicationContext());
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setValue(Type.TRIGGER, "Type", "value");
+            public void onClick(View view) {
+                final String appAddress = appAdapter.getSelectedApp().getAddress();
+                if (appAddress == null || appAddress.length() < 1) {
+                    Toast.makeText(getApplicationContext(), "Please select an app or dismiss", Toast.LENGTH_LONG).show();
+                } else {
+                    setValue(Type.TRIGGER, Utility.TRIGGER_APP_LAUNCH, appAddress, appAddress);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
 
+
         dialog.show();
     }
 
-    private void showNFCDialog() {
-        //Todo if (triggerOrCommand!=null) set(x);
-        //Todo make dialog
+    private void showNFCDialog(final Type triggerType) {
+        //Todo device.setText(...)
 
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.nfc_dialog);
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        final TextView device = (TextView) dialog.findViewById(R.id.device);
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setValue(Type.TRIGGER, "Type", "value");
+            public void onClick(View view) {
+                final String deviceName = device.getText().toString();
+                if (deviceName == null || deviceName.length() < 1) {
+                    Toast.makeText(getApplicationContext(), "Please tap a device or dismiss", Toast.LENGTH_LONG).show();
+                } else {
+                    setValue(triggerType, Utility.TRIGGER_NFC, deviceName, deviceName);
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -890,13 +936,24 @@ public class EditProfile extends Activity {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.map_dialog);
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setValue(triggerType, "Type", "value");
-                dialog.dismiss();
-            }
+        /**Todo
+         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        final String deviceName = device.getText().toString();
+        if (deviceName == null || deviceName.length() < 1) {
+        Toast.makeText(getApplicationContext(), "Please tap a device or dismiss", Toast.LENGTH_LONG).show();
+        } else {
+        setValue(triggerType, Utility.TRIGI, deviceName, deviceName);
+        dialog.dismiss();
+        }
+        }
         });
+
+         dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        dialog.dismiss();
+        }
+        });*/
 
         dialog.show();
     }
@@ -916,10 +973,18 @@ public class EditProfile extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "1" : "0");
+            public void onClick(View view) {
+                setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "Triggered when docked" : "Triggered when NOT docked", materialCheckBox.isChecked() ? "1" : "0");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -938,10 +1003,17 @@ public class EditProfile extends Activity {
         if (trigger != null)
             materialCheckBox.setChecked(trigger.getValue().equals("1"));
 
-        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Todo add save and cancel setValue(triggerType, Utility.TRIGGER_EARPHONE_JACK, materialCheckBox.isChecked() ? "1" : "0");
+            public void onClick(View view) {
+                setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "Triggered when head phones are connected" : "Triggered when head phones are NOT connected", materialCheckBox.isChecked() ? "1" : "0");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dialog.dismiss();
             }
         });
@@ -1035,7 +1107,7 @@ public class EditProfile extends Activity {
         } else if (commandOrTrigger.equals(Utility.TRIGGER_BLUETOOTH)) {
             showBluetoothDevicePickerDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_NFC)) {
-            showNFCDialog();
+            showNFCDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_LOCATION)) {
             showLocationDialog(triggerType);
         } else if (commandOrTrigger.equals(Utility.TRIGGER_EARPHONE_JACK)) {

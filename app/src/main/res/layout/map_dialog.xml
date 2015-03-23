@@ -5,6 +5,22 @@
     android:background="@drawable/dialog_background_inset"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="8dp"
+        android:text="Location trigger"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -28,21 +44,13 @@
                 android:textColor="@color/dark_grey_text"
                 android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/cancel"
+            <include
+                android:id="@+id/save_cancel"
+                layout="@layout/save_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/text"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="4dp"
-                android:background="@drawable/white_button_selector"
-                android:minWidth="120dp"
-                android:padding="8dp"
-                android:text="Dismiss"
-                android:textColor="@color/material_blue"
-                android:textSize="18sp" />
+                android:layout_below="@+id/text" />
         </RelativeLayout>
     </ScrollView>
 

@@ -92,7 +92,7 @@ public class Utility {
     public static ArrayList<App> apps;
     private static Calendar calendar = Calendar.getInstance();
 
-    public static void getApps(Context context) {
+    public static ArrayList<App> getApps(Context context) {
         final PackageManager manager = getPackageManager(context);
         final Intent i = new Intent(Intent.ACTION_MAIN, null);
         i.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -111,6 +111,7 @@ public class Utility {
 
         sort(apps);
 
+        return apps;
     }
 
     public static ArrayList<TriggerOrCommand> processCommands(String commands) {

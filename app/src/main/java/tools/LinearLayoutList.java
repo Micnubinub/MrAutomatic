@@ -145,7 +145,7 @@ public class LinearLayoutList extends LinearLayout {
                 ((ImageView) open.findViewById(R.id.icon)).setImageResource(Utility.getIcon(t.getCategory()));
                 ((TextView) open.findViewById(R.id.primary)).setText(Utility.getTriggerOrCommandName(t.getCategory()));
                 ((TextView) open.findViewById(R.id.secondary)).setText(t.getDisplayString());
-
+                open.findViewById(R.id.secondary).setSelected(true);
                 delete.setTag(t.getCategory());
                 open.setTag(t.getCategory());
 
