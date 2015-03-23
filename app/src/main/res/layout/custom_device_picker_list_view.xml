@@ -26,7 +26,7 @@
         android:layout_below="@+id/title"
         android:layout_marginLeft="4dp">
 
-    <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
+        <view_classes.MaterialCheckBox xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/material_checkbox"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
@@ -81,5 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="4dp" />
 </RelativeLayout>

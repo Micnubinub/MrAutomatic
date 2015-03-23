@@ -21,13 +21,13 @@
         android:textStyle="bold" />
 
 
-    <ListView
+    <include
         android:id="@+id/list"
+        layout="@layout/list_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/save_cancel"
-        android:layout_below="@+id/title"
-        android:padding="8dp" />
+        android:layout_below="@+id/title" />
 
     <include
         android:id="@+id/save_cancel"
@@ -35,5 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="4dp" />
 </RelativeLayout>

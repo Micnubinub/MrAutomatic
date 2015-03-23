@@ -105,7 +105,7 @@ public class EditProfile extends Activity {
     private String profileId;
     private boolean edit = false;
     private EditText profile_name;
-    private String currentScan, profile_name_text;
+    private String profile_name_text;
     private boolean trigger_device_picked = false;
     private WifiManager wifiManager;
     private ContentResolver contentResolver;
@@ -132,7 +132,6 @@ public class EditProfile extends Activity {
         }
     }
 
-
     private void showAlarmVolumeDialog() {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.seekbar);
@@ -143,7 +142,7 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Alarm volume will be set to: %d%", Math.round((progress / (float) max) * 100)));
+                ((TextView) dialog.findViewById(R.id.text)).setText("Alarm volume will be set to: " + (Math.round((progress / (float) max) * 100)) + "%");
             }
         });
 
@@ -166,7 +165,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                setCommandValue(Utility.ALARM_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), "Set to : " + (Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)) + "%");
                 dialog.dismiss();
             }
         });
@@ -206,7 +205,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                setCommandValue(Utility.MEDIA_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), "Set to : " + (Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)) + "%");
                 dialog.dismiss();
             }
         });
@@ -247,7 +246,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                setCommandValue(Utility.NOTIFICATION_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), "Set to : " + (Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)) + "%");
                 dialog.dismiss();
             }
         });
@@ -294,7 +293,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                setCommandValue(Utility.RINGER_VOLUME_SETTING, String.valueOf(materialSeekBar.getProgress()), "Set to : " + (Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)) + "%");
                 dialog.dismiss();
             }
         });
@@ -343,7 +342,7 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Brightness will be set to : %d%s", Math.round((progress / (float) max) * 100), "%"));
+                ((TextView) dialog.findViewById(R.id.text)).setText("Brightness will be set to : " + (Math.round((progress / (float) max) * 100) + "%"));
             }
         });
         final MaterialCheckBox materialCheckBox = (MaterialCheckBox) dialog.findViewById(R.id.material_checkbox);
@@ -378,7 +377,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()), String.format("Set to : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                setCommandValue(Utility.BRIGHTNESS_SETTING, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()), "Set to : " + (Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)) + "%");
                 dialog.dismiss();
             }
         });
@@ -402,7 +401,8 @@ public class EditProfile extends Activity {
         materialSeekBar.setOnProgressChangedListener(new MaterialSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int max, int progress) {
-                ((TextView) dialog.findViewById(R.id.text)).setText(String.format("Triggered when less than : %d%s", progress, "%"));
+                ((TextView) dialog.findViewById(R.id.text)).setText("Triggered when less than : " + progress + "%")
+                ;
             }
         });
 
@@ -420,15 +420,17 @@ public class EditProfile extends Activity {
         try {
             final TriggerOrCommand trigger = getTriggerOrCommandFromArray(triggerType, Utility.TRIGGER_BATTERY);
             if (trigger != null) {
-                if (trigger.getValue().equals("-1"))
+                if (trigger.getValue().equals("-1")) {
                     materialCheckBox.setChecked(true);
-                else
+                    materialSeekBar.setProgress(0);
+                } else
                     materialSeekBar.setProgress(Integer.parseInt(trigger.getValue()));
             } else
                 materialSeekBar.setProgress(50);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -440,7 +442,8 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View v) {
                 setValue(triggerType, Utility.TRIGGER_BATTERY, materialCheckBox.isChecked() ? "-1" : String.valueOf(materialSeekBar.getProgress()),
-                        materialCheckBox.isChecked() ? "When charging" : String.format("Trigger at : %d%", Math.round((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)));
+                        materialCheckBox.isChecked() ? "When charging" : ("Trigger at : %d" + (Math.round(((materialSeekBar.getProgress() / (float) materialSeekBar.getMax()) * 100)))) + "%")
+                ;
                 dialog.dismiss();
             }
         });
@@ -856,7 +859,7 @@ public class EditProfile extends Activity {
                 if (appAddress == null || appAddress.length() < 1) {
                     Toast.makeText(getApplicationContext(), "Please select an app or dismiss", Toast.LENGTH_LONG).show();
                 } else {
-                    setValue(Type.COMMAND, Utility.LAUNCH_APP_SETTING, appAddress, appAddress);
+                    setValue(Type.COMMAND, Utility.LAUNCH_APP_SETTING, appAddress, appAdapter.getSelectedApp().getName());
                     dialog.dismiss();
                 }
             }
@@ -885,7 +888,7 @@ public class EditProfile extends Activity {
                 if (appAddress == null || appAddress.length() < 1) {
                     Toast.makeText(getApplicationContext(), "Please select an app or dismiss", Toast.LENGTH_LONG).show();
                 } else {
-                    setValue(Type.TRIGGER, Utility.TRIGGER_APP_LAUNCH, appAddress, appAddress);
+                    setValue(Type.TRIGGER, Utility.TRIGGER_APP_LAUNCH, appAddress, appAdapter.getSelectedApp().getName());
                     dialog.dismiss();
                 }
             }
@@ -928,6 +931,8 @@ public class EditProfile extends Activity {
                 dialog.dismiss();
             }
         });
+
+        dialog.findViewById(R.id.text).setSelected(true);
 
         dialog.show();
     }
@@ -977,7 +982,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "Triggered when docked" : "Triggered when NOT docked", materialCheckBox.isChecked() ? "1" : "0");
+                setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "1" : "0", materialCheckBox.isChecked() ? "Triggered when docked" : "Triggered when NOT docked");
                 dialog.dismiss();
             }
         });
@@ -1006,7 +1011,7 @@ public class EditProfile extends Activity {
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setValue(triggerType, Utility.TRIGGER_DOCK, materialCheckBox.isChecked() ? "Triggered when head phones are connected" : "Triggered when head phones are NOT connected", materialCheckBox.isChecked() ? "1" : "0");
+                setValue(triggerType, Utility.TRIGGER_EARPHONE_JACK, materialCheckBox.isChecked() ? "1" : "0", materialCheckBox.isChecked() ? "Triggered when head phones are connected" : "Triggered when head phones are NOT connected");
                 dialog.dismiss();
             }
         });

@@ -42,7 +42,7 @@
 
     </RelativeLayout>
 
-    <view_classes.ParallaxScrollView
+    <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/c">
@@ -131,5 +131,5 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
-    </view_classes.ParallaxScrollView>
+    </ScrollView>
 </RelativeLayout>

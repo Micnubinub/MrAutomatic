@@ -90,6 +90,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/container1"
-        android:layout_margin="8dp" />
+        android:layout_margin="4dp" />
 
 </RelativeLayout>

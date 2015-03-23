@@ -35,9 +35,11 @@ public class AppAdapter extends BaseAdapter {
     final ArrayList<App> apps;
     final Context context;
 
+
     public AppAdapter(ListView listView, Context context) {
         this.context = context;
         this.apps = Utility.getApps(context);
+        listView.setAdapter(this);
         listView.setOnItemClickListener(listener);
     }
 
