@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -42,13 +44,8 @@ import tools.Utility;
 
 public class ProfileService extends Service {
     /**
-     * Profile :
-     * ArrayList <TOC> triggerAndCommands
-     * getTriggers() returns an aRRAYlIST IF TRIGGERS_AND_COMMANDS
-     * getCommands(), getProhibitions(), getRestrictions()
-     * <p/>
      * Profile service
-     * Call getTriggersAndCommands() >> if triggered add to viable tAC
+     * <p/>
      * Call geRestrictions() >> if not triggered remove from viable tAC
      * call getProhibitions() >> if not triggered remove from viable tAC
      * <p/>
@@ -68,6 +65,7 @@ public class ProfileService extends Service {
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
     //Todo fix the explanation in use-ssid, and use it
     //Todo location item = long, lat, rad;
+
 
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -94,6 +92,7 @@ public class ProfileService extends Service {
     private static AlarmManager alarmManager;
     private static LocationManager locationManager;
     private static WifiManager wifiManager;
+    private static AudioManager audioManager;
     private static ArrayList<Device> bluetoothDevices = new ArrayList<Device>(), wifiDevices = new ArrayList<Device>();
     private static PendingIntent alarmIntent;
     private static ArrayList<Profile> profiles;
@@ -120,24 +119,29 @@ public class ProfileService extends Service {
                 wifiOrBluetoothComplete = true;
         }
     };
+
     private static int bluetooth_old_value, wifi_old_value;
     private static Context context;
 
     public static void scheduleNext(Context context) {
-        try {
-            final Intent intent = new Intent(context, AlarmReceiver.class);
-            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC, System.currentTimeMillis() + scan_interval, alarmIntent);
-            } else
-                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + scan_interval, alarmIntent);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (context == null) {
+            Log.e("can't ScheduleNext", "context =- null");
+            return;
         }
+        final long sched = System.currentTimeMillis() + scan_interval;
+        Log.e("scheduling: ", String.valueOf(sched));
+        final Intent intent = new Intent(context, AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC, sched, alarmIntent);
+        } else
+            alarmManager.set(AlarmManager.RTC, sched, alarmIntent);
+
+
     }
 
     private static void continueScan() {
+        Log.e("continue", "scan");
         /**TODO **IMPORTANT
          * getTriggers() if triggered add to viable
          * getRestrictions() if ALL within bounds keep, else remove from viable
@@ -152,9 +156,14 @@ public class ProfileService extends Service {
          *
          */
         checkTriggers();
+
+
+        setProfile();
+        completeScan();
     }
 
     private static void checkTriggers() {
+        Log.e("check", "triggers");
         final ArrayList<TriggerOrCommand> triggers = getTriggers();
         for (TriggerOrCommand trigger : triggers) {
             if (trigger.getType() == TriggerOrCommand.Type.COMMAND)
@@ -167,6 +176,7 @@ public class ProfileService extends Service {
             checkHeadEarphoneJack(trigger);
             checkLocation(trigger);
             checkTime(trigger);
+            Log.e("checking... :", trigger.toString());
         }
     }
 
@@ -187,6 +197,7 @@ public class ProfileService extends Service {
 
     private static ArrayList<TriggerOrCommand> getRestrictions() {
         final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+
         if (profiles == null || profiles.size() < 1)
             return triggerOrCommands;
 
@@ -226,6 +237,11 @@ public class ProfileService extends Service {
          */
     }
 
+    private static void addToViable(TriggerOrCommand tOC) {
+        if ((tOC != null) && !(viable.contains(tOC)))
+            viable.add(tOC);
+    }
+
     private static void checkBatteryTemperature(final TriggerOrCommand triggerOrCommand) {
         //Todo fill in
         if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_BATTERY_TEMPERATURE)))
@@ -239,7 +255,12 @@ public class ProfileService extends Service {
 
                 break;
             case TRIGGER:
-
+                try {
+                    if (Integer.parseInt(triggerOrCommand.getValue()) > battery_temp)
+                        addToViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case PROHIBITION:
 
@@ -257,12 +278,29 @@ public class ProfileService extends Service {
 
                 break;
             case TRIGGER:
-
+                if (isBluetoothDeviceAvailable(triggerOrCommand.getValue()))
+                    addToViable(triggerOrCommand);
                 break;
             case PROHIBITION:
 
                 break;
         }
+    }
+
+    private static boolean isBluetoothDeviceAvailable(String device) {
+        for (Device bluetoothDevice : bluetoothDevices) {
+            if (bluetoothDevice.getName().equals(device) || bluetoothDevice.getAddress().equals(device))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean iWifiDeviceAvailable(String device) {
+        for (Device wifiDevice : wifiDevices) {
+            if (wifiDevice.getName().equals(device) || wifiDevice.getAddress().equals(device))
+                return true;
+        }
+        return false;
     }
 
     private static void checkWifi(final TriggerOrCommand triggerOrCommand) {
@@ -275,6 +313,8 @@ public class ProfileService extends Service {
 
                 break;
             case TRIGGER:
+                if (iWifiDeviceAvailable(triggerOrCommand.getValue()))
+                    addToViable(triggerOrCommand);
 
                 break;
             case PROHIBITION:
@@ -293,7 +333,12 @@ public class ProfileService extends Service {
 
                 break;
             case TRIGGER:
-
+                try {
+                    if (audioManager.isWiredHeadsetOn())
+                        addToViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case PROHIBITION:
 
@@ -305,18 +350,23 @@ public class ProfileService extends Service {
         //Todo fill in
         if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_DOCK)))
             return;
-
-        switch (triggerOrCommand.getType()) {
-            case RESTRICTIONS:
-
-                break;
-            case TRIGGER:
-
-                break;
-            case PROHIBITION:
-
-                break;
-        }
+//        IntentFilter ifilter = new IntentFilter(Intent.ACTION_DOCK_EVENT);
+//        Intent dockStatus = context.registerReceiver(null, ifilter);
+//
+//        int dockState = .getIntExtra(EXTRA_DOCK_STATE, -1);
+//        boolean isDocked = dockState != Intent.EXTRA_DOCK_STATE_UNDOCKED;
+//        switch (triggerOrCommand.getType()) {
+//            case RESTRICTIONS:
+//
+//                break;
+//            case TRIGGER:
+//
+//                addToViable(triggerOrCommand);
+//                break;
+//            case PROHIBITION:
+//
+//                break;
+//        }
     }
 
     private static void checkTime(final TriggerOrCommand triggerOrCommand) {
@@ -324,17 +374,17 @@ public class ProfileService extends Service {
         if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_TIME)))
             return;
 
-        switch (triggerOrCommand.getType()) {
-            case RESTRICTIONS:
-
-                break;
-            case TRIGGER:
-
-                break;
-            case PROHIBITION:
-
-                break;
-        }
+//        switch (triggerOrCommand.getType()) {
+//            case RESTRICTIONS:
+//
+//                break;
+//            case TRIGGER:
+//
+//                break;
+//            case PROHIBITION:
+//
+//                break;
+//        }
     }
 
     private static void checkLocation(final TriggerOrCommand triggerOrCommand) {
@@ -342,17 +392,17 @@ public class ProfileService extends Service {
         if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_LOCATION)))
             return;
 
-        switch (triggerOrCommand.getType()) {
-            case RESTRICTIONS:
-
-                break;
-            case TRIGGER:
-
-                break;
-            case PROHIBITION:
-
-                break;
-        }
+//        switch (triggerOrCommand.getType()) {
+//            case RESTRICTIONS:
+//
+//                break;
+//            case TRIGGER:
+//
+//                break;
+//            case PROHIBITION:
+//
+//                break;
+//        }
     }
 
     private static void checkBattery(final TriggerOrCommand triggerOrCommand) {
@@ -364,19 +414,18 @@ public class ProfileService extends Service {
 
         final Intent batteryStatus = context.registerReceiver(null, filter);
         final int battery_level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        try {
-            return (Integer.parseInt(triggerOrCommand.getValue()) < battery_level);
-        } catch (Exception e) {
-            Log.e("checkBattery :" + triggerOrCommand.getValue(), e.toString());
-            return;
-        }
 
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
 
                 break;
             case TRIGGER:
-
+                try {
+                    if (Integer.parseInt(triggerOrCommand.getValue()) > battery_level)
+                        addToViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case PROHIBITION:
 
@@ -386,6 +435,7 @@ public class ProfileService extends Service {
 
 
     private static void checkProfiles() {
+        Log.e("check", "profiles");
         getOldValues();
         if (context == null)
             return;
@@ -453,7 +503,13 @@ public class ProfileService extends Service {
         context.stopService(new Intent(context, ProfileService.class));
     }
 
-    private static void setProfile(Profile profile) {
+    private static void setProfile() {
+        if (viable.size() < 1) {
+            setOldValues();
+            return;
+        }
+        //Todo fill in
+        final Profile profile = profiles.get(0);
         Log.e("Setting Profile: ", profile.getID() + ". " + profile.getName());
         final ArrayList<TriggerOrCommand> commands = Utility.getCommands(profile.getTriggersOrCommands());
         for (TriggerOrCommand command : commands) {
@@ -471,6 +527,8 @@ public class ProfileService extends Service {
         if (context == null)
             return;
 
+        Toast.makeText(context, "Viable : " + viable.toString(), Toast.LENGTH_LONG).show();
+        Log.e("Viable : ", viable.toString());
         scheduleNext(context);
     }
 
@@ -505,6 +563,7 @@ public class ProfileService extends Service {
     }
 
     private static void startScan() {
+        Log.e("start", "scan");
         //TODO STARTSCAN()
         viable.clear();
         profiles = Utility.getProfiles(context);
@@ -531,6 +590,8 @@ public class ProfileService extends Service {
         super.onCreate();
         context = getApplicationContext();
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
