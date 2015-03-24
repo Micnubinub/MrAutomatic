@@ -2,7 +2,6 @@ package tools;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -77,7 +76,6 @@ public class LinearLayoutList extends LinearLayout {
             final int i = items.indexOf(item);
             items.remove(item);
             items.add(i, triggerOrCommand);
-//            Log.e("adding ", triggerOrCommand.getCategory() + " > " + triggerOrCommand.getDisplayString());
         }
 
         getViews();
@@ -124,10 +122,7 @@ public class LinearLayoutList extends LinearLayout {
     }
 
     private void getViews() {
-        //Todo fill in
         removeAllViews();
-        Log.e("numChildren", String.valueOf(getChildCount()));
-        Log.e("items", items.toString());
         for (int i = 0; i < items.size(); i++) {
             final Object triggerOrCommandOrAvailable = items.get(i);
             View v = null;

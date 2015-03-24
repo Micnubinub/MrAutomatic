@@ -73,7 +73,7 @@ public class ProfileService extends Service {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                addDevice(new Device(device.getName(), device.getAddress()));
+                bluetoothDevices.add(new Device(device.getName(), device.getAddress()));
             }
         }
     };
@@ -81,74 +81,43 @@ public class ProfileService extends Service {
     private static final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())) {
-                final ArrayList<Device> devices = new ArrayList<Device>();
                 for (ScanResult scanResult : wifiManager.getScanResults()) {
-                    addDevice(new Device(scanResult.SSID, scanResult.BSSID));
+                    wifiDevices.add(new Device(scanResult.SSID, scanResult.BSSID));
                 }
-                wifiScanLListener.onScanComplete(devices);
+                wifiScanLListener.onScanComplete(wifiDevices);
             }
         }
     };
     private static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     private static final LocationListener locationListener = new MyLocationListener();
-    private static ArrayList<Device> devices = new ArrayList<Device>();
-    private static PendingIntent alarmIntent;
+    private static final ArrayList<TriggerOrCommand> viable = new ArrayList<>();
     private static AlarmManager alarmManager;
     private static LocationManager locationManager;
     private static WifiManager wifiManager;
-    private static ArrayList<Profile> profiles, viableProfiles = new ArrayList<>();
-    private static int scan_interval, retries;
-    private static boolean wifi_or_bluetooth_complete, toastWhenProfileSet;
+    private static ArrayList<Device> bluetoothDevices = new ArrayList<Device>(), wifiDevices = new ArrayList<Device>();
+    private static PendingIntent alarmIntent;
+    private static ArrayList<Profile> profiles;
+    private static boolean continueCheckingTOC;
+    private static int scan_interval;
+    private static boolean wifiOrBluetoothComplete, toastWhenProfileSet;
+
     private static ScanListener bluetoothScanListener = new ScanListener() {
         @Override
         public void onScanComplete(ArrayList<Device> devices) {
-            final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
-            for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<TriggerOrCommand> triggers1 = Utility.getTriggers(profiles.get(i).getTriggersOrCommands());
-                for (int j = 0; j < triggers1.size(); j++) {
-                    triggers.add(triggers1.get(j));
-                }
-            }
-
-            for (int i = 0; i < triggers.size(); i++) {
-                final TriggerOrCommand trigger = triggers.get(i);
-                for (int j = 0; j < devices.size(); j++) {
-                    final Device device = devices.get(j);
-                    if (device.getAddress().equals(trigger.getValue()) || device.getName().equals(trigger.getValue()))
-                        addProfileToViableList(trigger.getProfileID());
-                }
-            }
-            if (wifi_or_bluetooth_complete)
-                checkRestrictionsAndProhibitions();
+            if (wifiOrBluetoothComplete)
+                continueScan();
             else
-                wifi_or_bluetooth_complete = true;
+                wifiOrBluetoothComplete = true;
         }
     };
 
     private static ScanListener wifiScanLListener = new ScanListener() {
         @Override
         public void onScanComplete(ArrayList<Device> devices) {
-            final ArrayList<TriggerOrCommand> triggers = new ArrayList<>();
-            for (int i = 0; i < profiles.size(); i++) {
-                final ArrayList<TriggerOrCommand> triggers1 = Utility.getTriggers(profiles.get(i).getTriggersOrCommands());
-                for (int j = 0; j < triggers1.size(); j++) {
-                    triggers.add(triggers1.get(j));
-                }
-            }
-
-            for (int i = 0; i < triggers.size(); i++) {
-                final TriggerOrCommand trigger = triggers.get(i);
-                for (int j = 0; j < devices.size(); j++) {
-                    final Device device = devices.get(j);
-                    if (device.getAddress().equals(trigger.getValue()) || device.getName().equals(trigger.getValue()))
-                        addProfileToViableList(trigger.getProfileID());
-                }
-            }
-
-            if (wifi_or_bluetooth_complete)
-                checkRestrictionsAndProhibitions();
+            if (wifiOrBluetoothComplete)
+                continueScan();
             else
-                wifi_or_bluetooth_complete = true;
+                wifiOrBluetoothComplete = true;
         }
     };
     private static int bluetooth_old_value, wifi_old_value;
@@ -168,6 +137,84 @@ public class ProfileService extends Service {
         }
     }
 
+    private static void continueScan() {
+        /**TODO **IMPORTANT
+         * getTriggers() if triggered add to viable
+         * getRestrictions() if ALL within bounds keep, else remove from viable
+         * getProhibitions() if ALL not within bounds keep, else remove
+         * sort by priority
+         * sort by scope
+         * =====================================================================
+         * scanForLoop()
+         * bool continueCheckingTrigger ^^ >> use this to short circuit the check >> paste in every check
+         *
+         *
+         *
+         */
+        checkTriggers();
+    }
+
+    private static void checkTriggers() {
+        final ArrayList<TriggerOrCommand> triggers = getTriggers();
+        for (TriggerOrCommand trigger : triggers) {
+            if (trigger.getType() == TriggerOrCommand.Type.COMMAND)
+                continue;
+            checkBattery(trigger);
+            checkBatteryTemperature(trigger);
+            checkBluetooth(trigger);
+            checkWifi(trigger);
+            checkDock(trigger);
+            checkHeadEarphoneJack(trigger);
+            checkLocation(trigger);
+            checkTime(trigger);
+        }
+    }
+
+    private static ArrayList<TriggerOrCommand> getTriggers() {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+        if (profiles == null || profiles.size() < 1)
+            return triggerOrCommands;
+
+        for (Profile profile : profiles) {
+            final ArrayList<TriggerOrCommand> arrayList = profile.getTriggersOrCommands();
+            for (TriggerOrCommand triggerOrCommand : arrayList) {
+                if (triggerOrCommand.getType() == TriggerOrCommand.Type.TRIGGER)
+                    triggerOrCommands.add(triggerOrCommand);
+            }
+        }
+        return triggerOrCommands;
+    }
+
+    private static ArrayList<TriggerOrCommand> getRestrictions() {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+        if (profiles == null || profiles.size() < 1)
+            return triggerOrCommands;
+
+        for (Profile profile : profiles) {
+            final ArrayList<TriggerOrCommand> arrayList = profile.getTriggersOrCommands();
+            for (TriggerOrCommand triggerOrCommand : arrayList) {
+                if (triggerOrCommand.getType() == TriggerOrCommand.Type.RESTRICTIONS)
+                    triggerOrCommands.add(triggerOrCommand);
+            }
+        }
+        return triggerOrCommands;
+    }
+
+    private static ArrayList<TriggerOrCommand> getProhibitions() {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+        if (profiles == null || profiles.size() < 1)
+            return triggerOrCommands;
+
+        for (Profile profile : profiles) {
+            final ArrayList<TriggerOrCommand> arrayList = profile.getTriggersOrCommands();
+            for (TriggerOrCommand triggerOrCommand : arrayList) {
+                if (triggerOrCommand.getType() == TriggerOrCommand.Type.PROHIBITION)
+                    triggerOrCommands.add(triggerOrCommand);
+            }
+        }
+        return triggerOrCommands;
+    }
+
     public static void registerBroadcastReceivers(Context context) {
         //Todo register all necessary receivers
         /**
@@ -179,58 +226,181 @@ public class ProfileService extends Service {
          */
     }
 
-    private static boolean checkBattery(final TriggerOrCommand profile) {
-        if (context == null)
-            return false;
+    private static void checkBatteryTemperature(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_BATTERY_TEMPERATURE)))
+            return;
+
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        final Intent batteryStatus = context.registerReceiver(null, filter);
+        final float battery_temp = Math.round(batteryStatus.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f);
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkBluetooth(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_BLUETOOTH)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkWifi(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_WIFI)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkHeadEarphoneJack(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_EARPHONE_JACK)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkDock(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_DOCK)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkTime(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_TIME)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkLocation(final TriggerOrCommand triggerOrCommand) {
+        //Todo fill in
+        if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_LOCATION)))
+            return;
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
+        }
+    }
+
+    private static void checkBattery(final TriggerOrCommand triggerOrCommand) {
+        if (context == null || !(triggerOrCommand.getCategory().equals(Utility.TRIGGER_BATTERY)))
+            return;
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         //Todo ---- register this, and toast it to see if it works well or not, if so make it a broadcast receiver
+        //Todo viable.add(...), remove()
+
         final Intent batteryStatus = context.registerReceiver(null, filter);
         final int battery_level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         try {
-            return (Integer.parseInt(profile.getValue()) < battery_level);
+            return (Integer.parseInt(triggerOrCommand.getValue()) < battery_level);
         } catch (Exception e) {
-            Log.e("checkBattery :" + profile.getValue(), e.toString());
-            return false;
+            Log.e("checkBattery :" + triggerOrCommand.getValue(), e.toString());
+            return;
+        }
+
+        switch (triggerOrCommand.getType()) {
+            case RESTRICTIONS:
+
+                break;
+            case TRIGGER:
+
+                break;
+            case PROHIBITION:
+
+                break;
         }
     }
 
-    private static void checkRestrictionsAndProhibitions() {
-        setOldValues();
-        for (int i = 0; i < viableProfiles.size(); i++) {
-            final Profile profile = viableProfiles.get(i);
-
-//            for (int j = 0; i < profile.getProhibitions().size(); j++) {
-//                final TriggerOrCommand prohib = profile.getProhibitions().get(j);
-//                if (isTriggerTriggered(prohib))
-//                    removeProfileFromViableList(prohib.getProfileID());
-//            }
-//
-//            for (int j = 0; i < profile.getRestrictions().size(); j++) {
-//                final TriggerOrCommand restriction = profile.getRestrictions().get(j);
-//                if (!isTriggerTriggered(restriction))
-//                    removeProfileFromViableList(restriction.getProfileID());
-//            }
-        }
-
-        //Todo setProfile
-        setProfile("");
-    }
-
-    private static boolean isTriggerTriggered(TriggerOrCommand trigger) {
-        //Todo
-
-        return false;
-    }
 
     private static void checkProfiles() {
         getOldValues();
         if (context == null)
             return;
 
-        if (devices == null)
-            devices = new ArrayList<Device>();
+        if (bluetoothDevices == null)
+            bluetoothDevices = new ArrayList<Device>();
         else
-            devices.clear();
+            bluetoothDevices.clear();
+
+        if (wifiDevices == null)
+            wifiDevices = new ArrayList<Device>();
+        else
+            wifiDevices.clear();
+
+        wifiOrBluetoothComplete = false;
 
         if (!adapter.isEnabled()) {
             adapter.enable();
@@ -244,7 +414,7 @@ public class ProfileService extends Service {
                     public void run() {
                         context.unregisterReceiver(bluetoothReceiver);
                         adapter.cancelDiscovery();
-                        bluetoothScanListener.onScanComplete(devices);
+                        bluetoothScanListener.onScanComplete(bluetoothDevices);
                     }
                 }, 11500);
             } catch (Exception e) {
@@ -264,9 +434,6 @@ public class ProfileService extends Service {
         context.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
-    private static synchronized void addDevice(Device device) {
-        devices.add(device);
-    }
 
     private static void checkIfShouldRunService() {
         //Todo dont run service if>> numProfiles =0 or if allProfiles can be handled with broadcasts
@@ -286,56 +453,25 @@ public class ProfileService extends Service {
         context.stopService(new Intent(context, ProfileService.class));
     }
 
-    private static void setProfile(String profileID) {
-        Profile profile = null;
-        loop:
-        for (int i = 0; i < viableProfiles.size(); i++) {
-            profile = viableProfiles.get(i);
-            if (profile.getID().equals(profileID))
-                break loop;
-        }
-        if (profile == null) {
-            completeScan();
-            return;
-        } else {
-            for (int i = 0; i < profile.getTriggersOrCommands().size(); i++) {
-                final TriggerOrCommand command = profile.getTriggersOrCommands().get(i);
-                //Todo set commands
-            }
-            completeScan();
+    private static void setProfile(Profile profile) {
+        Log.e("Setting Profile: ", profile.getID() + ". " + profile.getName());
+        final ArrayList<TriggerOrCommand> commands = Utility.getCommands(profile.getTriggersOrCommands());
+        for (TriggerOrCommand command : commands) {
+            //TODO
         }
     }
 
+
     private static void completeScan() {
-        wifi_or_bluetooth_complete = false;
-        if (viableProfiles != null && viableProfiles.size() > 0)
-            viableProfiles.clear();
+        wifiOrBluetoothComplete = false;
+        if (viable != null && viable.size() > 0)
+            viable.clear();
         //Todo get profiles on each scan, schedule next
 
         if (context == null)
             return;
 
         scheduleNext(context);
-        profiles = Utility.getProfiles(context);
-    }
-
-    private static void addProfileToViableList(String profileID) {
-        for (int i = 0; i < profiles.size(); i++) {
-            final Profile profile = profiles.get(i);
-            if (profile.getID().equals(profileID)) {
-                viableProfiles.add(profile);
-                profiles.remove(profile);
-            }
-        }
-    }
-
-    private static void removeProfileFromViableList(String profileID) {
-        for (int i = 0; i < viableProfiles.size(); i++) {
-            final Profile profile = viableProfiles.get(i);
-            if (profile.getID().equals(profileID)) {
-                viableProfiles.remove(profile);
-            }
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -366,6 +502,14 @@ public class ProfileService extends Service {
 
     private static void location(String location) {
         //Todo check location
+    }
+
+    private static void startScan() {
+        //TODO STARTSCAN()
+        viable.clear();
+        profiles = Utility.getProfiles(context);
+        //Todo consider saving a string oldProfile and using it to check if all the profiles are
+        checkProfiles();
     }
 
     @Override
@@ -413,6 +557,7 @@ public class ProfileService extends Service {
                 scan_interval = 900000;
                 break;
         }
+        startScan();
         //  final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //   final int NOTIFICATION = R.string.app_name;
         //final Notification notification = new Notification(R.drawable.save, "started", System.currentTimeMillis());
@@ -471,7 +616,7 @@ public class ProfileService extends Service {
     public static class AlarmReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            scheduleNext(context);
+            startScan();
         }
     }
 

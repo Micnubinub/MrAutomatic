@@ -33,7 +33,7 @@ public class BluetoothListAdapter extends BaseAdapter {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                final Device d = new Device(device.getName(), device.getAddress());
+                final Device d = new Device(device.getName() == null ? "Unknown" : device.getName(), device.getAddress());
                 if (!devicesContains(d))
                     devices.add(d);
                 try {

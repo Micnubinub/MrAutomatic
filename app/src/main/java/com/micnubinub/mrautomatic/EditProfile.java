@@ -46,7 +46,6 @@ import view_classes.MaterialSwitch;
  * Created by root on 21/08/14.
  */
 public class EditProfile extends Activity {
-    //Todo fix > can't edit
     //Todo preference to play preview and add to all the seek bars
     //TODO ---- IMPORTANT check if all the strings are correct
     //Todo make google maps view
@@ -57,7 +56,6 @@ public class EditProfile extends Activity {
      * use the code from bass jump
      * list the files and the system wallpapers/ringtones...
      */
-    //Todo NFC dismiss method adds items to the LLL
 
 
     public static final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -609,8 +607,7 @@ public class EditProfile extends Activity {
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
 
-        //Todo get the values from this and add them to the profile service
-        //Todo make a method getScreenTimeOutTextByInt(that returns the secs/mins then use this in data and the music player
+        //Todo get the values from this and add them to the profile service >> make a method getScreenTimeOutTextByInt(that returns the secs/mins then use this in data and the music player
         final MaterialRadioButton button1 = new MaterialRadioButton(this);
         button1.setLayoutParams(params);
         button1.setText("10 secs");
@@ -836,10 +833,8 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View view) {
                 listAdapter.cancelScan();
-                //Todo use this view.setOnClickListener(tagClickListener);
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
                 final String val = useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress();
-                //todo figure out a solution setValue(triggerType, Utility.TRIGGER_BLUETOOTH, val, useSSID.isChecked() ? val : listAdapter.getSelectedDevice().getName() + "(" + val + ")");
                 setValue(triggerType, Utility.TRIGGER_BLUETOOTH, val);
                 dialog.dismiss();
             }
@@ -872,7 +867,6 @@ public class EditProfile extends Activity {
                 listAdapter.cancelScan();
                 Toast.makeText(EditProfile.this, listAdapter.getSelectedDevice().toString(), Toast.LENGTH_LONG).show();
                 final String val = useSSID.isChecked() ? listAdapter.getSelectedDevice().getName() : listAdapter.getSelectedDevice().getAddress();
-                //Todo figure out a solution setValue(triggerType, Utility.TRIGGER_WIFI, val, useSSID.isChecked() ? val : listAdapter.getSelectedDevice().getName() + "(" + val + ")");
                 setValue(triggerType, Utility.TRIGGER_WIFI, val);
                 dialog.dismiss();
             }
@@ -947,7 +941,6 @@ public class EditProfile extends Activity {
     }
 
     private void showWallPaperDialog() {
-        //Todo if (triggerOrCommand!=null) set(x);
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.wallpaper_choose);
@@ -970,8 +963,6 @@ public class EditProfile extends Activity {
     }
 
     private void showAppLauncherDialog() {
-        //Todo if (triggerOrCommand!=null) set(x);
-        //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.app_launch_dialog);
         dialog.setContentView(R.layout.app_launch_dialog);
@@ -1064,7 +1055,6 @@ public class EditProfile extends Activity {
     }
 
     private void showLocationDialog(final Type triggerType) {
-        //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.map_dialog);
         /**Todo
@@ -1197,7 +1187,6 @@ public class EditProfile extends Activity {
     public void showEditorDialog(final Type triggerType, String commandOrTrigger) {
         if (commandOrTrigger == null)
             return;
-        //Todo make sure it works for both commands and triggers
         if (commandOrTrigger.equals(Utility.ALARM_VOLUME_SETTING)) {
             showAlarmVolumeDialog();
         } else if (commandOrTrigger.equals(Utility.AUTO_ROTATION_SETTING)) {
@@ -1255,11 +1244,11 @@ public class EditProfile extends Activity {
 
     private void showInfo(String infoType) {
         if (infoType.contains("restric")) {
-            showInfoHelpDialog("Restriction", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Restriction", "Restrictions work on a MUST basis, thus ALL of them must be triggered for the profile to be set, provided all the other conditions pass.");
         } else if (infoType.contains("prohib")) {
             showInfoHelpDialog("Prohibition", "Prohibitions work on a NOT basis, thus if any ONE of them is triggered the profile is not set.");
         } else if (infoType.contains("trig")) {
-            showInfoHelpDialog("Trigger", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions passed.");
+            showInfoHelpDialog("Trigger", "Triggers work on an OR basis, thus it only needs ONE of them to be triggered for the profile to be set, provided all the other conditions pass.");
         } else {
             showInfoHelpDialog("Command", "Commands are carried out when all the conditions are satisfied, for example if the wifi commands has its switch turned on, wifi will be turned on, other wise it will be turned off.");
         }
@@ -1298,10 +1287,11 @@ public class EditProfile extends Activity {
     }
 
     private void getLayouts() {
-        //Todo copy from>> dialog with 4 ticks : triggers, restrictions, prohibitions and commands
         findViewById(R.id.copy_from).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Todo copy from>> dialog with 4 ticks : triggers, restrictions, prohibitions and commands
+
                 Toast.makeText(EditProfile.this, "Coming soon", Toast.LENGTH_LONG).show();
             }
         });
@@ -1354,13 +1344,6 @@ public class EditProfile extends Activity {
     private void editProfile(String id) {
 
         getProfileValues(id);
-        setViewValues();
-    }
-
-    private void setViewValues() {
-        //Todo lots of work to be done here
-
-
     }
 
     @Override

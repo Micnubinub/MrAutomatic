@@ -19,13 +19,11 @@ public class Profile {
         this.iD = iD;
         this.priority = priority;
         this.name = name;
-
         this.commands = Utility.getTriggersAndCommands(triggers);
 
         for (int i = 0; i < this.commands.size(); i++) {
             this.commands.get(i).setProfileID(iD);
         }
-
     }
 
     public String getName() {

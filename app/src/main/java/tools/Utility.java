@@ -114,18 +114,6 @@ public class Utility {
         return apps;
     }
 
-    public static ArrayList<TriggerOrCommand> processCommands(String commands) {
-        final ArrayList<TriggerOrCommand> commandList = new ArrayList<TriggerOrCommand>();
-        final String[] commandArray = commands.split(",");
-        for (String s : commandArray) {
-            final String[] tmp = s.split(":");
-            //Todo fix this
-            commandList.add(new TriggerOrCommand(Type.TRIGGER, tmp[0], tmp[1]));
-        }
-        return commandList;
-    }
-
-
     public static int getSeconds(long date) {
         DateFormat formatter = new SimpleDateFormat("ss");
         calendar.setTimeInMillis(date);
@@ -532,7 +520,6 @@ public class Utility {
         final ArrayList<TriggerOrCommand> triggerList = new ArrayList<TriggerOrCommand>();
         for (String s : triggers.split(",")) {
             final String[] array = s.split(":", 3);
-            //Todo check
             triggerList.add(new TriggerOrCommand(getTypeFromString(array[0]), array[1], array[2]));
         }
         return triggerList;
@@ -646,8 +633,6 @@ public class Utility {
         } else if (type.equals(RINGER_VOLUME_SETTING)) {
             icon = R.drawable.ringer;
         }
-        //Todo get data icon, sound icon, sleep timeout, silent mode, rotation, wallapaper/gallery
-
         return icon;
     }
 
