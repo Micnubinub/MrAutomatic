@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_green">
+    android:background="@color/material_blue_light">
 
 
     <RelativeLayout
@@ -62,12 +62,11 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/save"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:ellipsize="end"
-                    android:fontFamily="sans"
                     android:maxLines="1"
                     android:text="Profile Name :"
                     android:textColor="@android:color/white"
@@ -79,9 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/a"
                     android:layout_margin="8dp"
-                    android:background="@color/material_green_light"
+                    android:background="@color/material_blue_lightr"
                     android:ellipsize="end"
-                    android:fontFamily="sans"
                     android:hint="Enter name here"
                     android:maxLines="1"
                     android:padding="12dp"

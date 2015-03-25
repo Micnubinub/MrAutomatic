@@ -35,6 +35,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import tools.TriggerOrCommand.Type;
+import view_classes.WeekDayChooser;
 
 /**
  * Created by root on 9/07/14.
@@ -76,6 +77,7 @@ public class Utility {
     public static final String PREF_PLAY_PREVIEW = "PREF_PLAY_PREVIEW";
     public static final String PREF_SCAN_INTERVAL = "PREF_SCAN_INTERVAL";
     public static final String PREF_DEFAULT_PROFILE = "PREF_DEFAULT_PROFILE";
+    public static final String PREF_OVERRIDE_TIME_TRIGGER_DURATION = "PREF_OVERRIDE_TIME_TRIGGER_DURATION";
 
     /*
      public static final String a = " ";
@@ -97,14 +99,67 @@ public class Utility {
         }
 
         apps = new ArrayList<App>(list.size());
-
         for (ResolveInfo info : list) {
             apps.add(new App(info.loadLabel(manager).toString(), info.activityInfo.packageName, info.loadIcon(manager)));
         }
-
         sort(apps);
-
         return apps;
+    }
+
+    public static long getNextDayOffWeek(WeekDayChooser.WeekDay dayOfWeek) {
+        //TODO test
+        final long now = System.currentTimeMillis();
+        final int todayIndex = getDayIndex(getDay(now).toUpperCase());
+        final int dayOfWeekIndex = getDayIndex(dayOfWeek);
+        final int diffDays = (dayOfWeekIndex - todayIndex) % 7;
+        return (diffDays * 86400000) - (getHours(now) * 3600000) - (getMinutes(now) * 60000) - (getSeconds(now) * 1000);
+    }
+
+
+    public static int getScanIntervalFromInt(int scan_interval) {
+        int scans = 30000;
+        switch (scan_interval) {
+            case 0:
+                scans = 30000;
+                break;
+            case 1:
+                scans = 60000;
+                break;
+            case 2:
+                scans = 120000;
+                break;
+            case 3:
+                scans = 180000;
+                break;
+            case 4:
+                scans = 300000;
+                break;
+            case 5:
+                scans = 600000;
+                break;
+            case 6:
+                scans = 900000;
+                break;
+        }
+        return scans;
+    }
+
+    private static int getDayIndex(String weekDay) {
+        WeekDayChooser.WeekDay[] weekDays = WeekDayChooser.WeekDay.values();
+        for (int i = 0; i < weekDays.length; i++) {
+            if (weekDay.equals(weekDays[i].toString()))
+                return i;
+        }
+        return -1;
+    }
+
+    private static int getDayIndex(WeekDayChooser.WeekDay weekDay) {
+        WeekDayChooser.WeekDay[] weekDays = WeekDayChooser.WeekDay.values();
+        for (int i = 0; i < weekDays.length; i++) {
+            if (weekDay == weekDays[i])
+                return i;
+        }
+        return -1;
     }
 
     public static int getSeconds(long date) {
@@ -120,16 +175,23 @@ public class Utility {
         return Integer.parseInt(formatter.format(calendar.getTime()));
     }
 
+    public static String getDay(long date) {
+        final DateFormat formatter = new SimpleDateFormat("EEE");
+        calendar.setTimeInMillis(date);
+        return formatter.format(calendar.getTime());
+    }
+
+    public static String getMonth(long date) {
+        final Calendar calendar = Calendar.getInstance();
+        final DateFormat formatter = new SimpleDateFormat("MMM");
+        calendar.setTimeInMillis(date);
+        return formatter.format(calendar.getTime());
+    }
+
     public static int getMinutes(long date) {
         DateFormat formatter = new SimpleDateFormat("mm");
         calendar.setTimeInMillis(date);
         return Integer.parseInt(formatter.format(calendar.getTime()));
-    }
-
-    public static String getDay(long date) {
-        DateFormat formatter = new SimpleDateFormat("EEEE");
-        calendar.setTimeInMillis(date);
-        return formatter.format(calendar.getTime());
     }
 
     public static PackageManager getPackageManager(Context context) {

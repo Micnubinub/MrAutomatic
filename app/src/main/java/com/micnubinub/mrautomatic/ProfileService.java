@@ -57,6 +57,7 @@ public class ProfileService extends Service {
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
     //Todo fix the explanation in use-ssid, and use it
     //Todo location item = long, lat, rad;
+    //Todo if a time trigger is used make it so that the service schedules the next scan to be after the time triggers duration has passed
 
 
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
@@ -727,29 +728,7 @@ public class ProfileService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
-        switch (Integer.parseInt(prefs.getString(Utility.PREF_SCAN_INTERVAL, "0"))) {
-            case 0:
-                scan_interval = 30000;
-                break;
-            case 1:
-                scan_interval = 60000;
-                break;
-            case 2:
-                scan_interval = 120000;
-                break;
-            case 3:
-                scan_interval = 180000;
-                break;
-            case 4:
-                scan_interval = 300000;
-                break;
-            case 5:
-                scan_interval = 600000;
-                break;
-            case 6:
-                scan_interval = 900000;
-                break;
-        }
+        scan_interval = Utility.getScanIntervalFromInt(prefs.getInt(Utility.PREF_SCAN_INTERVAL, 0));
         startScan();
         //  final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //   final int NOTIFICATION = R.string.app_name;

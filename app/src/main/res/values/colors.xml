@@ -42,6 +42,7 @@
     <color name="material_purple">#9c27b0</color>
     <color name="material_purple_dark">#7b1fa2</color>
     <color name="material_blue_light">#738ffe</color>
+    <color name="material_blue_lightr">#839ffe</color>
     <color name="material_blue">#5677fc</color>
     <color name="material_blue_dark">#455ede</color>
     <color name="material_green_light">#42bd41</color>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/c"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/material_blue_light">
+
+        <ImageView
+            android:id="@+id/cancel"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/save"
+            android:layout_toRightOf="@+id/cancel"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Preferences"
+            android:textColor="@color/white"
+            android:textSize="28sp" />
+
+    </RelativeLayout>
+
+    <view_classes.MaterialSwitch
+        android:id="@+id/play_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        app:text="Play preview sound when editing" />
+
+    <view_classes.MaterialSwitch
+        android:id="@+id/toast_when_profile_set"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        app:text="Toast when profile is set" />
+
+    <view_classes.MaterialSwitch
+        android:id="@+id/override_timer_duration"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        app:text="Override timer duration" />
+
+    <TextView
+        android:id="@+id/scan_intervals"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="Set scan intervals"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/default_profile"
+        android:layout_width="fill_parent"
+        android:layout_height="52dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="Set default profile"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="20sp" />
+
+
+</LinearLayout>
