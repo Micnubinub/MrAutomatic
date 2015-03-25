@@ -129,8 +129,6 @@ public class ProfileService extends Service {
             alarmManager.setExact(AlarmManager.RTC, sched, alarmIntent);
         } else
             alarmManager.set(AlarmManager.RTC, sched, alarmIntent);
-
-
     }
 
     private static void continueScan() {
@@ -728,7 +726,7 @@ public class ProfileService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
-        scan_interval = Utility.getScanIntervalFromInt(prefs.getInt(Utility.PREF_SCAN_INTERVAL, 0));
+        scan_interval = Utility.getScanIntervalFromInt(prefs.getInt(Utility.PREF_SCAN_INTERVAL, 2));
         startScan();
         //  final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //   final int NOTIFICATION = R.string.app_name;

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/material_blue_light">
 
-
     <RelativeLayout
         android:id="@+id/c"
         android:layout_width="fill_parent"

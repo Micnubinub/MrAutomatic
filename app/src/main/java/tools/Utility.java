@@ -708,6 +708,7 @@ public class Utility {
     public static class EarphoneJackReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
             if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
                 int state = intent.getIntExtra("state", -1);
@@ -735,6 +736,8 @@ public class Utility {
     public static class BatteryPowerReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
+
             if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED))
                 Toast.makeText(context, "Charging", Toast.LENGTH_LONG).show();
 
@@ -747,6 +750,7 @@ public class Utility {
     public static class BluetoothStateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             if (intent.getAction().equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED))
                 Toast.makeText(context, "Bluetooth connection state changed", Toast.LENGTH_LONG).show();
 
@@ -756,6 +760,7 @@ public class Utility {
     public static class DockReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             if (intent.getAction().equals(Intent.ACTION_DOCK_EVENT))
                 Toast.makeText(context, "Dock event", Toast.LENGTH_LONG).show();
 
@@ -765,6 +770,7 @@ public class Utility {
     public static class SmsReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             Toast.makeText(context, "Message received", Toast.LENGTH_LONG).show();
 
         }
@@ -773,6 +779,7 @@ public class Utility {
     public static class ScreenOnOffReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             Toast.makeText(context, "onoff", Toast.LENGTH_LONG).show();
 
         }
@@ -781,6 +788,7 @@ public class Utility {
     public static class WifiStateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //TODO implement
             Toast.makeText(context, "Wifi state c", Toast.LENGTH_LONG).show();
 
         }
