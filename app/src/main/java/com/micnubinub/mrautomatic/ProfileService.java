@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +57,9 @@ public class ProfileService extends Service {
     //Todo fix the explanation in use-ssid, and use it
     //Todo location item = long, lat, rad;
     //Todo if a time trigger is used make it so that the service schedules the next scan to be after the time triggers duration has passed
-
+    //Todo battery charging is -1, so just make sure its not removed or added from viable because of <=...
+    //todo get and set old values
+    //Todo save default profile here and use it when viable <1
 
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -538,10 +539,13 @@ public class ProfileService extends Service {
             return;
         }
         final ArrayList<Profile> viableProfiles = getViableProfiles();
-        profiles.clear();
+
         sortViableProfiles(viableProfiles);
 
         //Todo fill in
+        if (viableProfiles.size() < 1)
+            return;
+        profiles.clear();
         final Profile profile = viableProfiles.get(0);
         Log.e("Setting Profile: ", profile.getID() + ". " + profile.getName());
 
@@ -606,7 +610,6 @@ public class ProfileService extends Service {
         //Todo get profiles on each scan, schedule next
         if (context == null)
             return;
-        Toast.makeText(context, "Viable : " + viable.toString(), Toast.LENGTH_LONG).show();
         Log.e("Viable : ", viable.toString());
         scheduleNext(context);
     }
@@ -651,6 +654,7 @@ public class ProfileService extends Service {
     }
 
     private static void setCommand(TriggerOrCommand command) {
+        Log.e("setCommand:", command.toString());
         if (context == null || !(command.getType() == TriggerOrCommand.Type.COMMAND))
             return;
 
@@ -726,7 +730,7 @@ public class ProfileService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
-        scan_interval = Utility.getScanIntervalFromInt(prefs.getInt(Utility.PREF_SCAN_INTERVAL, 2));
+        scan_interval = Utility.getScanIntervalFromInt(prefs.getInt(Utility.PREF_SCAN_INTERVAL, 0));
         startScan();
         //  final NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //   final int NOTIFICATION = R.string.app_name;

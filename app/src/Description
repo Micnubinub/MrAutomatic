@@ -1,0 +1,40 @@
+MrAutomatic is an automation app that aims to save you time and convenience you in any way it can.
+The app can set profiles the user has described base on its surroundings. It relies on the following sensors/devices :
+    1. BATTERY TEMPERATURE
+    2. BATTERY LEVEL
+    3. BLUETOOTH
+    4. WIFI
+    5. APP LAUNCHES *
+    6. LOCATION (GPS) *
+    7. TIME AND DATE *
+    8. DOCK
+    9. EARPHONE JACK
+    10.NFC *
+    11.SMS *
+It uses those devices to determine which profile to set. Profiles can control the following :
+     1. WIFI
+     2. BLUETOOTH
+     3. DATA *
+     4. BRIGHTNESS
+     5. AIRPLANE *
+     6. SILENT MODE
+     7. NOTIFICATION VOLUME
+     8. MEDIA VOLUME
+     9. RINGER VOLUME
+     10.ACCOUNT SYNC *
+     11.AUTO ROTATION
+     12.SLEEP TIMEOUT
+     13.WALLPAPER *
+     14.RINGTONE *
+     15.LAUNCH APP
+     16.MEDIA (PAUSE,PLAY OR STOP MUSIC OR VIDEO) *
+     17.ALARM VOLUME
+Note items with an astrix(*) next to them are partially implemented and will be done soon
+More triggers and settings/actions may be added later provided there is a lot of user interest on the respective idea.
+
+Planned additions :
+     Manually setting profile for a specific duration
+     Manually black listing a profile for a specific duration
+
+
+

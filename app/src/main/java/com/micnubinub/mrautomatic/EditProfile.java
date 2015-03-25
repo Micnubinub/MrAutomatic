@@ -1261,7 +1261,6 @@ public class EditProfile extends Activity {
         final Bundle bundle = getIntent().getExtras();
         try {
             profileId = bundle.getString(Utility.EDIT_PROFILE);
-            toast(profileId);
             edit = !(profileId == null || profileId.length() < 1);
         } catch (Exception e) {
             e.printStackTrace();

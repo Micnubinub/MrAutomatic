@@ -51,6 +51,13 @@ public class MainActivity extends Activity {
             }
         });
 
+        findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, Preferences.class));
+            }
+        });
+
         final Intent intent = new Intent(this, ProfileService.class);
         startService(intent);
     }
