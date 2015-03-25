@@ -21,12 +21,18 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
+    <view_classes.WeekDayChooser
+        android:id="@+id/week_day_chooser"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_below="@+id/title" />
+
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/week_day_chooser"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
@@ -83,13 +89,36 @@
 
     </LinearLayout>
 
+    <TextView
+
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/container1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:ellipsize="end"
+        android:padding="8dp"
+        android:text="Set duration :"
+        android:textColor="@color/dark_grey_text"
+        android:textSize="18sp" />
+
+    <view_classes.MaterialSeekBar
+        android:id="@+id/material_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="24dp"
+        android:layout_below="@+id/text"
+        android:layout_margin="8dp" />
+
     <include
         android:id="@+id/save_cancel"
         layout="@layout/save_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/container1"
+        android:layout_below="@+id/material_seekbar"
         android:layout_margin="4dp" />
 
 </RelativeLayout>

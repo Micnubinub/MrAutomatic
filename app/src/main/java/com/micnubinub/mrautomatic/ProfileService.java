@@ -43,11 +43,9 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
+    //TODO check if all restrictions (all in viable?) are met in setProfile before setting it
     /**
      * Profile service
-     * <p/>
-     * Call geRestrictions() >> if not triggered remove from viable tAC
-     * call getProhibitions() >> if not triggered remove from viable tAC
      * <p/>
      * sort the remainder by priority
      * sort the sorted remainder by trigger radius
@@ -157,7 +155,6 @@ public class ProfileService extends Service {
          */
         checkTriggers();
 
-
         setProfile();
         completeScan();
     }
@@ -237,6 +234,11 @@ public class ProfileService extends Service {
          */
     }
 
+    private static void removeFromViable(TriggerOrCommand tOC) {
+        if ((tOC != null) && (viable.contains(tOC)))
+            viable.remove(tOC);
+    }
+
     private static void addToViable(TriggerOrCommand tOC) {
         if ((tOC != null) && !(viable.contains(tOC)))
             viable.add(tOC);
@@ -252,18 +254,29 @@ public class ProfileService extends Service {
         final float battery_temp = Math.round(batteryStatus.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10f);
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
-
+                try {
+                    if (Integer.parseInt(triggerOrCommand.getValue()) < battery_temp)
+                        removeFromViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
+
             case TRIGGER:
                 try {
-                    if (Integer.parseInt(triggerOrCommand.getValue()) > battery_temp)
+                    if (Integer.parseInt(triggerOrCommand.getValue()) >= battery_temp)
                         addToViable(triggerOrCommand);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case PROHIBITION:
-
+                try {
+                    if (Integer.parseInt(triggerOrCommand.getValue()) >= battery_temp)
+                        removeFromViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -275,14 +288,16 @@ public class ProfileService extends Service {
 
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
-
+                if (!isBluetoothDeviceAvailable(triggerOrCommand.getValue()))
+                    removeFromViable(triggerOrCommand);
                 break;
             case TRIGGER:
                 if (isBluetoothDeviceAvailable(triggerOrCommand.getValue()))
                     addToViable(triggerOrCommand);
                 break;
             case PROHIBITION:
-
+                if (isBluetoothDeviceAvailable(triggerOrCommand.getValue()))
+                    removeFromViable(triggerOrCommand);
                 break;
         }
     }
@@ -310,15 +325,16 @@ public class ProfileService extends Service {
 
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
-
+                if (!iWifiDeviceAvailable(triggerOrCommand.getValue()))
+                    removeFromViable(triggerOrCommand);
                 break;
             case TRIGGER:
                 if (iWifiDeviceAvailable(triggerOrCommand.getValue()))
                     addToViable(triggerOrCommand);
-
                 break;
             case PROHIBITION:
-
+                if (iWifiDeviceAvailable(triggerOrCommand.getValue()))
+                    removeFromViable(triggerOrCommand);
                 break;
         }
     }
@@ -330,7 +346,12 @@ public class ProfileService extends Service {
 
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
-
+                try {
+                    if (!audioManager.isWiredHeadsetOn())
+                        addToViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case TRIGGER:
                 try {
@@ -341,7 +362,12 @@ public class ProfileService extends Service {
                 }
                 break;
             case PROHIBITION:
-
+                try {
+                    if (audioManager.isWiredHeadsetOn())
+                        removeFromViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -417,7 +443,12 @@ public class ProfileService extends Service {
 
         switch (triggerOrCommand.getType()) {
             case RESTRICTIONS:
-
+                try {
+                    if (!(Integer.parseInt(triggerOrCommand.getValue()) > battery_level))
+                        addToViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case TRIGGER:
                 try {
@@ -428,7 +459,12 @@ public class ProfileService extends Service {
                 }
                 break;
             case PROHIBITION:
-
+                try {
+                    if (Integer.parseInt(triggerOrCommand.getValue()) > battery_level)
+                        removeFromViable(triggerOrCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -517,16 +553,11 @@ public class ProfileService extends Service {
         }
     }
 
-
     private static void completeScan() {
         wifiOrBluetoothComplete = false;
-        if (viable != null && viable.size() > 0)
-            viable.clear();
         //Todo get profiles on each scan, schedule next
-
         if (context == null)
             return;
-
         Toast.makeText(context, "Viable : " + viable.toString(), Toast.LENGTH_LONG).show();
         Log.e("Viable : ", viable.toString());
         scheduleNext(context);
@@ -595,7 +626,7 @@ public class ProfileService extends Service {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         toastWhenProfileSet = prefs.getBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, true);
-        switch (Integer.parseInt(prefs.getString(Utility.SCAN_INTERVAL, "0"))) {
+        switch (Integer.parseInt(prefs.getString(Utility.PREF_SCAN_INTERVAL, "0"))) {
             case 0:
                 scan_interval = 30000;
                 break;

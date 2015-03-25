@@ -52,7 +52,6 @@ public class Utility {
     public static final String TRIGGER_EARPHONE_JACK = "EARPHONE_JACK";
     public static final String TRIGGER_NFC = "NFC";
 
-
     public static final String WIFI_SETTING = "WIFI_SETTING";
     public static final String BLUETOOTH_SETTING = "BLUETOOTH_SETTING";
     public static final String DATA_SETTING = "DATA_SETTING";
@@ -71,20 +70,14 @@ public class Utility {
     public static final String MEDIA_CONTROL_SETTING = "MEDIA_CONTROL_SETTING";
     public static final String ALARM_VOLUME_SETTING = "ALARM_VOLUME_SETTING";
 
-    public static final String SCAN_INTERVAL = "SCAN_INTERVAL";
-    public static final String DURATION = "DURATION";
-
     //Profile editor
     public static final String EDIT_PROFILE = "EDIT_PROFILE";
-    public static final String PROFILE_ID = "PROFILE_ID";
     public static final String PREF_TOAST_WHEN_PROFILE_SET = "TOAST_WHEN_PROFILE_SET";
     public static final String PREF_PLAY_PREVIEW = "PREF_PLAY_PREVIEW";
+    public static final String PREF_SCAN_INTERVAL = "PREF_SCAN_INTERVAL";
+    public static final String PREF_DEFAULT_PROFILE = "PREF_DEFAULT_PROFILE";
+
     /*
-     public static final String a = " ";
-     public static final String a = " ";
-     public static final String a = " ";
-     public static final String a = " ";
-     public static final String a = " ";
      public static final String a = " ";
      public static final String a = " ";
      public static final String a = " "; */
