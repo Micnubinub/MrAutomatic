@@ -235,6 +235,18 @@ public class Utility {
         return profiles;
     }
 
+    public static void setAutoRotation(Context context, boolean value) {
+        try {
+            Settings.System.putInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, value ? 1 : 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void controlMedia(Context context, String value) {
+        //Todo fill in
+    }
+
     public static void setNotificationVolume(Context context, int value) {
         try {
             Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_NOTIFICATION, value);
@@ -267,12 +279,9 @@ public class Utility {
         }
     }
 
-    public static void setAutoBrightness(Context context, int value) {
+    public static void setAutoBrightness(Context context, boolean value) {
         try {
-            if (value < 0)
-                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
-            else
-                Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, value ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -281,24 +290,29 @@ public class Utility {
     public static void setBrightness(Context context, int value) {
         try {
             Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
             Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void setWifi(Context context, int value) {
+    public static void setWifi(Context context, boolean value) {
         try {
-            ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(value > 0);
+            ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(value);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void setBluetooth(Context context, int value) {
+    public static void setBluetooth(Context context, boolean value) {
         try {
             final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-            if (value > 1) {
+            if (value) {
                 if (!adapter.isEnabled())
                     adapter.enable();
             } else {
@@ -311,6 +325,7 @@ public class Utility {
     }
 
     public static void setScreenTimeout(Context context, int value) {
+        //Todo check
         try {
             int time_out;
             switch (value) {
@@ -401,6 +416,7 @@ public class Utility {
     }
 
     public static void setWallpaper(Context context, String value) {
+        //Todo fill in
         try {
             final Uri uri = Uri.parse(value);
 
@@ -457,22 +473,14 @@ public class Utility {
         return b;
     }
 
-    public static void setSilentMode(Context context, int value) {
+    public static void setSilentMode(Context context, boolean value) {
         try {
-
-            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            switch (value) {
-                case 0:
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-
-                    break;
-                case 1:
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    break;
-                case 2:
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    break;
-            }
+            //Todo consider getting the old value and setting if value is false
+            final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            if (value)
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            else
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
 
         } catch (Exception e) {
@@ -481,6 +489,7 @@ public class Utility {
     }
 
     public static void setSetRingtone(Context context, String value) {
+        //Todo fill in
         try {
             Settings.System.putString(context.getContentResolver(), Settings.System.RINGTONE, value);
 //            AudioManager.setRingerMode(RINGER_MODE_NORMAL);
@@ -491,9 +500,14 @@ public class Utility {
         }
     }
 
-    public static void setVibrate(Context context, int value) {
+    public static void setVibrate(Context context, boolean value) {
         try {
-
+            //Todo consider getting the old value and setting if value is false
+            final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            if (value)
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            else
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         } catch (Exception e) {
             e.printStackTrace();
         }

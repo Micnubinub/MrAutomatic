@@ -27,6 +27,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,17 +45,9 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
-    //TODO check if all restrictions (all in viable?) are met in setProfile before setting it
     /**
      * Profile service
      * <p/>
-     * sort the remainder by priority
-     * sort the sorted remainder by trigger radius
-     * Location
-     * Wifi
-     * Bluetooth
-     * Battery
-     * NFC
      */
     //Todo make a list of all the use full broadcast receivers and triggers and make a class full of enums to be used to proceessss>>continue adding some
     //Todo extract all the scanning code in wifiListAdapter and bTListAdapter
@@ -544,13 +538,68 @@ public class ProfileService extends Service {
             setOldValues();
             return;
         }
+        final ArrayList<Profile> viableProfiles = getViableProfiles();
+        profiles.clear();
+        sortViableProfiles(viableProfiles);
+
         //Todo fill in
-        final Profile profile = profiles.get(0);
+        final Profile profile = viableProfiles.get(0);
         Log.e("Setting Profile: ", profile.getID() + ". " + profile.getName());
+
         final ArrayList<TriggerOrCommand> commands = Utility.getCommands(profile.getTriggersOrCommands());
+
         for (TriggerOrCommand command : commands) {
-            //TODO
+            setCommand(command);
         }
+    }
+
+    private static void sortViableProfiles(ArrayList<Profile> profiles) {
+        Collections.sort(profiles, new Comparator<Profile>() {
+            @Override
+            public int compare(Profile profile, Profile profile2) {
+                return profile.getPriority() - profile2.getPriority();
+            }
+        });
+//Todo consider sorting with radius
+    }
+
+//    private static int getRadiusOrPriority(String type){
+//        * Location
+//                * Wifi
+//                * Bluetooth
+//                * Battery
+//                * NFC
+//    }
+
+    public static ArrayList<Profile> getViableProfiles() {
+        final ArrayList<Profile> profiles1 = new ArrayList<>();
+        for (Profile profile : profiles) {
+            final boolean isProhibPass = Utility.getProhibitions(profile.getTriggersOrCommands()).size() == getViableProhibitionsUsingProfile(profile.getID()).size();
+            final boolean isRestrPass = Utility.getRestrictions(profile.getTriggersOrCommands()).size() == getViableRestrictionsUsingProfile(profile.getID()).size();
+
+            if (isProhibPass && isRestrPass)
+                profiles1.add(profile);
+        }
+
+        return profiles1;
+    }
+
+    public static ArrayList<TriggerOrCommand> getViableRestrictionsUsingProfile(String profileID) {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+        for (TriggerOrCommand triggerOrCommand : viable) {
+            if ((triggerOrCommand.getType() == TriggerOrCommand.Type.RESTRICTIONS) && (profileID.equals(triggerOrCommand.getProfileID())))
+                triggerOrCommands.add(triggerOrCommand);
+        }
+        return triggerOrCommands;
+    }
+
+    public static ArrayList<TriggerOrCommand> getViableProhibitionsUsingProfile(String profileID) {
+        final ArrayList<TriggerOrCommand> triggerOrCommands = new ArrayList<>();
+        for (TriggerOrCommand triggerOrCommand : viable) {
+            if ((triggerOrCommand.getType() == TriggerOrCommand.Type.PROHIBITION) && (profileID.equals(triggerOrCommand.getProfileID())))
+                triggerOrCommands.add(triggerOrCommand);
+        }
+        return triggerOrCommands;
     }
 
     private static void completeScan() {
@@ -600,6 +649,58 @@ public class ProfileService extends Service {
         profiles = Utility.getProfiles(context);
         //Todo consider saving a string oldProfile and using it to check if all the profiles are
         checkProfiles();
+    }
+
+    private static void setCommand(TriggerOrCommand command) {
+        if (context == null || !(command.getType() == TriggerOrCommand.Type.COMMAND))
+            return;
+
+        final String val = command.getValue();
+        if (val == null)
+            return;
+
+        try {
+            if (command.getCategory().equals("WIFI_SETTING")) {
+                Utility.setWifi(context, val.equals("1"));
+
+            } else if (command.getCategory().equals("BLUETOOTH_SETTING")) {
+                Utility.setBluetooth(context, val.equals("1"));
+
+            } else if (command.getCategory().equals("DATA_SETTING")) {
+                //Todo
+
+            } else if (command.getCategory().equals("BRIGHTNESS_SETTING")) {
+                if (val.equals("-1")) {
+                    Utility.setAutoBrightness(context, true);
+                } else {
+                    Utility.setBrightness(context, Integer.parseInt(val));
+                }
+            } else if (command.getCategory().equals("SILENT_MODE_SETTING")) {
+                Utility.setSilentMode(context, val.equals("1"));
+            } else if (command.getCategory().equals("NOTIFICATION_VOLUME_SETTING")) {
+                Utility.setNotificationVolume(context, Integer.parseInt(val));
+            } else if (command.getCategory().equals("MEDIA_VOLUME_SETTING")) {
+                Utility.setMediaVolume(context, Integer.parseInt(val));
+            } else if (command.getCategory().equals("RINGER_VOLUME_SETTING")) {
+                Utility.setRingerVolume(context, Integer.parseInt(val));
+            } else if (command.getCategory().equals("AUTO_ROTATION_SETTING")) {
+                Utility.setAutoRotation(context, val.equals("1"));
+            } else if (command.getCategory().equals("SLEEP_TIMEOUT_SETTING")) {
+                Utility.setScreenTimeout(context, Integer.parseInt(val));
+            } else if (command.getCategory().equals("WALLPAPER_SETTING")) {
+                Utility.setWallpaper(context, val);
+            } else if (command.getCategory().equals("RINGTONE_SETTING")) {
+                Utility.setSetRingtone(context, val);
+            } else if (command.getCategory().equals("LAUNCH_APP_SETTING")) {
+                Utility.launchApp(context, val);
+            } else if (command.getCategory().equals("MEDIA_CONTROL_SETTING")) {
+                Utility.controlMedia(context, val);
+            } else if (command.getCategory().equals("ALARM_VOLUME_SETTING")) {
+                Utility.setAlarmVolume(context, Integer.parseInt(val));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
