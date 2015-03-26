@@ -39,6 +39,12 @@ public class Preferences extends Activity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         findViewById(R.id.scan_intervals).setOnClickListener(listener);
         findViewById(R.id.default_profile).setOnClickListener(listener);
+        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         toast = (MaterialSwitch) findViewById(R.id.toast_when_profile_set);
         override = (MaterialSwitch) findViewById(R.id.override_timer_duration);
@@ -62,5 +68,7 @@ public class Preferences extends Activity {
     @Override
     protected void onDestroy() {
         save();
+        super.onDestroy();
+
     }
 }

@@ -57,5 +57,6 @@
         android:layout_alignBottom="@id/c"
         android:layout_alignLeft="@+id/c"
         android:layout_alignRight="@+id/c"
-        android:layout_alignTop="@+id/c" />
+        android:layout_alignTop="@+id/c"
+        android:visibility="gone" />
 </RelativeLayout>

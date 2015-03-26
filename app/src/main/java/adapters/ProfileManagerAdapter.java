@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.R;
 
 import java.util.ArrayList;
 
+import tools.TriggerOrCommand;
 import tools.Utility;
 
 /**
@@ -21,12 +23,74 @@ import tools.Utility;
 public class ProfileManagerAdapter extends BaseAdapter {
     private final Context context;
     private ArrayList<Profile> profiles;
+    private View.OnClickListener deleteListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(view.getContext(), "Coming Soon", Toast.LENGTH_LONG).show();
+//       Todo delete
+            try {
+                Utility.deleteProfile(view.getContext(), (String) view.getTag());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
     public ProfileManagerAdapter(Context context, ArrayList<Profile> profiles) {
         this.context = context;
         this.profiles = profiles;
     }
 
+    private static String getString(Profile profile) {
+        final StringBuilder builder = new StringBuilder();
+        final ArrayList<TriggerOrCommand> commands = Utility.getCommands(profile.getTriggersOrCommands());
+        final ArrayList<TriggerOrCommand> triggers = Utility.getTriggers(profile.getTriggersOrCommands());
+        final ArrayList<TriggerOrCommand> restrictions = Utility.getRestrictions(profile.getTriggersOrCommands());
+        final ArrayList<TriggerOrCommand> prohibitions = Utility.getProhibitions(profile.getTriggersOrCommands());
+
+        if (triggers.size() > 0) {
+            builder.append("Triggers >> ");
+            for (TriggerOrCommand trigger : triggers) {
+                builder.append(trigger.toString());
+                if (triggers.indexOf(trigger) + 1 < triggers.size())
+                    builder.append(" , ");
+                else builder.append(" ");
+            }
+        }
+
+        if (restrictions.size() > 0) {
+            builder.append("Restrictions >> ");
+            for (TriggerOrCommand trigger : restrictions) {
+                builder.append(trigger.toString());
+                if (restrictions.indexOf(trigger) + 1 < restrictions.size())
+                    builder.append(" , ");
+                else builder.append("   ");
+            }
+        }
+
+        if (prohibitions.size() > 0) {
+            builder.append("Prohibitions >> ");
+            for (TriggerOrCommand trigger : prohibitions) {
+                builder.append(trigger.toString());
+                if (prohibitions.indexOf(trigger) + 1 < prohibitions.size())
+                    builder.append(" , ");
+                else builder.append("   ");
+            }
+        }
+
+        if (commands.size() > 0) {
+            builder.append("Commands >> ");
+            for (TriggerOrCommand trigger : commands) {
+                builder.append(trigger.toString());
+                if (commands.indexOf(trigger) + 1 < commands.size())
+                    builder.append(" , ");
+                else builder.append("   ");
+            }
+        }
+
+        return builder.toString();
+    }
 
     @Override
     public int getCount() {
@@ -44,41 +108,19 @@ public class ProfileManagerAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        ViewHolder holder;
+    public View getView(int position, View convertVew, ViewGroup parent) {
         final Profile profile = profiles.get(position);
 
-        if (convertView == null) {
-            //Todo redo the xml
-            convertView = View.inflate(context, R.layout.profile_list_item, null);
-            holder = new ViewHolder();
-            holder.icon = (ImageView) convertView.findViewById(R.id.trigger_icon);
-            holder.name = (TextView) convertView.findViewById(R.id.name);
-            holder.trigger = (TextView) convertView.findViewById(R.id.trigger);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        final View v = View.inflate(context, R.layout.profile_list_item, null);
+        // ((ImageView) convertView.findViewById(R.id.trigger_icon)).setImageDrawable(...);
+        ((TextView) v.findViewById(R.id.name)).setText(profile.getName());
+        final TextView textView = (TextView) v.findViewById(R.id.trigger);
+        textView.setText(getString(profile));
+        textView.setSelected(true);
 
-        holder.name.setText(profile.getName());
-//        holder.icon.setImageDrawable(getDrawable(profile.getTriggerType()));
-//        if (profile.getTriggerType().equals(Utility.TRIGGER_BATTERY)) {
-//            int i = 0;
-//            try {
-//                i = Integer.parseInt(profile.getTrigger());
-//            } catch (Exception e) {
-//                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
-//            }
-//
-//            if (i < 0)
-//                holder.trigger.setText(profile.getTriggerType() + " (Charging)");
-//            else
-//                holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
-//        } else
-//            holder.trigger.setText(profile.getTriggerType() + " (" + profile.getTrigger() + ")");
-
-        return convertView;
+        v.findViewById(R.id.delete).setOnClickListener(deleteListener);
+        v.findViewById(R.id.delete).setTag(profile.getiD());
+        return v;
     }
 
     private final Drawable getDrawable(String triggerType) {
@@ -97,7 +139,6 @@ public class ProfileManagerAdapter extends BaseAdapter {
             return context.getResources().getDrawable(R.drawable.ic_launcher);
         return context.getResources().getDrawable(R.drawable.fab);
     }
-
 
     public void setProfiles(ArrayList<Profile> profiles) {
         this.profiles = profiles;

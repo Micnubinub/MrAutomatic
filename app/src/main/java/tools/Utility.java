@@ -707,6 +707,15 @@ public class Utility {
         return icon;
     }
 
+    public static void deleteProfile(Context context, String profileID) {
+        //TODO complete this
+        final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
+        final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
+        final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.PRIORITY};
+        final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
+
+    }
+
     public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
         final ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);//use context received in broadcastreceiver
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -721,7 +730,6 @@ public class Utility {
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -730,7 +738,6 @@ public class Utility {
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             ProfileService.startScanForReceiver(context);
-
         }
     }
 
@@ -759,7 +766,6 @@ public class Utility {
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             ProfileService.startScanForReceiver(context);
-
         }
     }
 

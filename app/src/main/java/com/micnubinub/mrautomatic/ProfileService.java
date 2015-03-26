@@ -67,7 +67,9 @@ public class ProfileService extends Service {
         public void onReceive(Context context, Intent intent) {
             if (BluetoothDevice.ACTION_FOUND.equals(intent.getAction())) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                bluetoothDevices.add(new Device(device.getName(), device.getAddress()));
+                final Device d = new Device(device.getName(), device.getAddress());
+                bluetoothDevices.add(d);
+                Log.e("addingDevice ", d.toString());
             }
         }
     };
