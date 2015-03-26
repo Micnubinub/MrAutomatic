@@ -15,7 +15,7 @@ import view_classes.MaterialSwitch;
 public class Preferences extends Activity {
     private static SharedPreferences prefs;
     private static SharedPreferences.Editor editor;
-    private static MaterialSwitch toast, override, preview;
+    private static MaterialSwitch toast, override, preview, only_receivers;
     private static View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -43,6 +43,7 @@ public class Preferences extends Activity {
         toast = (MaterialSwitch) findViewById(R.id.toast_when_profile_set);
         override = (MaterialSwitch) findViewById(R.id.override_timer_duration);
         preview = (MaterialSwitch) findViewById(R.id.play_preview);
+        only_receivers = (MaterialSwitch) findViewById(R.id.only_receivers);
         //Todo setChecked,inteveals =...
     }
 
@@ -52,8 +53,14 @@ public class Preferences extends Activity {
         editor.putBoolean(Utility.PREF_TOAST_WHEN_PROFILE_SET, toast.isChecked());
         editor.putInt(Utility.PREF_SCAN_INTERVAL, scanIntervals);
         editor.putString(Utility.PREF_DEFAULT_PROFILE, profileID);
+        editor.putBoolean(Utility.PREF_ONLY_USE_RECEIVERS, only_receivers.isChecked());
         editor.putBoolean(Utility.PREF_OVERRIDE_TIME_TRIGGER_DURATION, override.isChecked());
 
         editor.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        save();
     }
 }

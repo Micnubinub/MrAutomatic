@@ -1093,7 +1093,6 @@ public class EditProfile extends Activity {
 
     private void showNFCDialog(final Type triggerType) {
         //Todo device.setText(...)
-
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.nfc_dialog);
         final TextView device = (TextView) dialog.findViewById(R.id.device);

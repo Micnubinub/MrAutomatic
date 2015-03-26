@@ -18,7 +18,6 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/white_button_selector"
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="8dp"
@@ -130,4 +129,13 @@
 
     </RelativeLayout>
 
+    <include
+        android:id="@+id/coming_soon"
+        layout="@layout/coming_soon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/c"
+        android:layout_alignLeft="@+id/c"
+        android:layout_alignRight="@+id/c"
+        android:layout_alignTop="@+id/c" />
 </RelativeLayout>

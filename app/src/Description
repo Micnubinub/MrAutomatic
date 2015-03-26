@@ -30,7 +30,9 @@ It uses those devices to determine which profile to set. Profiles can control th
      16.MEDIA (PAUSE,PLAY OR STOP MUSIC OR VIDEO) *
      17.ALARM VOLUME
 Note items with an astrix(*) next to them are partially implemented and will be done soon
+Note preferences are still not implemented yet
 More triggers and settings/actions may be added later provided there is a lot of user interest on the respective idea.
+
 
 Planned additions :
      Manually setting profile for a specific duration

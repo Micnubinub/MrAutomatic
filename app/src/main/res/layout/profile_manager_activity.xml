@@ -25,9 +25,11 @@
 
         <ImageView
             android:id="@+id/menu"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            android:background="@drawable/menu_selector"
             android:padding="14dp"
             android:scaleType="centerInside"
             android:src="@drawable/menu" />

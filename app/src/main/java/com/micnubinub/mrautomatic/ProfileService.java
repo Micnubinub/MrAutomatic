@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,28 +134,12 @@ public class ProfileService extends Service {
     }
 
     private static void continueScan() {
-        Log.e("continue", "scan");
-        /**TODO **IMPORTANT
-         * getTriggers() if triggered add to viable
-         * getRestrictions() if ALL within bounds keep, else remove from viable
-         * getProhibitions() if ALL not within bounds keep, else remove
-         * sort by priority
-         * sort by scope
-         * =====================================================================
-         * scanForLoop()
-         * bool continueCheckingTrigger ^^ >> use this to short circuit the check >> paste in every check
-         *
-         *
-         *
-         */
         checkTriggers();
-
         setProfile();
         completeScan();
     }
 
     private static void checkTriggers() {
-        Log.e("check", "triggers");
         final ArrayList<TriggerOrCommand> triggers = getTriggers();
         for (TriggerOrCommand trigger : triggers) {
             if (trigger.getType() == TriggerOrCommand.Type.COMMAND)
@@ -218,12 +203,10 @@ public class ProfileService extends Service {
     }
 
     public static void registerBroadcastReceivers(Context context) {
-        //Todo register all necessary receivers
-        /**
+        /** TODO register all necessary receivers
          * final IntentFilter receiverFilter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
          * final Utility.EarphoneJackReceiver receiver = new Utility.EarphoneJackReceiver();
          * context.registerReceiver(receiver, receiverFilter);
-         * <p/>
          * * do for all broadcasts with "Intent.FLAG_RECEIVER_REGISTERED_ONLY"
          */
     }
@@ -334,7 +317,6 @@ public class ProfileService extends Service {
     }
 
     private static void checkHeadEarphoneJack(final TriggerOrCommand triggerOrCommand) {
-        //Todo fill in
         if (!(triggerOrCommand.getCategory().equals(Utility.TRIGGER_EARPHONE_JACK)))
             return;
 
@@ -465,53 +447,70 @@ public class ProfileService extends Service {
 
 
     private static void checkProfiles() {
+        //TODO test this
         Log.e("check", "profiles");
         getOldValues();
         if (context == null)
             return;
 
-        if (bluetoothDevices == null)
-            bluetoothDevices = new ArrayList<Device>();
-        else
-            bluetoothDevices.clear();
-
-        if (wifiDevices == null)
-            wifiDevices = new ArrayList<Device>();
-        else
-            wifiDevices.clear();
+        final boolean scanForBluetooth = scanForBluetooth();
+        final boolean scanForWifi = scanForWifi();
 
         wifiOrBluetoothComplete = false;
 
-        if (!adapter.isEnabled()) {
-            adapter.enable();
+        if (scanForBluetooth) {
+            if (bluetoothDevices == null)
+                bluetoothDevices = new ArrayList<Device>();
+            else
+                bluetoothDevices.clear();
 
-            try {
-                adapter.startDiscovery();
-                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                context.registerReceiver(bluetoothReceiver, filter); // Don't forget to unregister during onDestroy
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        context.unregisterReceiver(bluetoothReceiver);
-                        adapter.cancelDiscovery();
-                        bluetoothScanListener.onScanComplete(bluetoothDevices);
-                    }
-                }, 11500);
-            } catch (Exception e) {
-            }
 
-        } else {
-            try {
+            if (!adapter.isEnabled()) {
                 adapter.enable();
-            } catch (Exception e) {
+
+                try {
+                    adapter.startDiscovery();
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    context.registerReceiver(bluetoothReceiver, filter); // Don't forget to unregister during onDestroy
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            context.unregisterReceiver(bluetoothReceiver);
+                            adapter.cancelDiscovery();
+                            bluetoothScanListener.onScanComplete(bluetoothDevices);
+                        }
+                    }, 11500);
+                } catch (Exception e) {
+                }
+
+            } else {
+                try {
+                    adapter.enable();
+                } catch (Exception e) {
+                }
             }
+        } else {
+            wifiOrBluetoothComplete = true;
         }
 
-        if (!wifiManager.isWifiEnabled())
-            wifiManager.setWifiEnabled(true);
+        if (scanForWifi) {
+            if (wifiDevices == null)
+                wifiDevices = new ArrayList<Device>();
+            else
+                wifiDevices.clear();
 
-        wifiManager.startScan();
-        context.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+            if (!wifiManager.isWifiEnabled())
+                wifiManager.setWifiEnabled(true);
+            context.registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            wifiManager.startScan();
+        } else {
+            wifiOrBluetoothComplete = true;
+        }
+
+        if (!scanForWifi && !scanForBluetooth)
+            continueScan();
+
     }
 
 
@@ -612,6 +611,8 @@ public class ProfileService extends Service {
             return;
         Log.e("Viable : ", viable.toString());
         scheduleNext(context);
+        viable.clear();
+        profiles.clear();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -624,18 +625,20 @@ public class ProfileService extends Service {
     public static void getOldValues() {
         if (adapter != null)
             bluetooth_old_value = adapter.isEnabled() ? 1 : 0;
+
         if (wifiManager != null)
             wifi_old_value = wifiManager.isWifiEnabled() ? 1 : 0;
 
     }
 
     public static void setOldValues() {
-        if (bluetooth_old_value != 1) {
+        if (bluetooth_old_value < 1) {
             if (adapter.isEnabled()) {
                 adapter.disable();
             }
         } else {
-            adapter.enable();
+            if (!adapter.isEnabled())
+                adapter.enable();
         }
         wifiManager.setWifiEnabled(wifi_old_value > 0);
     }
@@ -645,11 +648,8 @@ public class ProfileService extends Service {
     }
 
     private static void startScan() {
-        Log.e("start", "scan");
-        //TODO STARTSCAN()
         viable.clear();
         profiles = Utility.getProfiles(context);
-        //Todo consider saving a string oldProfile and using it to check if all the profiles are
         checkProfiles();
     }
 
@@ -704,6 +704,58 @@ public class ProfileService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void startScanForReceiver(Context contextIn) {
+        if (context == null)
+            context = contextIn;
+
+        if (context == null)
+            return;
+
+        Toast.makeText(context, "Starting scan for broadcast receiver", Toast.LENGTH_LONG).show();
+        registerBroadcastReceivers(context);
+        //Todo maybe check if it should be automatically started or not
+        if (!Utility.isServiceRunning(context, ProfileService.class))
+            context.startService(new Intent(context, ProfileService.class));
+
+        startScan();
+    }
+
+    private static boolean scanForBluetooth() {
+        for (TriggerOrCommand triggerOrCommand : getProhibitions()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_BLUETOOTH)) ;
+            return true;
+        }
+
+        for (TriggerOrCommand triggerOrCommand : getTriggers()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_BLUETOOTH)) ;
+            return true;
+        }
+
+        for (TriggerOrCommand triggerOrCommand : getRestrictions()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_BLUETOOTH)) ;
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean scanForWifi() {
+        for (TriggerOrCommand triggerOrCommand : getProhibitions()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_WIFI)) ;
+            return true;
+        }
+
+        for (TriggerOrCommand triggerOrCommand : getTriggers()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_WIFI)) ;
+            return true;
+        }
+
+        for (TriggerOrCommand triggerOrCommand : getRestrictions()) {
+            if (triggerOrCommand.getCategory().equals(Utility.TRIGGER_WIFI)) ;
+            return true;
+        }
+        return false;
     }
 
     @Override

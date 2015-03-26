@@ -1,8 +1,8 @@
 package tools;
 
+import android.app.ActivityManager;
 import android.app.WallpaperManager;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.ProfileDBHelper;
+import com.micnubinub.mrautomatic.ProfileService;
 import com.micnubinub.mrautomatic.R;
 
 import java.io.File;
@@ -77,6 +78,7 @@ public class Utility {
     public static final String PREF_PLAY_PREVIEW = "PREF_PLAY_PREVIEW";
     public static final String PREF_SCAN_INTERVAL = "PREF_SCAN_INTERVAL";
     public static final String PREF_DEFAULT_PROFILE = "PREF_DEFAULT_PROFILE";
+    public static final String PREF_ONLY_USE_RECEIVERS = "PREF_ONLY_USE_RECEIVERS";
     public static final String PREF_OVERRIDE_TIME_TRIGGER_DURATION = "PREF_OVERRIDE_TIME_TRIGGER_DURATION";
 
     /*
@@ -705,31 +707,21 @@ public class Utility {
         return icon;
     }
 
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+        final ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);//use context received in broadcastreceiver
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) return true;
+
+        }
+        return false;
+    }
+
     public static class EarphoneJackReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
-            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
-                int state = intent.getIntExtra("state", -1);
 
-                switch (state) {
-                    case 0:
-                        // "Headset is unplugged");
-                        break;
-                    case 1:
-                        // "Headset is plugged");
-                        break;
-                    default:
-                        // "I have no idea what the headset state is");
-                }
-
-                Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED.equals(intent.getAction()))
-                Toast.makeText(context, "bluetooth", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -737,12 +729,7 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
-
-            if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED))
-                Toast.makeText(context, "Charging", Toast.LENGTH_LONG).show();
-
-            if (intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED))
-                Toast.makeText(context, "Not Charging", Toast.LENGTH_LONG).show();
+            ProfileService.startScanForReceiver(context);
 
         }
     }
@@ -752,7 +739,7 @@ public class Utility {
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             if (intent.getAction().equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED))
-                Toast.makeText(context, "Bluetooth connection state changed", Toast.LENGTH_LONG).show();
+                ProfileService.startScanForReceiver(context);
 
         }
     }
@@ -771,7 +758,7 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
-            Toast.makeText(context, "Message received", Toast.LENGTH_LONG).show();
+            ProfileService.startScanForReceiver(context);
 
         }
     }
@@ -780,7 +767,7 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
-            Toast.makeText(context, "onoff", Toast.LENGTH_LONG).show();
+            ProfileService.startScanForReceiver(context);
 
         }
     }
@@ -789,8 +776,7 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
-            Toast.makeText(context, "Wifi state c", Toast.LENGTH_LONG).show();
-
+            ProfileService.startScanForReceiver(context);
         }
     }
 }
