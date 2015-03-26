@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/dialog_background_inset"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/c"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="8dp"
-        android:text="Location trigger"
-        android:textColor="@color/dark_grey_text"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:background="@drawable/dialog_background_inset"
+        android:orientation="vertical">
 
-
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title">
-
-        <RelativeLayout
+        <TextView
+            android:id="@+id/title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="Location trigger"
+            android:textColor="@color/dark_grey_text"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/text"
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title">
+
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:ellipsize="end"
-                android:padding="8dp"
-                android:text="Secondary"
-                android:textColor="@color/dark_grey_text"
-                android:textSize="18sp" />
+                android:paddingBottom="8dp">
 
-            <include
-                android:id="@+id/save_cancel"
-                layout="@layout/save_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/text"
-                android:layout_marginBottom="4dp"
-                android:layout_marginRight="4dp" />
-        </RelativeLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:ellipsize="end"
+                    android:padding="8dp"
+                    android:text="Secondary"
+                    android:textColor="@color/dark_grey_text"
+                    android:textSize="18sp" />
 
+                <include
+                    android:id="@+id/save_cancel"
+                    layout="@layout/save_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/text"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginRight="4dp" />
+            </RelativeLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+
+    <include
+        android:id="@+id/coming_soon"
+        layout="@layout/coming_soon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/c"
+        android:layout_alignLeft="@+id/c"
+        android:layout_alignRight="@+id/c"
+        android:layout_alignTop="@+id/c" />
 </RelativeLayout>

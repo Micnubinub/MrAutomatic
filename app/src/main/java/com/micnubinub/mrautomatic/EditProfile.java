@@ -546,7 +546,7 @@ public class EditProfile extends Activity {
     private void showDataDialog() {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.radio_group);
-
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         ((TextView) dialog.findViewById(R.id.title)).setText("Data");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
@@ -670,7 +670,7 @@ public class EditProfile extends Activity {
     private void showMusicPlayerDialog() {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.radio_group);
-
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         ((TextView) dialog.findViewById(R.id.title)).setText("Media Control");
         final MaterialRadioGroup materialRadioGroup = (MaterialRadioGroup) dialog.findViewById(R.id.material_radio_group);
         final ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, dpToPixels(40));
@@ -694,6 +694,8 @@ public class EditProfile extends Activity {
         materialRadioGroup.addView(button2);
         materialRadioGroup.addView(button3);
         materialRadioGroup.addView(button4);
+
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
 
         try {
             final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.MEDIA_CONTROL_SETTING);
@@ -726,6 +728,7 @@ public class EditProfile extends Activity {
         dialog.setContentView(R.layout.switch_item);
         ((TextView) dialog.findViewById(R.id.title)).setText("Auto-rotation");
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         materialSwitch.setText("Auto-rotation");
         try {
             final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.AUTO_ROTATION_SETTING);
@@ -739,6 +742,71 @@ public class EditProfile extends Activity {
             @Override
             public void onClick(View view) {
                 setCommandValue(Utility.AUTO_ROTATION_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showSyncDialog() {
+        final Dialog dialog = getDialog();
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Sync");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
+        materialSwitch.setText("Sync");
+        try {
+            final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.ACCOUNT_SYNC_SETTING);
+            if (command != null)
+                materialSwitch.setChecked(command.getValue().equals("1"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCommandValue(Utility.ACCOUNT_SYNC_SETTING, materialSwitch.isChecked() ? "1" : "0");
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showAirplaneDialog() {
+        final Dialog dialog = getDialog();
+        dialog.setContentView(R.layout.switch_item);
+        ((TextView) dialog.findViewById(R.id.title)).setText("Airplane mode");
+        final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
+        materialSwitch.setText("Airplane mode");
+        try {
+            final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.AIRPLANE_SETTING);
+            if (command != null)
+                materialSwitch.setChecked(command.getValue().equals("1"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setCommandValue(Utility.AIRPLANE_SETTING, materialSwitch.isChecked() ? "1" : "0");
                 dialog.dismiss();
             }
         });
@@ -921,7 +989,7 @@ public class EditProfile extends Activity {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.ringtone_chooser);
-
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -944,6 +1012,7 @@ public class EditProfile extends Activity {
         //Todo make dialog
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.wallpaper_choose);
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -992,11 +1061,12 @@ public class EditProfile extends Activity {
     }
 
     private void showAppLaunchListenerDialog() {
-        //Todo make sure this isn't in other trigger types >>prohibs, restr.
+        //Todo make sure this isn't in other trigger types >>prohibs, restr. or make it available in foreground app listener
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.app_launch_dialog);
         final ListView listView = (ListView) dialog.findViewById(R.id.list);
         final AppAdapter appAdapter = new AppAdapter(listView, getApplicationContext());
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
 
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1018,7 +1088,6 @@ public class EditProfile extends Activity {
             }
         });
 
-
         dialog.show();
     }
 
@@ -1028,7 +1097,7 @@ public class EditProfile extends Activity {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.nfc_dialog);
         final TextView device = (TextView) dialog.findViewById(R.id.device);
-
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1057,6 +1126,7 @@ public class EditProfile extends Activity {
     private void showLocationDialog(final Type triggerType) {
         final Dialog dialog = getDialog();
         dialog.setContentView(R.layout.map_dialog);
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         /**Todo
          dialog.findViewById(R.id.save_cancel).findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
@@ -1151,7 +1221,7 @@ public class EditProfile extends Activity {
         dialog.setContentView(R.layout.time_picker);
         final AbstractWheel hours = (AbstractWheel) dialog.findViewById(R.id.hours);
         final AbstractWheel minutes = (AbstractWheel) dialog.findViewById(R.id.minutes);
-
+        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         hours.setViewAdapter(new NumericWheelAdapter(this, 0, 23));
         hours.setCyclic(true);
 
@@ -1197,6 +1267,12 @@ public class EditProfile extends Activity {
             showWallPaperDialog();
         } else if (commandOrTrigger.equals(Utility.WIFI_SETTING)) {
             showWifiDialog();
+        } else if (commandOrTrigger.equals(Utility.AIRPLANE_SETTING)) {
+            //Todo
+            showAirplaneDialog();
+        } else if (commandOrTrigger.equals(Utility.ACCOUNT_SYNC_SETTING)) {
+            //Todo
+            showSyncDialog();
         } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
             showBrightnessDialog();
         } else if (commandOrTrigger.equals(Utility.MEDIA_VOLUME_SETTING)) {

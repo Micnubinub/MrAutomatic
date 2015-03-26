@@ -60,6 +60,7 @@ public class ProfileService extends Service {
     //Todo battery charging is -1, so just make sure its not removed or added from viable because of <=...
     //todo get and set old values
     //Todo save default profile here and use it when viable <1
+    //Todo, do the thing where you only scan for bt, wifi and location only when necessary
 
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -123,7 +124,6 @@ public class ProfileService extends Service {
             return;
         }
         final long sched = System.currentTimeMillis() + scan_interval;
-        Log.e("scheduling: ", String.valueOf(sched));
         final Intent intent = new Intent(context, AlarmReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
