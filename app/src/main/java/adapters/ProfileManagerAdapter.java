@@ -1,6 +1,7 @@
 package adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.micnubinub.mrautomatic.EditProfile;
 import com.micnubinub.mrautomatic.Profile;
 import com.micnubinub.mrautomatic.R;
 
@@ -21,6 +23,18 @@ import tools.Utility;
  * Created by root on 22/08/14.
  */
 public class ProfileManagerAdapter extends BaseAdapter {
+    private static View.OnClickListener listener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            try {
+                Intent intent = new Intent(view.getContext(), EditProfile.class);
+                intent.putExtra(Utility.EDIT_PROFILE, (String) view.getTag());
+                view.getContext().startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
     private final Context context;
     private ArrayList<Profile> profiles;
     private View.OnClickListener deleteListener = new View.OnClickListener() {
@@ -35,7 +49,6 @@ public class ProfileManagerAdapter extends BaseAdapter {
             }
         }
     };
-
 
     public ProfileManagerAdapter(Context context, ArrayList<Profile> profiles) {
         this.context = context;
@@ -120,6 +133,8 @@ public class ProfileManagerAdapter extends BaseAdapter {
 
         v.findViewById(R.id.delete).setOnClickListener(deleteListener);
         v.findViewById(R.id.delete).setTag(profile.getiD());
+        v.setTag(profile.getiD());
+        v.setOnClickListener(listener);
         return v;
     }
 

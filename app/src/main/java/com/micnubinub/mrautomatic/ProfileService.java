@@ -45,6 +45,7 @@ import tools.Utility;
  */
 
 public class ProfileService extends Service {
+    public static final ArrayList<Profile> profiles = new ArrayList<>();
     /**
      * Profile service
      * <p/>
@@ -73,7 +74,6 @@ public class ProfileService extends Service {
             }
         }
     };
-
     private static final BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(intent.getAction())) {
@@ -93,7 +93,6 @@ public class ProfileService extends Service {
     private static AudioManager audioManager;
     private static ArrayList<Device> bluetoothDevices = new ArrayList<Device>(), wifiDevices = new ArrayList<Device>();
     private static PendingIntent alarmIntent;
-    private static ArrayList<Profile> profiles;
     private static boolean continueCheckingTOC;
     private static int scan_interval;
     private static boolean wifiOrBluetoothComplete, toastWhenProfileSet;
@@ -123,7 +122,7 @@ public class ProfileService extends Service {
 
     public static void scheduleNext(Context context) {
         if (context == null) {
-            Log.e("can't ScheduleNext", "context =- null");
+            Log.e("can't ScheduleNext", "context = null");
             return;
         }
         final long sched = System.currentTimeMillis() + scan_interval;
@@ -154,7 +153,6 @@ public class ProfileService extends Service {
             checkHeadEarphoneJack(trigger);
             checkLocation(trigger);
             checkTime(trigger);
-            Log.e("checking... :", trigger.toString());
         }
     }
 
@@ -415,6 +413,7 @@ public class ProfileService extends Service {
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         //Todo ---- register this, and toast it to see if it works well or not, if so make it a broadcast receiver
         //Todo viable.add(...), remove()
+        //Todo fix battery checking when charging
 
         final Intent batteryStatus = context.registerReceiver(null, filter);
         final int battery_level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -450,7 +449,7 @@ public class ProfileService extends Service {
 
     private static void checkProfiles() {
         //TODO test this
-        Log.e("check", "profiles");
+        Log.e("List of profiles:  \n", profiles.toString());
         getOldValues();
         if (context == null)
             return;
@@ -651,7 +650,7 @@ public class ProfileService extends Service {
 
     private static void startScan() {
         viable.clear();
-        profiles = Utility.getProfiles(context);
+        // profiles = Utility.getProfiles(context);
         checkProfiles();
     }
 

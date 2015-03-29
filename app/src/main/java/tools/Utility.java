@@ -262,7 +262,14 @@ public class Utility {
 
 
     public static ArrayList<Profile> getProfiles(Context context) {
-        final ArrayList<Profile> profiles = new ArrayList<Profile>();
+        final ArrayList<Profile> profiles;
+
+        if (ProfileService.profiles != null)
+            profiles = ProfileService.profiles;
+        else
+            profiles = new ArrayList<>();
+
+        profiles.clear();
         final ProfileDBHelper profileDBHelper = new ProfileDBHelper(context);
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
         final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.PRIORITY};

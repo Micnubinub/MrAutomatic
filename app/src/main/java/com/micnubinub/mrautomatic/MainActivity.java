@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,19 +15,6 @@ import tools.Utility;
  * Created by root on 21/08/14.
  */
 public class MainActivity extends Activity {
-
-    private final AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            try {
-                Intent intent = new Intent(MainActivity.this, EditProfile.class);
-                intent.putExtra(Utility.EDIT_PROFILE, profiles.get(position).getID());
-                MainActivity.this.startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
     ProfileManagerAdapter adapter;
     private ArrayList<Profile> profiles;
 
@@ -41,7 +27,6 @@ public class MainActivity extends Activity {
         profiles = Utility.getProfiles(this);
         adapter = new ProfileManagerAdapter(this, profiles);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(listener);
 
         findViewById(R.id.new_profile).setOnClickListener(new View.OnClickListener() {
             @Override

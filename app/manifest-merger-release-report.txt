@@ -161,85 +161,79 @@ action#android.bluetooth.adapter.action.CONNECTION_STATE_CHANGED
 ADDED from AndroidManifest.xml:78:17
 	android:name
 		ADDED from AndroidManifest.xml:78:25
-uses-feature#0x00020000
-ADDED from AndroidManifest.xml:82:9
-	android:glEsVersion
-		ADDED from AndroidManifest.xml:83:13
-	android:required
-		ADDED from AndroidManifest.xml:84:13
 meta-data#com.google.android.maps.v2.API_KEY
-ADDED from AndroidManifest.xml:85:9
+ADDED from AndroidManifest.xml:82:9
 	android:value
-		ADDED from AndroidManifest.xml:87:13
+		ADDED from AndroidManifest.xml:84:13
 	android:name
-		ADDED from AndroidManifest.xml:86:13
+		ADDED from AndroidManifest.xml:83:13
 receiver#com.micnubinub.mrautomatic.ProfileService$AlarmReceiver
-ADDED from AndroidManifest.xml:89:9
+ADDED from AndroidManifest.xml:86:9
 	android:enabled
-		ADDED from AndroidManifest.xml:91:13
+		ADDED from AndroidManifest.xml:88:13
 	android:name
-		ADDED from AndroidManifest.xml:90:13
+		ADDED from AndroidManifest.xml:87:13
 receiver#com.micnubinub.mrautomatic.ProfileService$BootUpReceiver
-ADDED from AndroidManifest.xml:93:9
+ADDED from AndroidManifest.xml:90:9
 	android:enabled
-		ADDED from AndroidManifest.xml:95:13
+		ADDED from AndroidManifest.xml:92:13
 	android:name
-		ADDED from AndroidManifest.xml:94:13
+		ADDED from AndroidManifest.xml:91:13
 intent-filter#android.intent.action.BOOT_COMPLETED
-ADDED from AndroidManifest.xml:96:13
+ADDED from AndroidManifest.xml:93:13
 action#android.intent.action.BOOT_COMPLETED
-ADDED from AndroidManifest.xml:97:17
+ADDED from AndroidManifest.xml:94:17
 	android:name
-		ADDED from AndroidManifest.xml:97:25
+		ADDED from AndroidManifest.xml:94:25
 receiver#tools.Utility$DockReceiver
-ADDED from AndroidManifest.xml:101:9
+ADDED from AndroidManifest.xml:98:9
 	android:enabled
-		ADDED from AndroidManifest.xml:103:13
+		ADDED from AndroidManifest.xml:100:13
 	android:name
-		ADDED from AndroidManifest.xml:102:13
+		ADDED from AndroidManifest.xml:99:13
 intent-filter#android.intent.action.DOCK_EVENT
-ADDED from AndroidManifest.xml:104:13
+ADDED from AndroidManifest.xml:101:13
 action#android.intent.action.DOCK_EVENT
-ADDED from AndroidManifest.xml:105:17
+ADDED from AndroidManifest.xml:102:17
 	android:name
-		ADDED from AndroidManifest.xml:105:25
+		ADDED from AndroidManifest.xml:102:25
 meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:109:9
+ADDED from AndroidManifest.xml:106:9
 MERGED from com.google.android.gms:play-services:6.5.87:21:9
 	android:value
-		ADDED from AndroidManifest.xml:111:13
+		ADDED from AndroidManifest.xml:108:13
 	android:name
-		ADDED from AndroidManifest.xml:110:13
+		ADDED from AndroidManifest.xml:107:13
 receiver#tools.Utility$WifiStateReceiver
-ADDED from AndroidManifest.xml:113:9
+ADDED from AndroidManifest.xml:110:9
 	android:name
-		ADDED from AndroidManifest.xml:113:19
+		ADDED from AndroidManifest.xml:110:19
 intent-filter#android.net.wifi.WIFI_STATE_CHANGED
-ADDED from AndroidManifest.xml:114:13
+ADDED from AndroidManifest.xml:111:13
 action#android.net.wifi.WIFI_STATE_CHANGED
-ADDED from AndroidManifest.xml:115:17
+ADDED from AndroidManifest.xml:112:17
 	android:name
-		ADDED from AndroidManifest.xml:115:25
+		ADDED from AndroidManifest.xml:112:25
 receiver#tools.Utility$SmsReceiver
-ADDED from AndroidManifest.xml:118:9
+ADDED from AndroidManifest.xml:115:9
 	android:enabled
-		ADDED from AndroidManifest.xml:120:13
+		ADDED from AndroidManifest.xml:117:13
 	android:name
-		ADDED from AndroidManifest.xml:119:13
+		ADDED from AndroidManifest.xml:116:13
 intent-filter#android.intent.action.DATA_SMS_RECEIVED+android.provider.Telephony.SMS_RECEIVED
-ADDED from AndroidManifest.xml:121:13
+ADDED from AndroidManifest.xml:118:13
 action#android.intent.action.DATA_SMS_RECEIVED
-ADDED from AndroidManifest.xml:122:17
+ADDED from AndroidManifest.xml:119:17
 	android:name
-		ADDED from AndroidManifest.xml:122:25
+		ADDED from AndroidManifest.xml:119:25
 action#android.provider.Telephony.SMS_RECEIVED
-ADDED from AndroidManifest.xml:123:17
+ADDED from AndroidManifest.xml:120:17
 	android:name
-		ADDED from AndroidManifest.xml:123:25
+		ADDED from AndroidManifest.xml:120:25
 service#com.micnubinub.mrautomatic.ProfileService
-ADDED from AndroidManifest.xml:127:9
+ADDED from AndroidManifest.xml:124:9
 	android:name
-		ADDED from AndroidManifest.xml:127:18
+		ADDED from AndroidManifest.xml:124:18
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:cardview-v7:21.0.3:15:5

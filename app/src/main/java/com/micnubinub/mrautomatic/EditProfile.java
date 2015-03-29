@@ -728,7 +728,6 @@ public class EditProfile extends Activity {
         dialog.setContentView(R.layout.switch_item);
         ((TextView) dialog.findViewById(R.id.title)).setText("Auto-rotation");
         final MaterialSwitch materialSwitch = (MaterialSwitch) dialog.findViewById(R.id.material_switch);
-        dialog.findViewById(R.id.coming_soon).setVisibility(View.VISIBLE);
         materialSwitch.setText("Auto-rotation");
         try {
             final TriggerOrCommand command = getTriggerOrCommandFromArray(Type.COMMAND, Utility.AUTO_ROTATION_SETTING);
