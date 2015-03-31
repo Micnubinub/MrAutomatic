@@ -66,7 +66,7 @@ public class WifiListAdapter extends BaseAdapter {
             }
         }
     };
-    private int selected_item;
+    private int selected_item = 0;
 
     public WifiListAdapter(Context context, CustomListView customListView) {
         this.context = context;

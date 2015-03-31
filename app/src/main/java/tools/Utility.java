@@ -274,9 +274,11 @@ public class Utility {
         final SQLiteDatabase profiledb = profileDBHelper.getReadableDatabase();
         final String[] need = new String[]{ProfileDBHelper.ID, ProfileDBHelper.PROFILE_NAME, ProfileDBHelper.TRIGGERS_AND_COMMANDS, ProfileDBHelper.PRIORITY};
         final Cursor cursor = profiledb.query(ProfileDBHelper.PROFILE_TABLE, need, null, null, null, null, null);
+
         try {
             cursor.moveToPosition(0);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         while (!cursor.isAfterLast()) {
             try {

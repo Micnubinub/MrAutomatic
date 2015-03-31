@@ -65,7 +65,7 @@ public class BluetoothListAdapter extends BaseAdapter {
             }
         }
     };
-    private int selected_item;
+    private int selected_item = 0;
 
     public BluetoothListAdapter(Context context, CustomListView customListView) {
         this.context = context;

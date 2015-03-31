@@ -49,6 +49,7 @@ public class EditProfile extends Activity {
     //Todo preference to play preview and add to all the seek bars
     //TODO ---- IMPORTANT check if all the strings are correct
     //Todo make google maps view
+    //TODO add a minimum duration in the editor
 
     /**
      * TODO IMPORTANT and time consuming :
@@ -1597,8 +1598,6 @@ public class EditProfile extends Activity {
             adapter.disable();
 
         wifiManager.setWifiEnabled(wifi_old_value == 0 ? false : true);
-
-
     }
 
     public void getProfileValues(String ID) {

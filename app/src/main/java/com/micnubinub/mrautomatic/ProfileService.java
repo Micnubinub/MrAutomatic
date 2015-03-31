@@ -1,6 +1,7 @@
 package com.micnubinub.mrautomatic;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -29,6 +30,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -90,6 +93,7 @@ public class ProfileService extends Service {
     private static AlarmManager alarmManager;
     private static LocationManager locationManager;
     private static WifiManager wifiManager;
+    private static ActivityManager activityManager;
     private static AudioManager audioManager;
     private static ArrayList<Device> bluetoothDevices = new ArrayList<Device>(), wifiDevices = new ArrayList<Device>();
     private static PendingIntent alarmIntent;
@@ -651,7 +655,45 @@ public class ProfileService extends Service {
     private static void startScan() {
         viable.clear();
         // profiles = Utility.getProfiles(context);
+        Log.e("startScanForground ", getForegroundApp().processName);
         checkProfiles();
+    }
+
+    private static ActivityManager.RunningAppProcessInfo getForegroundApp() {
+        ActivityManager.RunningAppProcessInfo result = null, info = null;
+
+        if (activityManager == null)
+            activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> l = activityManager.getRunningAppProcesses();
+        Iterator<ActivityManager.RunningAppProcessInfo> i = l.iterator();
+        while (i.hasNext()) {
+            info = i.next();
+            if (info.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                    && !isRunningService(info.processName)) {
+                result = info;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static boolean isRunningService(String processname) {
+        if (processname == null || processname.isEmpty())
+            return false;
+
+        ActivityManager.RunningServiceInfo service;
+
+        if (activityManager == null)
+            activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> l = activityManager.getRunningServices(9999);
+        Iterator<ActivityManager.RunningServiceInfo> i = l.iterator();
+        while (i.hasNext()) {
+            service = i.next();
+            if (service.process.equals(processname))
+                return true;
+        }
+
+        return false;
     }
 
     private static void setCommand(TriggerOrCommand command) {
@@ -759,6 +801,10 @@ public class ProfileService extends Service {
         return false;
     }
 
+    private void some() {
+
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final Notification.Builder builder = new Notification.Builder(this)
@@ -779,6 +825,7 @@ public class ProfileService extends Service {
         context = getApplicationContext();
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());

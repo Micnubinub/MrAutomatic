@@ -20,7 +20,7 @@ import tools.Utility;
  * Created by Michael on 3/23/2015.
  */
 public class AppAdapter extends BaseAdapter {
-    static int selectedItem = -1;
+    static int selectedItem = 0;
     private final ListView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
