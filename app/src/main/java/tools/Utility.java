@@ -80,6 +80,7 @@ public class Utility {
     public static final String PREF_DEFAULT_PROFILE = "PREF_DEFAULT_PROFILE";
     public static final String PREF_ONLY_USE_RECEIVERS = "PREF_ONLY_USE_RECEIVERS";
     public static final String PREF_OVERRIDE_TIME_TRIGGER_DURATION = "PREF_OVERRIDE_TIME_TRIGGER_DURATION";
+    //Todo remove app launch listener
 
     /*
      public static final String a = " ";
