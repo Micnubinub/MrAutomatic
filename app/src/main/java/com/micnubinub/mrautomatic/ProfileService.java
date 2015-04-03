@@ -49,14 +49,10 @@ import tools.Utility;
 
 public class ProfileService extends Service {
     public static final ArrayList<Profile> profiles = new ArrayList<>();
-    /**
-     * Profile service
-     * <p/>
-     */
     //Todo make a list of all the use full broadcast receivers and triggers and make a class full of enums to be used to proceessss>>continue adding some
     //Todo extract all the scanning code in wifiListAdapter and bTListAdapter
     //Todo then when done sort the fully triggered profiles by priority and set the first
-    //Todo        checkWifiProfiles(){ profiles.for > if profile.getCategory().equals("wifi")....}
+    //Todo checkWifiProfiles(){ profiles.for > if profile.getCategory().equals("wifi")....}
     //Todo if trigger is triggered add them into the viable list of triggers, use this array, to check for restrictions and prohibitions
     //Todo revert to old settings if no triggers are triggered, >> more complicated than initially looks
     //Todo fix the explanation in use-ssid, and use it
@@ -66,6 +62,26 @@ public class ProfileService extends Service {
     //todo get and set old values
     //Todo save default profile here and use it when viable <1
     //Todo, do the thing where you only scan for bt, wifi and location only when necessary
+    /**TODO
+     // public static final String INBOX = "content://sms/inbox";
+     // public static final String SENT = "content://sms/sent";
+     // public static final String DRAFT = "content://sms/draft";
+     Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
+
+     if (cursor.moveToFirst()) { // must check the result to prevent exception
+     do {
+     String msgData = "";
+     for(int idx=0;idx<cursor.getColumnCount();idx++)
+     {
+     msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+     }
+     // use msgData
+     } while (cursor.moveToNext());
+     } else {
+     // empty box, no SMS
+     }
+     */
+    //Todo read the android nfc basic on the desktop
 
     private static final BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -933,5 +949,6 @@ public class ProfileService extends Service {
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
+
 
 }
