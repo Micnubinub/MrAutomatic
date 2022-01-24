@@ -130,7 +130,7 @@ public class LinearLayoutList extends LinearLayout {
                 final TriggerOrCommand t = (TriggerOrCommand) triggerOrCommandOrAvailable;
                 Utility.getIcon(((TriggerOrCommand) triggerOrCommandOrAvailable).getCategory());
                 v = View.inflate(getContext(), R.layout.command_list_item, null);
-                v.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                v.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 final View delete = v.findViewById(R.id.delete);
                 final View open = v.findViewById(R.id.open);
 

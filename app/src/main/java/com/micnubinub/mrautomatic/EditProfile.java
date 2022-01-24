@@ -1,5 +1,6 @@
 package com.micnubinub.mrautomatic;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
@@ -1256,64 +1257,90 @@ public class EditProfile extends Activity {
     public void showEditorDialog(final Type triggerType, String commandOrTrigger) {
         if (commandOrTrigger == null)
             return;
-        if (commandOrTrigger.equals(Utility.ALARM_VOLUME_SETTING)) {
-            showAlarmVolumeDialog();
-        } else if (commandOrTrigger.equals(Utility.AUTO_ROTATION_SETTING)) {
-            showAutoRotationDialog();
-        } else if (commandOrTrigger.equals(Utility.BLUETOOTH_SETTING)) {
-            showBluetoothDialog();
-        } else if (commandOrTrigger.equals(Utility.WALLPAPER_SETTING)) {
-            showWallPaperDialog();
-        } else if (commandOrTrigger.equals(Utility.WIFI_SETTING)) {
-            showWifiDialog();
-        } else if (commandOrTrigger.equals(Utility.AIRPLANE_SETTING)) {
-            //Todo
-            showAirplaneDialog();
-        } else if (commandOrTrigger.equals(Utility.ACCOUNT_SYNC_SETTING)) {
-            //Todo
-            showSyncDialog();
-        } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
-            showBrightnessDialog();
-        } else if (commandOrTrigger.equals(Utility.MEDIA_VOLUME_SETTING)) {
-            showMediaVolumeDialog();
-        } else if (commandOrTrigger.equals(Utility.LAUNCH_APP_SETTING)) {
-            showAppLauncherDialog();
-        } else if (commandOrTrigger.equals(Utility.DATA_SETTING)) {
-            showDataDialog();
-        } else if (commandOrTrigger.equals(Utility.BRIGHTNESS_SETTING)) {
-            showBrightnessDialog();
-        } else if (commandOrTrigger.equals(Utility.RINGER_VOLUME_SETTING)) {
-            showRingtoneVolumeDialog();
-        } else if (commandOrTrigger.equals(Utility.MEDIA_CONTROL_SETTING)) {
-            showMusicPlayerDialog();
-        } else if (commandOrTrigger.equals(Utility.NOTIFICATION_VOLUME_SETTING)) {
-            showNotificationVolumeDialog();
-        } else if (commandOrTrigger.equals(Utility.RINGTONE_SETTING)) {
-            showRingtoneDialog();
-        } else if (commandOrTrigger.equals(Utility.SILENT_MODE_SETTING)) {
-            showSilentModeDialog();
-        } else if (commandOrTrigger.equals(Utility.SLEEP_TIMEOUT_SETTING)) {
-            showSleepTimeoutDialog();
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_APP_LAUNCH)) {
-            showAppLaunchListenerDialog();
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY)) {
-            showBatteryDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_BATTERY_TEMPERATURE)) {
-            showBatteryTemperatureDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_BLUETOOTH)) {
-            showBluetoothDevicePickerDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_NFC)) {
-            showNFCDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_LOCATION)) {
-            showLocationDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_EARPHONE_JACK)) {
-            showHeadPhoneJackDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_DOCK)) {
-            showDockDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_TIME)) {
-            showTimeDialog(triggerType);
-        } else if (commandOrTrigger.equals(Utility.TRIGGER_WIFI)) {
-            showWifiDevicePickerDialog(triggerType);
+        switch (commandOrTrigger) {
+            case Utility.ALARM_VOLUME_SETTING:
+                showAlarmVolumeDialog();
+                break;
+            case Utility.AUTO_ROTATION_SETTING:
+                showAutoRotationDialog();
+                break;
+            case Utility.BLUETOOTH_SETTING:
+                showBluetoothDialog();
+                break;
+            case Utility.WALLPAPER_SETTING:
+                showWallPaperDialog();
+                break;
+            case Utility.WIFI_SETTING:
+                showWifiDialog();
+                break;
+            case Utility.AIRPLANE_SETTING:
+                //Todo
+                showAirplaneDialog();
+                break;
+            case Utility.ACCOUNT_SYNC_SETTING:
+                //Todo
+                showSyncDialog();
+                break;
+            case Utility.MEDIA_VOLUME_SETTING:
+                showMediaVolumeDialog();
+                break;
+            case Utility.LAUNCH_APP_SETTING:
+                showAppLauncherDialog();
+                break;
+            case Utility.DATA_SETTING:
+                showDataDialog();
+                break;
+            case Utility.BRIGHTNESS_SETTING:
+                showBrightnessDialog();
+                break;
+            case Utility.RINGER_VOLUME_SETTING:
+                showRingtoneVolumeDialog();
+                break;
+            case Utility.MEDIA_CONTROL_SETTING:
+                showMusicPlayerDialog();
+                break;
+            case Utility.NOTIFICATION_VOLUME_SETTING:
+                showNotificationVolumeDialog();
+                break;
+            case Utility.RINGTONE_SETTING:
+                showRingtoneDialog();
+                break;
+            case Utility.SILENT_MODE_SETTING:
+                showSilentModeDialog();
+                break;
+            case Utility.SLEEP_TIMEOUT_SETTING:
+                showSleepTimeoutDialog();
+                break;
+            case Utility.TRIGGER_APP_LAUNCH:
+                showAppLaunchListenerDialog();
+                break;
+            case Utility.TRIGGER_BATTERY:
+                showBatteryDialog(triggerType);
+                break;
+            case Utility.TRIGGER_BATTERY_TEMPERATURE:
+                showBatteryTemperatureDialog(triggerType);
+                break;
+            case Utility.TRIGGER_BLUETOOTH:
+                showBluetoothDevicePickerDialog(triggerType);
+                break;
+            case Utility.TRIGGER_NFC:
+                showNFCDialog(triggerType);
+                break;
+            case Utility.TRIGGER_LOCATION:
+                showLocationDialog(triggerType);
+                break;
+            case Utility.TRIGGER_EARPHONE_JACK:
+                showHeadPhoneJackDialog(triggerType);
+                break;
+            case Utility.TRIGGER_DOCK:
+                showDockDialog(triggerType);
+                break;
+            case Utility.TRIGGER_TIME:
+                showTimeDialog(triggerType);
+                break;
+            case Utility.TRIGGER_WIFI:
+                showWifiDevicePickerDialog(triggerType);
+                break;
         }
     }
 
@@ -1350,7 +1377,7 @@ public class EditProfile extends Activity {
         profile_name = (EditText) findViewById(R.id.profile_name);
         findViewById(R.id.cancel).setOnClickListener(listener);
         findViewById(R.id.save).setOnClickListener(listener);
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         getLayouts();
         setInfoOnClickListeners();
 
@@ -1548,41 +1575,41 @@ public class EditProfile extends Activity {
             e.printStackTrace();
         }
 
-        try {
-            alarm_old_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_ALARM);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            alarm_old_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_ALARM);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         try {
             brightness_old_value = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
         } catch (Exception e) {
             e.printStackTrace();
         }
+//
+//        try {
+//            old_notification_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        try {
-            old_notification_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            old_incoming_call_volume = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_RING);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            old_media_volume_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_MUSIC);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            old_incoming_call_volume = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_RING);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            old_media_volume_value = Settings.System.getInt(getContentResolver(), Settings.System.VOLUME_MUSIC);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void setOldValues() {
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, old_media_volume_value);
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, old_notification_value);
-        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_RING, old_incoming_call_volume);
+//        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_MUSIC, old_media_volume_value);
+//        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_NOTIFICATION, old_notification_value);
+//        Settings.System.putInt(getContentResolver(), Settings.System.VOLUME_RING, old_incoming_call_volume);
 
         if (brightness_auto_old_value != 1) {
             Settings.System.putInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
@@ -1600,6 +1627,7 @@ public class EditProfile extends Activity {
         wifiManager.setWifiEnabled(wifi_old_value == 0 ? false : true);
     }
 
+    @SuppressLint("Range")
     public void getProfileValues(String ID) {
         profiledb = profileDBHelper.getReadableDatabase();
         cursor.moveToPosition(Integer.parseInt(ID));
@@ -1762,6 +1790,7 @@ public class EditProfile extends Activity {
         }
     }
 
+    @SuppressLint("Range")
     private void fillInArrayLists() {
         if (!edit)
             return;

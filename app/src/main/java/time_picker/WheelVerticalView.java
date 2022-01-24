@@ -222,8 +222,8 @@ public class WheelVerticalView extends AbstractWheelView {
         mItemsLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 
         mItemsLayout.measure(
-                View.MeasureSpec.makeMeasureSpec(getWidth() - 2 * mItemsPadding, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                MeasureSpec.makeMeasureSpec(getWidth() - 2 * mItemsPadding, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         );
 
     }
@@ -232,17 +232,17 @@ public class WheelVerticalView extends AbstractWheelView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
-        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
-        int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
-        int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         rebuildItems(); // rebuilding before measuring
 
         int width = calculateLayoutWidth(widthSize, widthMode);
 
         int height;
-        if (heightMode == View.MeasureSpec.EXACTLY) {
+        if (heightMode == MeasureSpec.EXACTLY) {
             height = heightSize;
         } else {
             height = Math.max(
@@ -250,7 +250,7 @@ public class WheelVerticalView extends AbstractWheelView {
                     getSuggestedMinimumHeight()
             );
 
-            if (heightMode == View.MeasureSpec.AT_MOST) {
+            if (heightMode == MeasureSpec.AT_MOST) {
                 height = Math.min(height, heightSize);
             }
         }
@@ -267,12 +267,12 @@ public class WheelVerticalView extends AbstractWheelView {
     private int calculateLayoutWidth(int widthSize, int mode) {
         mItemsLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         mItemsLayout.measure(
-                View.MeasureSpec.makeMeasureSpec(widthSize, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         );
         int width = mItemsLayout.getMeasuredWidth();
 
-        if (mode == View.MeasureSpec.EXACTLY) {
+        if (mode == MeasureSpec.EXACTLY) {
             width = widthSize;
         } else {
             width += 2 * mItemsPadding;
@@ -280,15 +280,15 @@ public class WheelVerticalView extends AbstractWheelView {
             // Check against our minimum width
             width = Math.max(width, getSuggestedMinimumWidth());
 
-            if (mode == View.MeasureSpec.AT_MOST && widthSize < width) {
+            if (mode == MeasureSpec.AT_MOST && widthSize < width) {
                 width = widthSize;
             }
         }
 
         // forcing recalculating
         mItemsLayout.measure(
-                View.MeasureSpec.makeMeasureSpec(width - 2 * mItemsPadding, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                MeasureSpec.makeMeasureSpec(width - 2 * mItemsPadding, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
         );
 
         return width;

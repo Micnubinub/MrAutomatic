@@ -1,5 +1,8 @@
 package tools;
 
+import static android.widget.Toast.LENGTH_LONG;
+
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.WallpaperManager;
 import android.bluetooth.BluetoothAdapter;
@@ -262,6 +265,7 @@ public class Utility {
     }
 
 
+    @SuppressLint("Range")
     public static ArrayList<Profile> getProfiles(Context context) {
         final ArrayList<Profile> profiles;
 
@@ -322,35 +326,42 @@ public class Utility {
     }
 
     public static void setNotificationVolume(Context context, int value) {
-        try {
-            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_NOTIFICATION, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Toast.makeText(context, "Set notif volume" + value, LENGTH_LONG).show();
+//        try {
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_NOTIFICATION, value);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void setMediaVolume(Context context, int value) {
-        try {
-            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_MUSIC, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Toast.makeText(context, "Set media volume" + value, LENGTH_LONG).show();
+
+//        try {
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_MUSIC, value);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void setAlarmVolume(Context context, int value) {
-        try {
-            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_ALARM, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Toast.makeText(context, "Set alarm volume" + value, LENGTH_LONG).show();
+
+//        try {
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_ALARM, value);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void setRingerVolume(Context context, int value) {
-        try {
-            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_RING, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Toast.makeText(context, "Set ringer volume" + value, LENGTH_LONG).show();
+
+//        try {
+//            Settings.System.putInt(context.getContentResolver(), Settings.System.VOLUME_RING, value);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static void setAutoBrightness(Context context, boolean value) {
@@ -500,8 +511,6 @@ public class Utility {
             //
             options.inJustDecodeBounds = false;
             wpm.setBitmap(decodeFile(new File(uri.getPath())));
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -739,7 +748,7 @@ public class Utility {
         @Override
         public void onReceive(Context context, Intent intent) {
             //TODO implement
-            Toast.makeText(context, "jack", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "jack", LENGTH_LONG).show();
         }
     }
 
@@ -766,7 +775,7 @@ public class Utility {
         public void onReceive(Context context, Intent intent) {
             //TODO implement
             if (intent.getAction().equals(Intent.ACTION_DOCK_EVENT))
-                Toast.makeText(context, "Dock event", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Dock event", LENGTH_LONG).show();
 
         }
     }

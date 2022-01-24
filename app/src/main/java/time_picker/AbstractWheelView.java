@@ -90,11 +90,11 @@ public abstract class AbstractWheelView extends AbstractWheel {
 
     // the rest
     /**
-     * The {@link android.graphics.Paint} for drawing the selector.
+     * The {@link Paint} for drawing the selector.
      */
     Paint mSelectorWheelPaint;
     /**
-     * The {@link android.graphics.Paint} for drawing the separators.
+     * The {@link Paint} for drawing the separators.
      */
     Paint mSeparatorsPaint;
     Bitmap mSpinBitmap;
@@ -172,7 +172,7 @@ public abstract class AbstractWheelView extends AbstractWheel {
     }
 
     /**
-     * Sets the <code>alpha</code> of the {@link android.graphics.Paint} for drawing separators
+     * Sets the <code>alpha</code> of the {@link Paint} for drawing separators
      * spinnerwheel.
      *
      * @param alpha alpha value from 0 to 255
@@ -184,7 +184,7 @@ public abstract class AbstractWheelView extends AbstractWheel {
     }
 
     /**
-     * Sets the <code>coeff</code> of the {@link android.graphics.Paint} for drawing
+     * Sets the <code>coeff</code> of the {@link Paint} for drawing
      * the selector spinnerwheel.
      *
      * @param coeff Coefficient from 0 (selector is passive) to 1 (selector is active)

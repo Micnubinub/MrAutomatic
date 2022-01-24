@@ -1,5 +1,8 @@
 package com.micnubinub.mrautomatic;
 
+import static android.app.PendingIntent.FLAG_MUTABLE;
+
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -13,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,6 +30,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,11 +153,8 @@ public class ProfileService extends Service {
         }
         final long sched = System.currentTimeMillis() + scan_interval;
         final Intent intent = new Intent(context, AlarmReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC, sched, alarmIntent);
-        } else
-            alarmManager.set(AlarmManager.RTC, sched, alarmIntent);
+        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, FLAG_MUTABLE);
+        alarmManager.set(AlarmManager.RTC, sched, alarmIntent);
     }
 
     private static void continueScan() {
@@ -636,13 +639,6 @@ public class ProfileService extends Service {
         profiles.clear();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private static Notification buildForJellyBean(Notification.Builder builder) {
-        // for some reason Notification.PRIORITY_DEFAULT doesn't show the counter
-        builder.setPriority(Notification.FLAG_ONGOING_EVENT);
-        return builder.build();
-    }
-
     public static void getOldValues() {
         if (adapter != null)
             bluetooth_old_value = adapter.isEnabled() ? 1 : 0;
@@ -671,7 +667,7 @@ public class ProfileService extends Service {
     private static void startScan() {
         viable.clear();
         // profiles = Utility.getProfiles(context);
-        Log.e("startScanForground ", getForegroundApp().processName);
+//        Log.e("startScanForground ", getForegroundApp().processName);
         checkProfiles();
     }
 
@@ -828,10 +824,10 @@ public class ProfileService extends Service {
                 .setContentTitle("Notification:")
                 .setOngoing(true)
                 .setContentText("Content");
-        Notification notification = buildForJellyBean(builder);
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+//        Notification notification = buildForJellyBean(builder);
+//        notification.flags |= Notification.FLAG_ONGOING_EVENT;
 
-        startForeground(startId, notification);
+//        startForeground(startId, notification);
         return Service.START_STICKY;//Service.START_STICKY;
     }
 
@@ -839,7 +835,7 @@ public class ProfileService extends Service {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -876,6 +872,16 @@ public class ProfileService extends Service {
     }
 
     private void checkLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
 
